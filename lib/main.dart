@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:in_time_app/home/presentation/screens/HomeScreen.dart';
-import 'package:in_time_app/loginScreen.dart';
+import 'package:in_time_app/account/presentation/screens/loginScreen.dart';
 
 void main() {
   runApp(const MyApp());

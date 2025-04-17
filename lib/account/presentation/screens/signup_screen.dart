@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:in_time_app/otp_verification_screen.dart';
+import 'package:in_time_app/account/presentation/screens/otp_verification_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
