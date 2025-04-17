@@ -1,9 +1,16 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:in_time_app/home/presentation/screens/HomeScreen.dart';
-import 'package:in_time_app/account/presentation/screens/loginScreen.dart';
+import 'package:in_time_app/core/localization/app_localization.dart';
+import 'package:in_time_app/core/utils/app_asset_path.dart';
 
-void main() {
-  runApp(const MyApp());
+import 'features/account/presentation/screens/loginScreen.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(EasyLocalization(
+      supportedLocales: AppLocalization.locales,
+      path: AppAsset.translations,
+      child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -14,7 +21,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -24,5 +30,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-

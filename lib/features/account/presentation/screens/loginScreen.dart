@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:in_time_app/account/presentation/screens/signup_screen.dart';
+import 'package:in_time_app/features/account/presentation/screens/signup_screen.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -45,6 +45,7 @@ class LoginScreen extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     // Handle register navigation
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpScreen(),));
                   },
                   child: const Text(
                     "Register",
