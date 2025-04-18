@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_time_app/core/localization/app_localization.dart';
 import 'package:in_time_app/core/service_locator/service_locator.dart';
 import 'package:in_time_app/core/utils/app_asset_path.dart';
+import 'package:in_time_app/core/utils/app_colors.dart';
 import 'package:in_time_app/features/account/presentation/logic/create_account_cubit.dart';
 
 import 'core/observers/cubit_observer.dart';
@@ -49,7 +50,14 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),
-          home: const LoginScreen(),
+          home: FutureBuilder(future: Future.delayed(Duration(seconds: 5)),
+              builder: (context, snapshot) =>
+            snapshot.connectionState == ConnectionState.done
+            ? const LoginScreen()
+            :Container(color: AppColors.white,
+            child: Center(
+               child: Image.asset('assets/images/logo_green.png'),
+            ),),),
         ));
   }
 }
