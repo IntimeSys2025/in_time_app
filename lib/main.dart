@@ -7,9 +7,11 @@ import 'features/account/presentation/screens/loginScreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
   runApp(EasyLocalization(
       supportedLocales: AppLocalization.locales,
       path: AppAsset.translations,
+      fallbackLocale: AppLocalization.locales[1],
       child: const MyApp()));
 }
 
