@@ -1,31 +1,36 @@
 import 'package:equatable/equatable.dart';
 
 class RegisterParams extends Equatable {
-  final String name;
-  final String countryCode;
-  final String phone;
-  final String email;
+  final String firstName;
+  final String lastName;
+  final String mobile;
   final String password;
+  final String passwordConfirmation;
+  final String dateBirth;
+  final String gender;
   // TODO  add image
 
-  const RegisterParams({
-    required this.name,
-    required this.countryCode,
-    required this.phone,
-    required this.email,
-    required this.password,
-  });
+  const RegisterParams(
+      {required this.firstName,
+      required this.lastName,
+      required this.mobile,
+      required this.password,
+      required this.passwordConfirmation,
+      required this.dateBirth,
+      required this.gender});
 
   Map<String, dynamic> toJson() {
     return {
-      'name': name,
-      'country_code': countryCode,
-      'phone': phone,
-      'email': email,
+      'first_name': firstName,
+      'last_name': lastName,
+      'mobile': mobile,
       'password': password,
-      'image': null,
+      'password_confirmation': passwordConfirmation,
+      'date_of_birth': dateBirth,
+      'gender': gender
     };
   }
+
   @override
   List<Object?> get props => [];
 }

@@ -30,6 +30,6 @@ class CreateAccountDataSourceImpl implements CreateAccountDataSource {
 
     // SecureStorage.saveToken(response.data['data']['token']);
     // AppConstants.userToken = response.data['data']['token'];
-    return UserModel.fromJson(response.data['data']['user']);
+    return UserModel.fromJson(response.data['data']);
   }
 }
