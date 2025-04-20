@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_time_app/features/account/data/models/arguments/login_params.dart';
 import 'package:in_time_app/features/account/domain/use_cases/login_use_case.dart';
 import 'package:in_time_app/features/account/domain/use_cases/register_use_case.dart';
-
+import 'package:intl_phone_field/phone_number.dart';
 import '../../data/models/arguments/register_params.dart';
 part 'create_account_state.dart';
 
@@ -14,6 +14,7 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
   CreateAccountCubit(this._registerUseCase, this._loginUseCase)
       : super(CreateAccountInitial());
   final phoneNumberFormKey = GlobalKey<FormState>();
+  final loginForm = GlobalKey<FormState>();
   void register() async {
     if(phoneNumberFormKey.currentState!.validate()){
       emit(RegisterAccountLoadingState());
@@ -38,10 +39,17 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
     }
 
   }
+  /// login form
+   PhoneNumber? phone;
+  final TextEditingController passwordController = TextEditingController();
+  final bool rememberMe = false;
 
-  void signIn() async {
+  void logIn() async {
     emit(SignInLoadingState());
-    final result = await _loginUseCase.call(const LoginParams(phone: ''));
+    final result = await _loginUseCase.call( LoginParams(
+      mobile: phone?.completeNumber ?? '',
+      password: passwordController.text, rememberMe: rememberMe
+    ));
     result.fold(
       (failure) {
         emit(SignInFailureState(errorMessage: failure.message));

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:in_time_app/core/utils/app_colors.dart';
+import 'package:in_time_app/features/account/presentation/logic/create_account_cubit.dart';
 import 'package:in_time_app/features/account/presentation/screens/signup_screen.dart';
+import 'package:in_time_app/features/home/presentation/screens/HomeScreen.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -8,202 +12,286 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cubit = BlocProvider.of<CreateAccountCubit>(context);
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          // mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const SizedBox(height: 80),
-            // App Logo
-            Image.asset(
-              "assets/images/logo_green.png", // Replace with your actual logo asset
-              height: 80,
-            ),
-            const SizedBox(height: 20),
+        child: BlocConsumer<CreateAccountCubit, CreateAccountState>(
+          listener: (context, state) {
+            // if(state is SignInLoadingState){
+            //   // Show loading indicator
+            //   showDialog(
+            //     context: context,
+            //     barrierDismissible: false,
+            //     builder: (context) => const Center(child: CircularProgressIndicator()),
+            //   );
+            //
+            // }else
+            if (state is SignInSuccessState) {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const HomeScreen(),
+                  ));
+            } else if (state is SignInFailureState) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.errorMessage),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
+          builder: (context, state) {
+            // if (state is SignInLoadingState) {
+            //   return const Center(
+            //       child: CircularProgressIndicator(
+            //     color: AppColors.transparent,
+            //   ));
+            //   // showDialog(
+            //   //   context: context,
+            //   //   barrierDismissible: false,
+            //   //   builder: (context) => const Center(child: CircularProgressIndicator()),
+            //   // );
+            // } else {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                // mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 80),
+                  // App Logo
+                  Image.asset(
+                    "assets/images/logo_green.png", // Replace with your actual logo asset
+                    height: 80,
+                  ),
+                  const SizedBox(height: 20),
 
-            // Welcome Back Text
-            const Text(
-              "Welcome Back 👋",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-
-            const SizedBox(height: 5),
-            const Text(
-              "Hello there, login to continue",
-              style: TextStyle(color: Colors.grey),
-            ),
-
-            const SizedBox(height: 15),
-            Row(
-              children: [
-                const Text("Didn’t have an account? "),
-                GestureDetector(
-                  onTap: () {
-                    // Handle register navigation
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpScreen(),));
-                  },
-                  child: const Text(
-                    "Register",
+                  // Welcome Back Text
+                  const Text(
+                    "Welcome Back 👋",
                     style: TextStyle(
-                      color: Colors.green,
+                      fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
-              ],
-            ),
 
-            const SizedBox(height: 20),
+                  const SizedBox(height: 5),
+                  const Text(
+                    "Hello there, login to continue",
+                    style: TextStyle(color: Colors.grey),
+                  ),
 
-            // Mobile Number Field
-            // TextField(
-            //   keyboardType: TextInputType.phone,
-            //   decoration: InputDecoration(
-            //     labelText: "Mobile Number *",
-            //     prefixIcon: Padding(
-            //       padding: const EdgeInsets.all(8.0),
-            //       child: Row(
-            //         mainAxisSize: MainAxisSize.min,
-            //         children: [
-            //           Image.asset(
-            //             "assets/saudi_flag.png", // Replace with country flag asset
-            //             height: 20,
-            //             width: 20,
-            //           ),
-            //           const SizedBox(width: 5),
-            //           const Text("+966"),
-            //         ],
-            //       ),
-            //     ),
-            //     border: OutlineInputBorder(
-            //       borderRadius: BorderRadius.circular(10),
-            //     ),
-            //   ),
-            // ),
-            Directionality(
-                textDirection: TextDirection.ltr,
-                child: Form(
-                    // key: createAccountCubit.phoneNumberFormKey,
-                    key: GlobalKey<FormState>(),
-                    child: IntlPhoneField(
-                      invalidNumberMessage: 'Invalid phone Number',
-                      // controller: createAccountCubit.phoneController,
-                      decoration: const InputDecoration(
-                        // labelText: LocaleKeys.phoneNumber.tr(),
-                        labelText: 'Phone Number',
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(),
+                  const SizedBox(height: 15),
+                  Row(
+                    children: [
+                      const Text("Didn’t have an account? "),
+                      GestureDetector(
+                        onTap: () {
+                          // Handle register navigation
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SignUpScreen(),
+                              ));
+                        },
+                        child: const Text(
+                          "Register",
+                          style: TextStyle(
+                            color: Colors.green,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                      initialCountryCode: 'SA',
-                      validator: (value) {
-                        debugPrint('Val:: ${value?.completeNumber}');
-                        // return createAccountCubit.validatePhoneNumber(value!);
-                      },
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      onCountryChanged: (value) {
-                        // createAccountCubit.countryCode = '+${value.fullCountryCode}';
-                        debugPrint('Phone12: ${value.fullCountryCode}');
-                      },
-                      keyboardType: TextInputType.phone,
-                      // countries: ["SA"],
+                    ],
+                  ),
 
-                      onChanged: (phone) {
-                        // createAccountCubit.countryCode = '';
-                        // createAccountCubit.countryCode = phone.countryCode ;
-                      },
-                      onSubmitted: (v) {
-                        // debugPrint('onSubmitted :: ${_phoneController.text}');
-                        // createAccountCubit.verifyPhoneNumber();
-                      },
-                      onSaved: (v) {
-                        // debugPrint('onSaved :: ${_phoneController.text}');
-                      },
-                    ))),
+                  const SizedBox(height: 20),
 
-            const SizedBox(height: 15),
+                  // Mobile Number Field
+                  // TextField(
+                  //   keyboardType: TextInputType.phone,
+                  //   decoration: InputDecoration(
+                  //     labelText: "Mobile Number *",
+                  //     prefixIcon: Padding(
+                  //       padding: const EdgeInsets.all(8.0),
+                  //       child: Row(
+                  //         mainAxisSize: MainAxisSize.min,
+                  //         children: [
+                  //           Image.asset(
+                  //             "assets/saudi_flag.png", // Replace with country flag asset
+                  //             height: 20,
+                  //             width: 20,
+                  //           ),
+                  //           const SizedBox(width: 5),
+                  //           const Text("+966"),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //     border: OutlineInputBorder(
+                  //       borderRadius: BorderRadius.circular(10),
+                  //     ),
+                  //   ),
+                  // ),
+                  Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: Form(
+                          key: cubit.loginForm,
+                          child: IntlPhoneField(
+                            // controller: ,
+                            invalidNumberMessage: 'Invalid phone Number',
+                            // controller: createAccountCubit.phoneController,
+                            decoration: const InputDecoration(
+                              // labelText: LocaleKeys.phoneNumber.tr(),
+                              labelText: 'Phone Number',
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(),
+                              ),
+                            ),
+                            initialCountryCode: 'SA',
+                            validator: (value) {
+                              debugPrint('Val:: ${value?.completeNumber}');
+                              return null;
+                              // return createAccountCubit.validatePhoneNumber(value!);
+                            },
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            onCountryChanged: (value) {
+                              // createAccountCubit.countryCode = '+${value.fullCountryCode}';
+                              debugPrint('Phone12: ${value.fullCountryCode}');
+                            },
+                            keyboardType: TextInputType.phone,
+                            // countries: ["SA"],
 
-            // Password Field
-            TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: "Password *",
-                suffixIcon: const Icon(Icons.visibility_off),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
+                            onChanged: (phone) {
+                              cubit.phone = phone;
+                              // createAccountCubit.countryCode = '';
+                              // createAccountCubit.countryCode = phone.countryCode ;
+                            },
+                            onSubmitted: (v) {
+                              // debugPrint('onSubmitted :: ${_phoneController.text}');
+                              // createAccountCubit.verifyPhoneNumber();
+                            },
+                            onSaved: (v) {
+                              // debugPrint('onSaved :: ${_phoneController.text}');
+                            },
+                          ))),
 
-            const SizedBox(height: 10),
+                  const SizedBox(height: 15),
 
-            // Remember Me & Forgot Password
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Checkbox(value: false, onChanged: (value) {}),
-                    const Text("Remember Me"),
-                  ],
-                ),
-                GestureDetector(
-                  onTap: () {
-                    // Handle forgot password navigation
-                  },
-                  child: const Text(
-                    "Forgot Password?",
-                    style: TextStyle(
-                      color: Colors.green,
-                      fontWeight: FontWeight.bold,
+                  // Password Field
+                  TextField(
+                    controller: cubit.passwordController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      labelText: "Password *",
+                      suffixIcon: const Icon(Icons.visibility_off),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
 
-            const SizedBox(height: 20),
+                  const SizedBox(height: 10),
 
-            // Login Button
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                  // Remember Me & Forgot Password
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Checkbox(
+                              value: cubit.rememberMe, onChanged: (value) {}),
+                          const Text("Remember Me"),
+                        ],
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          // Handle forgot password navigation
+                        },
+                        child: const Text(
+                          "Forgot Password?",
+                          style: TextStyle(
+                            color: Colors.green,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                onPressed: () {
-                  // Handle login
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpScreen(),));
-                },
-                child: const Text(
-                  "Login",
-                  style: TextStyle(fontSize: 18, color: Colors.white),
-                ),
-              ),
-            ),
 
-            const SizedBox(height: 15),
+                  const SizedBox(height: 20),
 
-            // Fingerprint Icon
-            // Center(
-            //   child: IconButton(
-            //     icon: const Icon(Icons.fingerprint,
-            //         size: 40, color: Colors.green),
-            //     onPressed: ()  {
-            //       // Handle fingerprint login
-            //     },
-            //   ),
-            // ),
-          ],
+                  // Login Button
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: (state is SignInLoadingState)
+                        ? ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            onPressed: () {
+                              // Handle login
+                              // cubit.logIn();
+                              // Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //       builder: (context) => SignUpScreen(),
+                              //     ));
+                            },
+                            child: const Center(
+                              child: CircularProgressIndicator(),
+                            )
+
+                            // Text(
+                            //   "Login",
+                            //   style: TextStyle(fontSize: 18, color: Colors.white),
+                            // ),
+                            )
+                        : ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            onPressed: () {
+                              // Handle login
+                              cubit.logIn();
+                              // Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //       builder: (context) => SignUpScreen(),
+                              //     ));
+                            },
+                            child: const Text(
+                              "Login",
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.white),
+                            ),
+                          ),
+                  ),
+
+                  const SizedBox(height: 15),
+
+                  // Fingerprint Icon
+                  // Center(
+                  //   child: IconButton(
+                  //     icon: const Icon(Icons.fingerprint,
+                  //         size: 40, color: Colors.green),
+                  //     onPressed: ()  {
+                  //       // Handle fingerprint login
+                  //     },
+                  //   ),
+                  // ),
+                ],
+              );
+            // }
+          },
         ),
       ),
     );

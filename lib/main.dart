@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),
-          home: FutureBuilder(future: Future.delayed(Duration(seconds: 5)),
+          home: FutureBuilder(future: Future.delayed(Duration(seconds: 2)),
               builder: (context, snapshot) =>
             snapshot.connectionState == ConnectionState.done
             ? const LoginScreen()

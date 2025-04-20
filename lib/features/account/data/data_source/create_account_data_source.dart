@@ -19,7 +19,7 @@ class CreateAccountDataSourceImpl implements CreateAccountDataSource {
   Future<UserModel> login({required LoginParams params}) async {
     final response = await _apiConsumer.post(path: EndPoints.login,
         body: params.toJson());
-    SecureStorage.saveToken(response.data['data']['token']);
+    // SecureStorage.saveToken(response.data['data']['token']);
     return UserModel.fromJson(response.data['data']['user']);
   }
 
