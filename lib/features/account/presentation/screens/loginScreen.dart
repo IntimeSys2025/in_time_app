@@ -3,57 +3,65 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_time_app/core/utils/app_colors.dart';
 import 'package:in_time_app/features/account/presentation/logic/create_account_cubit.dart';
+import 'package:in_time_app/features/account/presentation/screens/forget_password_screen.dart';
 import 'package:in_time_app/features/account/presentation/screens/signup_screen.dart';
 import 'package:in_time_app/features/home/presentation/screens/HomeScreen.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  bool isVisiblePassword = true;
   @override
   Widget build(BuildContext context) {
     final cubit = BlocProvider.of<CreateAccountCubit>(context);
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: BlocConsumer<CreateAccountCubit, CreateAccountState>(
-          listener: (context, state) {
-            // if(state is SignInLoadingState){
-            //   // Show loading indicator
-            //   showDialog(
-            //     context: context,
-            //     barrierDismissible: false,
-            //     builder: (context) => const Center(child: CircularProgressIndicator()),
-            //   );
-            //
-            // }else
-            if (state is SignInSuccessState) {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const HomeScreen(),
-                  ));
-            } else if (state is SignInFailureState) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.errorMessage),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            }
-          },
-          builder: (context, state) {
-            // if (state is SignInLoadingState) {
-            //   return const Center(
-            //       child: CircularProgressIndicator(
-            //     color: AppColors.transparent,
-            //   ));
-            //   // showDialog(
-            //   //   context: context,
-            //   //   barrierDismissible: false,
-            //   //   builder: (context) => const Center(child: CircularProgressIndicator()),
-            //   // );
-            // } else {
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: BlocConsumer<CreateAccountCubit, CreateAccountState>(
+            listener: (context, state) {
+              // if(state is SignInLoadingState){
+              //   // Show loading indicator
+              //   showDialog(
+              //     context: context,
+              //     barrierDismissible: false,
+              //     builder: (context) => const Center(child: CircularProgressIndicator()),
+              //   );
+              //
+              // }else
+              if (state is SignInSuccessState) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const HomeScreen(),
+                    ));
+              } else if (state is SignInFailureState) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.errorMessage),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+            },
+            builder: (context, state) {
+              // if (state is SignInLoadingState) {
+              //   return const Center(
+              //       child: CircularProgressIndicator(
+              //     color: AppColors.transparent,
+              //   ));
+              //   // showDialog(
+              //   //   context: context,
+              //   //   barrierDismissible: false,
+              //   //   builder: (context) => const Center(child: CircularProgressIndicator()),
+              //   // );
+              // } else {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 // mainAxisAlignment: MainAxisAlignment.start,
@@ -132,63 +140,57 @@ class LoginScreen extends StatelessWidget {
                   //     ),
                   //   ),
                   // ),
-                  Directionality(
-                      textDirection: TextDirection.ltr,
-                      child: Form(
-                          key: cubit.loginForm,
-                          child: IntlPhoneField(
-                            // controller: ,
-                            invalidNumberMessage: 'Invalid phone Number',
-                            // controller: createAccountCubit.phoneController,
-                            decoration: const InputDecoration(
-                              // labelText: LocaleKeys.phoneNumber.tr(),
-                              labelText: 'Phone Number',
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(),
+                  Form(
+                    key: cubit.loginForm,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Directionality(
+                            textDirection: TextDirection.ltr,
+                            child: IntlPhoneField(
+                              invalidNumberMessage: 'Invalid phone Number',
+                              decoration: const InputDecoration(
+                                labelText: 'Phone Number',
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(),
+                                ),
                               ),
+                              initialCountryCode: 'EG',
+                              validator: (value) {
+                                debugPrint('Val:: ${value?.completeNumber}');
+                                return null;
+                                // return createAccountCubit.validatePhoneNumber(value!);
+                              },
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
+                              keyboardType: TextInputType.phone,
+                              // countries: ["SA"],
+                              onChanged: (phone) {
+                                cubit.loginPhone = phone;
+                              },
+                            )),
+
+                        const SizedBox(height: 15),
+
+                        // Password Field
+                        TextFormField(
+                          controller: cubit.passwordController,
+                          obscureText: isVisiblePassword?true:false,
+                          validator: validatePassword,
+                          decoration: InputDecoration(
+                            labelText: "Password *",
+                            suffixIcon:  IconButton(onPressed: (){
+                              setState(() {
+                                isVisiblePassword = ! isVisiblePassword;
+                              });
+                            }, icon: Icon(isVisiblePassword ?Icons.visibility_off:Icons.visibility)),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                            initialCountryCode: 'SA',
-                            validator: (value) {
-                              debugPrint('Val:: ${value?.completeNumber}');
-                              return null;
-                              // return createAccountCubit.validatePhoneNumber(value!);
-                            },
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            onCountryChanged: (value) {
-                              // createAccountCubit.countryCode = '+${value.fullCountryCode}';
-                              debugPrint('Phone12: ${value.fullCountryCode}');
-                            },
-                            keyboardType: TextInputType.phone,
-                            // countries: ["SA"],
-
-                            onChanged: (phone) {
-                              cubit.phone = phone;
-                              // createAccountCubit.countryCode = '';
-                              // createAccountCubit.countryCode = phone.countryCode ;
-                            },
-                            onSubmitted: (v) {
-                              // debugPrint('onSubmitted :: ${_phoneController.text}');
-                              // createAccountCubit.verifyPhoneNumber();
-                            },
-                            onSaved: (v) {
-                              // debugPrint('onSaved :: ${_phoneController.text}');
-                            },
-                          ))),
-
-                  const SizedBox(height: 15),
-
-                  // Password Field
-                  TextField(
-                    controller: cubit.passwordController,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      labelText: "Password *",
-                      suffixIcon: const Icon(Icons.visibility_off),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
 
@@ -201,13 +203,18 @@ class LoginScreen extends StatelessWidget {
                       Row(
                         children: [
                           Checkbox(
-                              value: cubit.rememberMe, onChanged: (value) {}),
+                            activeColor: AppColors.green,
+                              value: cubit.rememberMe, onChanged: (value) {
+                            cubit.changeRememberMeVal();
+                            cubit.rememberMe = value!;
+                          }),
                           const Text("Remember Me"),
                         ],
                       ),
                       GestureDetector(
                         onTap: () {
                           // Handle forgot password navigation
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const ForgetPasswordScreen(),));
                         },
                         child: const Text(
                           "Forgot Password?",
@@ -228,52 +235,63 @@ class LoginScreen extends StatelessWidget {
                     height: 50,
                     child: (state is SignInLoadingState)
                         ? ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            onPressed: () {
-                              // Handle login
-                              // cubit.logIn();
-                              // Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //       builder: (context) => SignUpScreen(),
-                              //     ));
-                            },
-                            child: const Center(
-                              child: CircularProgressIndicator(),
-                            )
-
-                            // Text(
-                            //   "Login",
-                            //   style: TextStyle(fontSize: 18, color: Colors.white),
-                            // ),
-                            )
-                        : ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            onPressed: () {
-                              // Handle login
-                              cubit.logIn();
-                              // Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //       builder: (context) => SignUpScreen(),
-                              //     ));
-                            },
-                            child: const Text(
-                              "Login",
-                              style:
-                                  TextStyle(fontSize: 18, color: Colors.white),
-                            ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
                           ),
+                        ),
+                        onPressed: () {
+                          // Handle login
+                          // cubit.logIn();
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //       builder: (context) => SignUpScreen(),
+                          //     ));
+                        },
+                        child:  const Center(
+                          child: CircularProgressIndicator(color: AppColors.white,),
+                        )
+
+                      // Text(
+                      //   "Login",
+                      //   style: TextStyle(fontSize: 18, color: Colors.white),
+                      // ),
+                    )
+                        : ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      onPressed: () {
+                        // Handle login
+                        if(cubit.loginForm.currentState!.validate()) {
+                          // If the form is valid, proceed with login
+                          cubit.logIn();
+                        } else {
+                          // If the form is invalid, show an error message
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Please fill in all fields'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                        // cubit.logIn();
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //       builder: (context) => SignUpScreen(),
+                        //     ));
+                      },
+                      child: const Text(
+                        "Login",
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                      ),
+                    ),
                   ),
 
                   const SizedBox(height: 15),
@@ -290,10 +308,27 @@ class LoginScreen extends StatelessWidget {
                   // ),
                 ],
               );
-            // }
-          },
+              // }
+            },
+          ),
         ),
       ),
     );
+  }
+
+  String? validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Password is required';
+    }
+
+    final passwordRegex = RegExp(
+      r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$',
+    );
+
+    if (!passwordRegex.hasMatch(value)) {
+      return 'Password must be at least 8 characters,\ninclude uppercase, lowercase, number, and special character';
+    }
+
+    return null; // Password is valid
   }
 }

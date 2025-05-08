@@ -1,61 +1,240 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:in_time_app/core/utils/app_constants.dart';
 import 'package:in_time_app/features/account/data/models/arguments/login_params.dart';
+import 'package:in_time_app/features/account/data/models/arguments/verify_code_params.dart';
+import 'package:in_time_app/features/account/domain/use_cases/forget_password_use_case.dart';
 import 'package:in_time_app/features/account/domain/use_cases/login_use_case.dart';
 import 'package:in_time_app/features/account/domain/use_cases/register_use_case.dart';
+import 'package:in_time_app/features/account/domain/use_cases/reset_password.dart';
+import 'package:in_time_app/features/account/domain/use_cases/verify_code_use_case.dart';
 import 'package:intl_phone_field/phone_number.dart';
+import '../../../../core/storage/secure_storage.dart';
 import '../../data/models/arguments/register_params.dart';
+import '../../data/models/arguments/reset_passwprd_params.dart';
 part 'create_account_state.dart';
 
 class CreateAccountCubit extends Cubit<CreateAccountState> {
   final RegisterUseCase _registerUseCase;
   final LoginUseCase _loginUseCase;
-  CreateAccountCubit(this._registerUseCase, this._loginUseCase)
+  final ForgetPasswordUseCas _forgetPasswordUseCase;
+  final VerifyCodeUseCas _verifyCodeUseCas;
+  final ResetPasswordUseCas _resetPasswordUseCas;
+  CreateAccountCubit(
+      this._registerUseCase,
+      this._loginUseCase,
+      this._forgetPasswordUseCase,
+      this._verifyCodeUseCas,
+      this._resetPasswordUseCas)
       : super(CreateAccountInitial());
   final phoneNumberFormKey = GlobalKey<FormState>();
   final loginForm = GlobalKey<FormState>();
+
+  /// register form
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  PhoneNumber? signUpPhone;
+  TextEditingController passwordSignUpController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+  TextEditingController additionalPhoneController = TextEditingController();
+  TextEditingController dateOfBirthController = TextEditingController();
+  PhoneNumber? signUpAdditionalPhone;
+
+  String? gender;
+  DateTime? dateOfBirth;
+  bool termsAccepted = false;
+  bool privacyAccepted = false;
+
+  setDateOfBirth(DateTime date) {
+    dateOfBirth = date;
+    String formattedDate = DateFormat('yyyy-MM-dd').format(date);
+    dateOfBirthController.text = formattedDate;
+  }
+
+  bool availableDate() {
+    if (dateOfBirth == null) {
+      return false;
+    }
+    // final today = DateTime.now();
+    // final eighteenYearsAgo = DateTime(today.year - 18, today.month, today.day);
+    return dateOfBirth!.isBefore(DateTime.now());
+  }
+
   void register() async {
-    if(phoneNumberFormKey.currentState!.validate()){
-      emit(RegisterAccountLoadingState());
+    emit(RegisterAccountLoadingState());
+
+    if (phoneNumberFormKey.currentState!.validate()) {
+      if (passwordSignUpController.text != confirmPasswordController.text) {
+        emit(CreateAccountInitial());
+        emit(RegisterAccountFailureState(
+            errorMessage: 'passwords do not match'));
+        return;
+      }
+      if (signUpPhone?.number == null) {
+        emit(CreateAccountInitial());
+        emit(RegisterAccountFailureState(
+            errorMessage: 'Please enter a valid phone number'));
+        return;
+      }
+      if (!availableDate()) {
+        debugPrint('age::: ${availableDate()}');
+        emit(CreateAccountInitial());
+        emit(RegisterAccountFailureState(
+            errorMessage: 'Please enter a valid date of birth'));
+        return;
+      }
+      if (termsAccepted == false) {
+        emit(CreateAccountInitial());
+        emit(RegisterAccountFailureState(
+            errorMessage: 'Please accept the terms and conditions'));
+        return;
+      }
+      if (privacyAccepted == false) {
+        emit(CreateAccountInitial());
+        emit(RegisterAccountFailureState(
+            errorMessage: 'Please accept the privacy policy'));
+        return;
+      }
+
+      // emit(CreateAccountInitial());
+      // emit(RegisterAccountLoadingState());
       final result = await _registerUseCase.call(
-        const RegisterParams(
-            firstName: 'asmaa',
-            lastName: 'elbanna',
-            mobile: '+201122833771',
-            password: 'Rtr@12345678',
-            passwordConfirmation: 'Rtr@12345678',
-            dateBirth: '1993-07-25',
-            gender: 'female'),
+        RegisterParams(
+            firstName: firstNameController.text,
+            lastName: lastNameController.text,
+            mobile: signUpPhone?.completeNumber ?? '',
+            password: passwordSignUpController.text,
+            passwordConfirmation: confirmPasswordController.text,
+            dateBirth: dateOfBirthController.text ?? DateTime.now().toString(),
+            gender: gender ?? ''),
       );
       result.fold(
-            (failure) {
-          emit(RegisterAccountFailureState(errorMessage: failure.message));
+        (failure) {
+          debugPrint('Failure:: $failure');
+          emit(CreateAccountInitial());
+          emit(RegisterAccountFailureState(errorMessage: 'This user is already registered'));
         },
-            (user) {
+        (user) {
           emit(RegisterAccountSuccessState());
         },
       );
     }
-
   }
-  /// login form
-   PhoneNumber? phone;
-  final TextEditingController passwordController = TextEditingController();
-  final bool rememberMe = false;
 
+  void changePasswordVisibility({required bool isVisible}) {
+    emit(ChangePasswordVisibilityState(isVisible: isVisible));
+  }
+
+  /// login form
+  PhoneNumber? loginPhone;
+  // final TextEditingController passwordLoginController = TextEditingController();
+  bool rememberMe = false;
+
+  changeRememberMeVal() {
+    rememberMe = !rememberMe;
+    emit(CreateAccountInitial());
+    emit(ChangRememberMeState(isRememberMe: rememberMe));
+  }
+
+  TextEditingController passwordController = TextEditingController();
   void logIn() async {
+    if (loginPhone?.number == null) {
+      emit(CreateAccountInitial());
+      emit(SignInFailureState(
+          errorMessage: 'Please enter a valid phone number'));
+      return;
+    }
     emit(SignInLoadingState());
-    final result = await _loginUseCase.call( LoginParams(
-      mobile: phone?.completeNumber ?? '',
-      password: passwordController.text, rememberMe: rememberMe
-    ));
+    final result = await _loginUseCase.call(LoginParams(
+        mobile: loginPhone?.completeNumber ?? '',
+        password: passwordController.text,
+        rememberMe: rememberMe));
     result.fold(
       (failure) {
-        emit(SignInFailureState(errorMessage: failure.message));
+        emit(SignInFailureState(errorMessage: 'Invalid phone number or password'));
       },
       (success) {
+        if(rememberMe){
+          saveBoolValue(key: 'loggedIn', value: true);
+        }
         emit(SignInSuccessState());
+      },
+    );
+  }
+
+  /// forget password section
+  PhoneNumber? forgetPasswordPhone;
+  void forgetPassword() async {
+    emit(ForgetPasswordLoadingState());
+    debugPrint('forgetPasswordPhone:: ${forgetPasswordPhone?.number}');
+    if (forgetPasswordPhone?.number != null) {
+      final result = await _forgetPasswordUseCase
+          .call(forgetPasswordPhone!.completeNumber.toString());
+      result.fold(
+        (failure) {
+          emit(ForgetPasswordFailureState(errorMessage: 'The mobile number is not valid'));
+        },
+        (success) {
+          code = success;
+          emit(ForgetPasswordSuccessState(
+              successMessage:
+                  'The Confirmation code has been sent to the mobile you entered'));
+        },
+      );
+    } else {
+      emit(ForgetPasswordFailureState(
+          errorMessage: 'Please enter phone number'));
+    }
+  }
+
+  /// verify code
+  String? code;
+  void verifyCode() async {
+    emit(VerifyCodeLoadingState());
+    // if (code != null && code!.isNotEmpty && code!.length < 6) {
+    final result = await _verifyCodeUseCas.call(VerifyCodeParams(
+        mobile: forgetPasswordPhone!.completeNumber.toString(),
+        code: code ?? ''));
+    result.fold(
+      (failure) {
+        emit(VerifyCodeFailureState(errorMessage: failure.message));
+      },
+      (success) {
+        AppConstants.userToken = success;
+        emit(VerifyCodeSuccessState(successMessage: success));
+      },
+    );
+    // } else {
+    //   emit(VerifyCodeFailureState(errorMessage: 'Please enter a valid code'));
+    // }
+  }
+
+  /// reset password
+
+  final resetPasswordFormKey = GlobalKey<FormState>();
+  TextEditingController resetPasswordController = TextEditingController();
+  TextEditingController resetConfirmPasswordController =
+      TextEditingController();
+  void resetPassword() async {
+    emit(ResetPasswordLoadingState());
+    if (resetPasswordController.text !=
+        resetConfirmPasswordController.text) {
+      emit(CreateAccountInitial());
+      emit(ResetPasswordFailureState(errorMessage: 'passwords do not match'));
+      return;
+    }
+    final result = await _resetPasswordUseCas.call(ResetPasswordParams(
+        password: resetPasswordController.text,
+        passwordConfirmation: resetConfirmPasswordController.text,
+        token: AppConstants.userToken));
+    result.fold(
+      (failure) {
+        emit(ResetPasswordFailureState(errorMessage: failure.message));
+      },
+      (success) {
+        emit(ResetPasswordSuccessState(successMessage: success));
       },
     );
   }

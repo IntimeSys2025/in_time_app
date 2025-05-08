@@ -4,13 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_time_app/core/localization/app_localization.dart';
 import 'package:in_time_app/core/service_locator/service_locator.dart';
+import 'package:in_time_app/core/storage/secure_storage.dart';
 import 'package:in_time_app/core/utils/app_asset_path.dart';
 import 'package:in_time_app/core/utils/app_colors.dart';
 import 'package:in_time_app/features/account/presentation/logic/create_account_cubit.dart';
+import 'package:in_time_app/features/home/presentation/screens/HomeScreen.dart';
 
 import 'core/observers/cubit_observer.dart';
 import 'features/account/presentation/screens/loginScreen.dart';
-
+bool isLoggedIn = false;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -24,6 +26,10 @@ void main() async {
   if (!kReleaseMode) {
     Bloc.observer = MyBlocObserver();
   }
+
+  isLoggedIn = await getBoolValue(key: 'loggedIn');
+  debugPrint('isLoggedIn::: $isLoggedIn');
+
   runApp(EasyLocalization(
       supportedLocales: AppLocalization.locales,
       path: AppAsset.translations,
@@ -37,6 +43,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
     return MultiBlocProvider(
         providers: [
           BlocProvider(
@@ -50,10 +57,10 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),
-          home: FutureBuilder(future: Future.delayed(Duration(seconds: 2)),
+          home: FutureBuilder(future: Future.delayed(const Duration(seconds: 2)),
               builder: (context, snapshot) =>
             snapshot.connectionState == ConnectionState.done
-            ? const LoginScreen()
+            ? (isLoggedIn)?const HomeScreen():const LoginScreen()
             :Container(color: AppColors.white,
             child: Center(
                child: Image.asset('assets/images/logo_green.png'),
