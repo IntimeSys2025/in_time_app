@@ -14,6 +14,7 @@ import 'package:intl_phone_field/phone_number.dart';
 import '../../../../core/storage/secure_storage.dart';
 import '../../data/models/arguments/register_params.dart';
 import '../../data/models/arguments/reset_passwprd_params.dart';
+import '../../data/models/user_model.dart';
 part 'create_account_state.dart';
 
 class CreateAccountCubit extends Cubit<CreateAccountState> {
@@ -117,6 +118,7 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
           emit(RegisterAccountFailureState(errorMessage: 'This user is already registered'));
         },
         (user) {
+          saveUserData(user: user);
           emit(RegisterAccountSuccessState());
         },
       );
@@ -156,12 +158,23 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
         emit(SignInFailureState(errorMessage: 'Invalid phone number or password'));
       },
       (success) {
-        if(rememberMe){
-          saveBoolValue(key: 'loggedIn', value: true);
-        }
+       saveUserData(user: success);
         emit(SignInSuccessState());
       },
     );
+  }
+  saveUserData({required UserModel user })async{
+    if(rememberMe){
+      saveBoolValue(key: 'loggedIn', value: user.rememberMe);
+    }
+    saveStringValue(key: 'user_id', value: user.id.toString());
+    saveStringValue(key: 'user_name', value: '${user.firstName} ${user.lastName}');
+    saveStringValue(key: 'mobile', value: user.mobile);
+    saveStringValue(key: 'token', value: user.token);
+    AppConstants.isLoggedIn = await getBoolValue(key: 'loggedIn');
+    AppConstants.token = (await getStringValue(key: 'token')) ?? '';
+    AppConstants.fullName = await getStringValue(key: 'user_name') ?? '';
+
   }
 
   /// forget password section

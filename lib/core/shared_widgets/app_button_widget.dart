@@ -28,7 +28,7 @@ class AppButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: width,
-      height: 50,
+      height: 40,
       child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             padding: EdgeInsets.symmetric(horizontal: padding),
@@ -45,9 +45,9 @@ class AppButtonWidget extends StatelessWidget {
             title,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: AppFontSize.fontSize16,
+              fontSize: AppFontSize.fontSize14,
               color: textColor,
-              fontWeight: FontWeight.w700,
+              // fontWeight: FontWeight.w500,
             ),
           )),
     );

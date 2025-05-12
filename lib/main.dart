@@ -7,12 +7,14 @@ import 'package:in_time_app/core/service_locator/service_locator.dart';
 import 'package:in_time_app/core/storage/secure_storage.dart';
 import 'package:in_time_app/core/utils/app_asset_path.dart';
 import 'package:in_time_app/core/utils/app_colors.dart';
+import 'package:in_time_app/core/utils/app_constants.dart';
 import 'package:in_time_app/features/account/presentation/logic/create_account_cubit.dart';
-import 'package:in_time_app/features/home/presentation/screens/HomeScreen.dart';
+import 'package:in_time_app/features/home/presentation/screens/home_screen_one_doctor.dart';
+import 'package:in_time_app/features/home/presentation/screens/navigation_screen.dart';
 
 import 'core/observers/cubit_observer.dart';
 import 'features/account/presentation/screens/loginScreen.dart';
-bool isLoggedIn = false;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -27,8 +29,10 @@ void main() async {
     Bloc.observer = MyBlocObserver();
   }
 
-  isLoggedIn = await getBoolValue(key: 'loggedIn');
-  debugPrint('isLoggedIn::: $isLoggedIn');
+  AppConstants.isLoggedIn = await getBoolValue(key: 'loggedIn');
+  AppConstants.token = (await getStringValue(key: 'token')) ?? '';
+  AppConstants.fullName = await getStringValue(key: 'user_name') ?? '';
+
 
   runApp(EasyLocalization(
       supportedLocales: AppLocalization.locales,
@@ -53,14 +57,17 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           // title: 'Flutter Demo',
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            useMaterial3: true,
-          ),
-          home: FutureBuilder(future: Future.delayed(const Duration(seconds: 2)),
+          // theme: ThemeData(
+          //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          //   useMaterial3: true,
+          // ),
+          home:
+          // const NavigationBarScreen()
+
+          FutureBuilder(future: Future.delayed(const Duration(seconds: 2)),
               builder: (context, snapshot) =>
             snapshot.connectionState == ConnectionState.done
-            ? (isLoggedIn)?const HomeScreen():const LoginScreen()
+            ? const NavigationBarScreen()
             :Container(color: AppColors.white,
             child: Center(
                child: Image.asset('assets/images/logo_green.png'),

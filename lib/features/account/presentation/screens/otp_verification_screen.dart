@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:in_time_app/features/account/presentation/screens/reset_password_screen.dart';
-import 'package:in_time_app/features/home/presentation/screens/HomeScreen.dart';
+import 'package:in_time_app/features/home/presentation/screens/home_screen_one_doctor.dart';
 import 'package:pinput/pinput.dart';
 
 import '../logic/create_account_cubit.dart';
@@ -202,7 +202,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const HomeScreen(),
+                              builder: (context) => const HomeScreenOneDoctor(),
                             ));
                       }
                     },

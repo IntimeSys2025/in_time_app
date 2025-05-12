@@ -5,7 +5,7 @@ import 'package:in_time_app/core/utils/app_colors.dart';
 import 'package:in_time_app/features/account/presentation/logic/create_account_cubit.dart';
 import 'package:in_time_app/features/account/presentation/screens/forget_password_screen.dart';
 import 'package:in_time_app/features/account/presentation/screens/signup_screen.dart';
-import 'package:in_time_app/features/home/presentation/screens/HomeScreen.dart';
+import 'package:in_time_app/features/home/presentation/screens/home_screen_one_doctor.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -39,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const HomeScreen(),
+                      builder: (context) => const HomeScreenOneDoctor(),
                     ));
               } else if (state is SignInFailureState) {
                 ScaffoldMessenger.of(context).showSnackBar(

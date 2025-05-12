@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_time_app/core/utils/app_asset_path.dart';
 import 'package:in_time_app/core/utils/app_colors.dart';
-import 'package:in_time_app/features/home/presentation/screens/HomeScreen.dart';
+import 'package:in_time_app/features/home/presentation/screens/home_screen_one_doctor.dart';
 
 import '../logic/create_account_cubit.dart';
 
@@ -55,7 +55,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const HomeScreen(),
+                      builder: (context) => const HomeScreenOneDoctor(),
                     ));
               }
             },

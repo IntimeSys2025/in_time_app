@@ -21,6 +21,8 @@ sealed class AppColors {
   static const Color kRed = Color(0xffD63033);
   static const Color kOrange = Color(0xffF7A538);
   static const Color kBottomSheet = Color(0xffF5F8FF);
+  static const Color kCategoryColor = Color(0xFFEEF8EF);
+
 
 
   static const Color kMintGreen = Color(0xff0E7178);
@@ -30,9 +32,9 @@ sealed class AppColors {
 
 
   static const Color kGreenButton = Color(0xff66C87B);
-  static const Color kLightGreen = Color(0xFF8AC54F);
+  static const Color kLightGreen = Color(0xFFEEF8EF);
   static const Color kVeryDarkGreen = Color(0xFF103913);
-  static const Color kGreenBackground = Color(0xFF1B6459);
+  static const Color kGreenBackground = Color(0xFF42944F);
 
   static const Color scaffoldBackground = Colors.white;
   static const Color background = Color(0xFFf9f9f9);
