@@ -8,6 +8,8 @@ import 'package:in_time_app/features/account/presentation/screens/signup_screen.
 import 'package:in_time_app/features/home/presentation/screens/home_screen_one_doctor.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
+import '../../../home/presentation/screens/navigation_screen.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -39,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const HomeScreenOneDoctor(),
+                      builder: (context) => const NavigationBarScreen(),
                     ));
               } else if (state is SignInFailureState) {
                 ScaffoldMessenger.of(context).showSnackBar(

@@ -8,8 +8,17 @@ import 'package:in_time_app/features/account/domain/use_cases/login_use_case.dar
 import 'package:in_time_app/features/account/domain/use_cases/reset_password.dart';
 import 'package:in_time_app/features/account/domain/use_cases/verify_code_use_case.dart';
 import 'package:in_time_app/features/account/presentation/logic/create_account_cubit.dart';
+import 'package:in_time_app/features/home/data/data_sources/home_remote_data_source.dart';
+import 'package:in_time_app/features/home/data/repositories/home_repo_impl.dart';
+import 'package:in_time_app/features/home/domain/repositories/home_repo.dart';
+import 'package:in_time_app/features/home/domain/use_cases/appointments_use_case.dart';
+import 'package:in_time_app/features/home/domain/use_cases/get_categories_use_case.dart';
+import 'package:in_time_app/features/home/domain/use_cases/get_services_use_case.dart';
+import 'package:in_time_app/features/home/domain/use_cases/get_slider_use_case.dart';
+import 'package:in_time_app/features/home/domain/use_cases/sub_service_use_case.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import '../../features/account/domain/use_cases/register_use_case.dart';
+import '../../features/home/presentation/logic/home_cubit.dart';
 import '../network/api_consumer.dart';
 import '../network/dio_consumer.dart';
 import '../network/end_points.dart';
@@ -27,6 +36,10 @@ sealed class ServiceLocator {
         sl<VerifyCodeUseCas>(),
         sl<ResetPasswordUseCas>()));
 
+    sl.registerLazySingleton(() => HomeCubit(sl<GetCategoriesUseCase>(),
+        sl<GetSliderUseCase>(), sl<GetServiceUseCase>(),
+    sl<SubServiceUseCase>(), sl<AppointmentsUseCas>()));
+
     /// register use cases
     sl.registerLazySingleton<RegisterUseCase>(
         () => RegisterUseCase(sl<CreateAccountRepo>()));
@@ -41,17 +54,27 @@ sealed class ServiceLocator {
     sl.registerLazySingleton(
       () => ResetPasswordUseCas(sl<CreateAccountRepo>()),
     );
+    sl.registerLazySingleton(() => GetCategoriesUseCase(sl<HomeRepo>()));
+    sl.registerLazySingleton(() => GetSliderUseCase(sl<HomeRepo>()));
+
+    sl.registerLazySingleton(() => GetServiceUseCase(sl<HomeRepo>()));
+    sl.registerLazySingleton(() => SubServiceUseCase(sl<HomeRepo>()));
+    sl.registerLazySingleton(() => AppointmentsUseCas(sl<HomeRepo>()));
 
     /// register Repositories
     sl.registerLazySingleton<CreateAccountRepo>(
       () => CreateAccountRepoImpl(
           sl<CreateAccountDataSourceImpl>(), sl<NetworkStatus>()),
     );
+    sl.registerLazySingleton<HomeRepo>(() =>
+        HomeRepoImpl(sl<HomeRemoteDataSourceImpl>(), sl<NetworkStatus>()));
 
     ///register Data Source
     sl.registerLazySingleton<CreateAccountDataSourceImpl>(
       () => CreateAccountDataSourceImpl(sl<ApiConsumer>()),
     );
+    sl.registerLazySingleton<HomeRemoteDataSourceImpl>(
+        () => HomeRemoteDataSourceImpl(sl<ApiConsumer>()));
 
     /// Core
     sl.registerLazySingleton<NetworkStatus>(() => NetworkStatusImpl(sl()));

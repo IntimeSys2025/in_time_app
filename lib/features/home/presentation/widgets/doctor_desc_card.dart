@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:in_time_app/core/helpers/extension.dart';
+import 'package:in_time_app/core/localization/locale_keys.g.dart';
 import 'package:in_time_app/core/shared_widgets/app_button_widget.dart';
 import 'package:in_time_app/core/utils/app_asset_path.dart';
 import 'package:in_time_app/core/utils/app_colors.dart';
 import '../../../../core/utils/app_font_size.dart';
+import '../../data/models/slider_model.dart';
 
 class DoctorDescCard extends StatelessWidget {
-  const DoctorDescCard({super.key});
+  final SliderModel sliderModel;
+  const DoctorDescCard({super.key, required this.sliderModel});
 
   @override
   Widget build(BuildContext context) {
@@ -15,16 +19,17 @@ class DoctorDescCard extends StatelessWidget {
         color: AppColors.kGreenBackground, // Green background
         borderRadius: BorderRadius.circular(16),
       ),
-      padding: const EdgeInsets.only(right: 16),
+      padding: const EdgeInsets.all( 16),
       child: Row(
         children: [
           // SizedBox(width: MediaQuery.of(context).size.width * 0.4,),
-          Image.asset(
-            AppAsset.doctorImage,
+          Image.network(
+            sliderModel.media,
             // fit: BoxFit.fitWidth,
             // height: 200,
-            width: MediaQuery.of(context).size.width * 0.4,
+            width: MediaQuery.of(context).size.width * 0.3,
           ),
+          10.widthSpace,
           // const SizedBox(width: 12),
 
           // Doctor Info and Button
@@ -33,8 +38,7 @@ class DoctorDescCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const Text(
-                  'Ali AbdelAziz',
+                 Text( sliderModel.title,
                   style: TextStyle(
                     fontSize: AppFontSize.fontSize18,
                     fontWeight: FontWeight.bold,
@@ -42,8 +46,8 @@ class DoctorDescCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 6),
-                const Text(
-                  'Over 7 years helping individuals build confidence, and maintain healthy routines',
+                 Text(
+                  sliderModel.text,
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.white,
@@ -52,11 +56,13 @@ class DoctorDescCard extends StatelessWidget {
                 const SizedBox(height: 12),
 
                 // Book Now button
+                if(sliderModel.isButton == 1)
                 AppButtonWidget(
-                    title: 'Book Now',
+                    title: sliderModel.buttonText,
                     backgroundColor: AppColors.white,
                     textColor: AppColors.black,
-                    onPressed: () {})
+                    onPressed: () {}),
+                const SizedBox(height: 12),
                 // SizedBox(
                 //   height: 36,
                 //   child: ElevatedButton(

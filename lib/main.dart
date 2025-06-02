@@ -9,6 +9,7 @@ import 'package:in_time_app/core/utils/app_asset_path.dart';
 import 'package:in_time_app/core/utils/app_colors.dart';
 import 'package:in_time_app/core/utils/app_constants.dart';
 import 'package:in_time_app/features/account/presentation/logic/create_account_cubit.dart';
+import 'package:in_time_app/features/home/presentation/logic/home_cubit.dart';
 import 'package:in_time_app/features/home/presentation/screens/home_screen_one_doctor.dart';
 import 'package:in_time_app/features/home/presentation/screens/navigation_screen.dart';
 
@@ -33,7 +34,6 @@ void main() async {
   AppConstants.token = (await getStringValue(key: 'token')) ?? '';
   AppConstants.fullName = await getStringValue(key: 'user_name') ?? '';
 
-
   runApp(EasyLocalization(
       supportedLocales: AppLocalization.locales,
       path: AppAsset.translations,
@@ -47,11 +47,16 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
     return MultiBlocProvider(
         providers: [
           BlocProvider(
             create: (context) => sl<CreateAccountCubit>(),
+          ),
+          BlocProvider(
+            create: (context) => sl<HomeCubit>()
+            ..getCategories()
+            ..getSliders()
+            ..getServices(),
           )
         ],
         child: MaterialApp(
@@ -62,16 +67,20 @@ class MyApp extends StatelessWidget {
           //   useMaterial3: true,
           // ),
           home:
-          // const NavigationBarScreen()
+              // const NavigationBarScreen()
 
-          FutureBuilder(future: Future.delayed(const Duration(seconds: 2)),
-              builder: (context, snapshot) =>
-            snapshot.connectionState == ConnectionState.done
-            ? const NavigationBarScreen()
-            :Container(color: AppColors.white,
-            child: Center(
-               child: Image.asset('assets/images/logo_green.png'),
-            ),),),
+              FutureBuilder(
+            future: Future.delayed(const Duration(seconds: 2)),
+            builder: (context, snapshot) =>
+                snapshot.connectionState == ConnectionState.done
+                    ? const NavigationBarScreen()
+                    : Container(
+                        color: AppColors.white,
+                        child: Center(
+                          child: Image.asset('assets/images/logo_green.png'),
+                        ),
+                      ),
+          ),
         ));
   }
 }

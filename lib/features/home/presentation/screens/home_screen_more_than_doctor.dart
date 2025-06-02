@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:in_time_app/features/home/presentation/widgets/appointmant_card.dart';
 import 'package:in_time_app/features/home/presentation/widgets/custom_search_bar.dart';
 import 'package:in_time_app/features/home/presentation/widgets/doctor_card.dart';
-import 'package:in_time_app/features/home/presentation/widgets/doctor_desc_card.dart';
 import 'package:in_time_app/features/home/presentation/widgets/hospital_card.dart';
 import 'package:in_time_app/features/home/presentation/widgets/welcome_header.dart';
+import '../../../../core/utils/app_constants.dart';
 import '../../../../core/utils/app_font_size.dart';
-import '../widgets/service_card.dart';
 
 class HomeScreenMoreThanDoctor extends StatelessWidget {
   const HomeScreenMoreThanDoctor({super.key});
@@ -27,16 +26,23 @@ class HomeScreenMoreThanDoctor extends StatelessWidget {
                 const SizedBox(height: 20),
                 const HospitalCard(),
                 const SizedBox(height: 20),
-                const Text(
-                  'Upcoming Appointments',
-                  style: TextStyle(
-                      fontSize: AppFontSize.fontSize20,
-                      fontWeight: FontWeight.w500),
-                ),
-                const SizedBox(height: 10),
+                if(AppConstants.token!= '' && AppConstants.isLoggedIn)
+                  const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Upcoming Appointments',
+                        style: TextStyle(
+                            fontSize: AppFontSize.fontSize20,
+                            fontWeight: FontWeight.w500),
+                      ),
+                      SizedBox(height: 10),
+                      AppointmentCard(),
+                      SizedBox(height: 20),
+                    ],
+                  ),
 
-                const AppointmentCard(),
-                const SizedBox(height: 20),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

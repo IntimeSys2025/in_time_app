@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:in_time_app/features/home/presentation/logic/home_cubit.dart';
+import 'package:in_time_app/features/home/presentation/logic/home_states.dart';
 import 'package:in_time_app/features/home/presentation/widgets/appointmant_card.dart';
 import 'package:in_time_app/features/home/presentation/widgets/custom_search_bar.dart';
-import 'package:in_time_app/features/home/presentation/widgets/hospital_card.dart';
 import 'package:in_time_app/features/home/presentation/widgets/welcome_header.dart';
+import '../../../../core/utils/app_constants.dart';
 import '../../../../core/utils/app_font_size.dart';
 import '../widgets/category_widget.dart';
 import '../widgets/service_card.dart';
@@ -12,6 +15,7 @@ class HomeScreenMoreThanCategory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final homeCubit = BlocProvider.of<HomeCubit>(context);
     List<Map<String, dynamic>> categories = [
       {'icon': Icons.local_hospital, 'label': 'Clinics'},
       {'icon': Icons.medical_services, 'label': 'Labs'},
@@ -25,67 +29,77 @@ class HomeScreenMoreThanCategory extends StatelessWidget {
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const WelcomeHeader(),
-                const SizedBox(height: 20),
-                const CustomSearchBar(),
-                const SizedBox(height: 20),
-                SizedBox(
-                  height: 300,
-                  child: GridView.count(
-                    crossAxisCount: 3, // 3 columns
-                    mainAxisSpacing: 12,
-                    crossAxisSpacing: 12,
-                    // childAspectRatio: 1.1,
-                    children: [
-                      CategoryCard(
-                        icon: categories.first['icon'],
-                        label: categories.first['label'],
-                        isSelected: true,
-                      ),
-                      ... categories.map((item) {
-                        return CategoryCard(
-                          icon: item['icon'],
-                          label: item['label'],
-                        );
-                      }).toList(),
-                    ],
-
-
-                  ),
-                ),
-
-                // const HospitalCard(),
-                const SizedBox(height: 20),
-                const Text(
-                  'Upcoming Appointments',
-                  style: TextStyle(
-                      fontSize: AppFontSize.fontSize20,
-                      fontWeight: FontWeight.w500),
-                ),
-                const SizedBox(height: 10),
-
-                const AppointmentCard(),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: BlocBuilder<HomeCubit, HomeState>(
+              buildWhen: (previous, current) =>
+                  current is GetCategoriesSuccessState,
+              builder: (context, state) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Explore Our Services',
-                      style: TextStyle(
-                          fontSize: AppFontSize.fontSize20,
-                          fontWeight: FontWeight.w500),
+                    const WelcomeHeader(),
+                    const SizedBox(height: 20),
+                    const CustomSearchBar(),
+                    const SizedBox(height: 20),
+                    GridView.builder(
+                      shrinkWrap: true,
+                      itemCount: homeCubit.categories.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              childAspectRatio:1,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10),
+                      itemBuilder: (context, index) {
+                        final item = homeCubit.categories[index];
+                        return CategoryCard(
+                          isSelected: homeCubit.selectedCategoryIndex == index,
+                          imageUrl: item.imageUrl,
+                          label: item.name,
+                          onPressed: () {
+                            homeCubit.changeCategory(index);
+                          },
+                        );
+                      },
                     ),
-                    TextButton(onPressed: () {}, child: const Text('View All'))
+
+                    // const HospitalCard(),
+                    const SizedBox(height: 20),
+                    if (AppConstants.token != '' && AppConstants.isLoggedIn)
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Upcoming Appointments',
+                            style: TextStyle(
+                                fontSize: AppFontSize.fontSize20,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          SizedBox(height: 10),
+                          AppointmentCard(),
+                          SizedBox(height: 20),
+                        ],
+                      ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Explore Our Services',
+                          style: TextStyle(
+                              fontSize: AppFontSize.fontSize20,
+                              fontWeight: FontWeight.w500),
+                        ),
+                        TextButton(
+                            onPressed: () {}, child: const Text('View All'))
+                      ],
+                    ),
+                    // const SizedBox(height: 10),
+                    // const ServiceCard(),
+                    // const SizedBox(height: 10),
+                    // const ServiceCard(),
                   ],
-                ),
-                const SizedBox(height: 10),
-                const ServiceCard(),
-                const SizedBox(height: 10),
-                const ServiceCard(),
-              ],
+                );
+              },
             ),
           ),
         ),
@@ -93,5 +107,3 @@ class HomeScreenMoreThanCategory extends StatelessWidget {
     );
   }
 }
-
-

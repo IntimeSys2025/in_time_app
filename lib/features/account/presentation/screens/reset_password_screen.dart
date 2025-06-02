@@ -4,6 +4,7 @@ import 'package:in_time_app/core/utils/app_asset_path.dart';
 import 'package:in_time_app/core/utils/app_colors.dart';
 import 'package:in_time_app/features/home/presentation/screens/home_screen_one_doctor.dart';
 
+import '../../../home/presentation/screens/navigation_screen.dart';
 import '../logic/create_account_cubit.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
@@ -55,7 +56,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const HomeScreenOneDoctor(),
+                      builder: (context) => const NavigationBarScreen(),
                     ));
               }
             },

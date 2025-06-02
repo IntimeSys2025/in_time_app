@@ -10,6 +10,7 @@ class AppButtonWidget extends StatelessWidget {
   final Color borderColor;
   final Color textColor;
   final BorderRadius border;
+  final double height;
   final void Function()? onPressed;
   final double padding;
 
@@ -21,14 +22,15 @@ class AppButtonWidget extends StatelessWidget {
       this.backgroundColor = AppColors.kGreenButton,
       this.textColor = AppColors.white,
       this.border =const BorderRadius.all(Radius.circular(10)),
-        this.padding = 10,  this.borderColor = AppColors.transparent
+        this.padding = 10,  this.borderColor = AppColors.transparent,
+        this.height = 40
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: width,
-      height: 40,
+      height: height,
       child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             padding: EdgeInsets.symmetric(horizontal: padding),
@@ -45,7 +47,7 @@ class AppButtonWidget extends StatelessWidget {
             title,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: AppFontSize.fontSize14,
+              fontSize: AppFontSize.fontSize16,
               color: textColor,
               // fontWeight: FontWeight.w500,
             ),

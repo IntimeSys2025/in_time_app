@@ -4,7 +4,7 @@ sealed class AppConstants {
  static bool isLoggedIn = false;
  static String token = '';
  static String fullName ='';
-  static const ProductType productType = ProductType.moreThanCategory;
+  static const ProductType productType = ProductType.oneDoctor;
   static const imageURL =
       'https://img.freepik.com/free-photo/lifestyle-people-emotions-casual-concept-confident-nice-smiling-asian-woman-cross-arms-chest-confident-ready-help-listening-coworkers-taking-part-conversation_1258-59335.jpg?semt=ais_hybrid&w=740';
   static const double padding16 = 16;

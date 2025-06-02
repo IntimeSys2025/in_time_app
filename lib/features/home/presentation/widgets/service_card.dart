@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_time_app/core/shared_widgets/app_button_widget.dart';
-import 'package:in_time_app/core/utils/app_asset_path.dart';
-import 'package:in_time_app/features/home/presentation/screens/service_details_screen.dart';
-
+import 'package:in_time_app/features/home/data/models/service_model.dart';
+import 'package:in_time_app/features/home/presentation/logic/home_cubit.dart';
 import '../../../../core/utils/app_colors.dart';
 
 class ServiceCard extends StatelessWidget {
-  const ServiceCard({super.key});
+  final ServiceModel service;
+  const ServiceCard({super.key, required this.service});
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('ServiceCard: ${service.toJson()}');
+    final homeCubit = BlocProvider.of<HomeCubit>(context);
     return Container(
       decoration: BoxDecoration(
           // color: const Color(0xFF4CAF50), // Green background
@@ -21,10 +24,12 @@ class ServiceCard extends StatelessWidget {
           // Doctor Image
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
-            child: Image.asset(
-              AppAsset.servicesImage,
+            child: Image.network(
+              service.imageUrl,
+              // AppAsset.servicesImage,
               fit: BoxFit.fitHeight,
               height: 150,
+               width: 70,
             ),
           ),
 
@@ -35,18 +40,20 @@ class ServiceCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Achieve Your Goals',
-                  style: TextStyle(
+                 Text(
+                  // 'Achieve Your Goals',
+                  service.title,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                     color: AppColors.black,
                   ),
                 ),
                 const SizedBox(height: 6),
-                const Text(
-                  'Practical guidance from the Core curriculum to grow ....',
-                  style: TextStyle(
+                 Text(
+                  service.description,
+                  // 'Practical guidance from the Core curriculum to grow ....',
+                  style: const TextStyle(
                     fontSize: 12,
                     color: AppColors.black,
                   ),
@@ -57,7 +64,8 @@ class ServiceCard extends StatelessWidget {
                     textColor: AppColors.black,
                     backgroundColor: AppColors.kLightGreen,
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const ServiceDetailsScreen(),));
+                      homeCubit.getSubServices(id: service.id);
+
                     })
 
                 // Book Now button

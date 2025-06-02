@@ -72,7 +72,7 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
             ),
             NavigationDestination(
               icon: Icon(
-                Icons.category_outlined,
+                Icons.menu,
                 color: selectedIndex == 3
                     ? AppColors.kGreenBackground
                     : AppColors.grey,
@@ -80,7 +80,7 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
                     ? AppConstants.bigIcon
                     : AppConstants.smallIcon,
               ),
-              label: 'category',
+              label: 'more',
             ),
           ],
         ),

@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:in_time_app/features/home/presentation/screens/home_screen_one_doctor.dart';
+import 'package:in_time_app/core/shared_widgets/app_button_widget.dart';
+import 'package:in_time_app/core/utils/app_colors.dart';
+import '../screens/navigation_screen.dart';
 
 class DoctorCard extends StatelessWidget {
   const DoctorCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
     return InkWell(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreenOneDoctor(),));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NavigationBarScreen(),
+            ));
       },
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -65,51 +72,98 @@ class DoctorCard extends StatelessWidget {
                       style: TextStyle(color: Colors.grey),
                     ),
                     const SizedBox(height: 4),
-
-                    Row(
-                      children: [
-                        const Icon(Icons.location_on, size: 16, color: Colors.redAccent),
-                        const SizedBox(width: 4),
-                        const Text("Eloubour, Egypt",
-                            style: TextStyle(fontSize: 13, color: Colors.grey)),
+                    if (screenSize.width > 447)
+                      Row(children: [
+                        const Row(
+                          children: [
+                            Icon(Icons.location_on,
+                                size: 16, color: Colors.redAccent),
+                            SizedBox(width: 4),
+                            Text("Eloubour, Egypt",
+                                style: TextStyle(fontSize: 13, color: Colors.grey)),
+                          ],
+                        ),
                         const SizedBox(width: 10),
-                        const Icon(Icons.circle, size: 10, color: Colors.green),
-                        const SizedBox(width: 4),
-                        const Text("76 Patient Stories",
-                            style: TextStyle(fontSize: 13, color: Colors.grey)),
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
+                        const Row(
+                          children: [
+                            Icon(Icons.circle, size: 16, color: Colors.green),
+                            SizedBox(width: 4),
+                            Text("76 Patient Stories",
+                                style: TextStyle(fontSize: 13, color: Colors.grey)),
+                          ],
+                        ),
+                        const SizedBox(height: 6),
+                      ],),
+                      if (screenSize.width < 447)
                         Column(
+                          children: [
+                            const Row(
+                              children: [
+                                Icon(Icons.location_on,
+                                    size: 16, color: Colors.redAccent),
+                                SizedBox(width: 4),
+                                Text("Eloubour, Egypt",
+                                    style: TextStyle(fontSize: 13, color: Colors.grey)),
+                              ],
+                            ),
+                            const SizedBox(width: 10),
+                            const Row(
+                              children: [
+                                Icon(Icons.circle, size: 16, color: Colors.green),
+                                SizedBox(width: 4),
+                                Text("76 Patient Stories",
+                                    style: TextStyle(fontSize: 13, color: Colors.grey)),
+                              ],
+                            ),
+                            const SizedBox(height: 6),
+                          ],
+                        ),
+
+                    const SizedBox(height: 10),
+                    if (screenSize.width > 447)
+                      Row(children: [
+                        const Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text("Next Available",
+                          children: [
+                             Text("Next Available",
                                 style: TextStyle(color: Colors.green)),
-                            Text("11:00 AM tomorrow",
+                             Text("11:00 AM tomorrow",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 14,
                                     color: Colors.black)),
                           ],
                         ),
-                        ElevatedButton(
+                        const SizedBox(width: 10),
+                        AppButtonWidget(
+                          width: screenSize.width * 0.3,
+                          title: 'Book Now',
                           onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFE6F3EB), // light green background
-                            foregroundColor: Colors.black,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          child: const Text("Book Now"),
-                        )
+                          backgroundColor: AppColors.kLightGreen2,
+                          textColor: AppColors.black,),
+                      ],),
+
+                    if (screenSize.width < 447)
+                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("Next Available",
+                            style: TextStyle(color: Colors.green)),
+                        const Text("11:00 AM tomorrow",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: Colors.black)),
+                         const SizedBox(height: 6),
+                        AppButtonWidget(
+                          title: 'Book Now',
+                          onPressed: () {},
+                          backgroundColor: AppColors.kLightGreen2,
+                          textColor: AppColors.black,),
                       ],
                     ),
+
+                    const SizedBox(width: 10),
                   ],
                 ),
               ),
