@@ -1,38 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:in_time_app/core/helpers/extension.dart';
 import 'package:in_time_app/core/shared_widgets/app_button_widget.dart';
 import 'package:in_time_app/features/home/data/models/sub_service_model.dart';
 import '../../../../core/utils/app_colors.dart';
 
-class ServiceDetailsScreen extends StatefulWidget {
+class ServiceDetailsScreen extends StatelessWidget {
   final SubServiceModel subServiceModel;
   const ServiceDetailsScreen({super.key, required this.subServiceModel});
 
   @override
-  State<ServiceDetailsScreen> createState() => _ServiceDetailsScreenState();
-}
-
-class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
-  final Map<String, bool> _selectedServices = {
-    "Individual Therapy": true,
-    "Couples or Relationship Counseling": false,
-    "Child & Adolescent Therapy": true,
-    "Family Therapy": false,
-    "Specialized Therapy": false,
-  };
-
-  final Map<String, String> _prices = {
-    "Individual Therapy": "200\$",
-    "Couples or Relationship Counseling": "200\$",
-    "Child & Adolescent Therapy": "200\$",
-    "Family Therapy": "200\$",
-    "Specialized Therapy": "200\$",
-  };
-
-  @override
   Widget build(BuildContext context) {
+    debugPrint('ServiceDetailsScreen: ${subServiceModel.subServices.length}');
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Service Title'),
+        title: Text(subServiceModel.service.title),
         centerTitle: true,
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
@@ -47,8 +28,8 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
               // Top Image
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image.asset(
-                  'assets/images/service_details.jpg',
+                child: Image.network(
+                  subServiceModel.service.imageUrl,
                   height: 180,
                   width: double.infinity,
                   fit: BoxFit.cover,
@@ -60,8 +41,8 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Achieve Your Goals',
+                  Text(
+                    subServiceModel.service.title,
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   Row(
@@ -79,8 +60,8 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
               const SizedBox(height: 8),
 
               // Description
-              const Text(
-                "Practical guidance from the ‘Core’ curriculum to grow Practical guidance from the ‘Core’ curriculum to grow Practical guidance from the ‘Core’ curriculum to grow",
+               Text(
+                subServiceModel.service.description,
                 style: TextStyle(color: Colors.grey),
               ),
 
@@ -94,52 +75,64 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
 
               // Sub-Services List
               Expanded(
-                child: ListView(
-                  children: _selectedServices.keys.map((title) {
-                    return CheckboxListTile(
-                      value: _selectedServices[title],
-                      onChanged: (val) {
-                        setState(() {
-                          _selectedServices[title] = val!;
-                        });
-                      },
-                      title: Text(title),
-                      subtitle: Text("Price: ${_prices[title]}"),
-                      activeColor: Colors.green,
-                      controlAffinity: ListTileControlAffinity.leading,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  // physics: const NeverScrollableScrollPhysics(),
+                  itemCount: subServiceModel.subServices.length,
+                  itemBuilder: (context, index) {
+                    final subService = subServiceModel.subServices[index];
+                    return ListTile(
+                      leading: Checkbox(
+                        value: subService.id == 3,
+                        onChanged: (bool? value) {
+                          // setState(() {
+                          //   subService.isSelected = value ?? false;
+                          // });
+                        },
+                        activeColor: Colors.green,
+                      ),
+                      title: Row(
+                        children: [
+                          Text(
+                            subService.title,
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                          // ...[
+                          10.widthSpace,
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: subService.stateLabel == 'new' ?AppColors.kGreenButton:AppColors.kRed,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              subService.stateLabel,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        // ],
+                        ],
+                      ),
+                      subtitle: Text(
+                        "Price: \$${subService.price.toStringAsFixed(0)}",
+                        style: const TextStyle(fontSize: 14, color: Colors.grey),
+                      ),
                     );
-                  }).toList(),
+                  },
                 ),
               ),
 
-              // Book Appointment Button
-
               AppButtonWidget(
                 height: 50,
-
                 title: 'Book Appointment',
                 onPressed: () {},
                 backgroundColor: AppColors.kGreenBackground,
                 textColor: AppColors.white,
               )
-              // SizedBox(
-              //   width: double.infinity,
-              //   child: ElevatedButton(
-              //     onPressed: () {},
-              //     style: ElevatedButton.styleFrom(
-              //       backgroundColor: AppColors.kGreenBackground,
-              //       shape: RoundedRectangleBorder(
-              //         borderRadius: BorderRadius.circular(8),
-              //       ),
-              //       padding: const EdgeInsets.symmetric(vertical: 16),
-              //     ),
-              //     child: const Text(
-              //       "Book Appointment",
-              //       style: TextStyle(fontSize: 16,
-              //       color: AppColors.white),
-              //     ),
-              //   ),
-              // ),
+
             ],
           ),
         ),
@@ -147,3 +140,4 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
     );
   }
 }
+
