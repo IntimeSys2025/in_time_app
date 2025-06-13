@@ -11,9 +11,15 @@ class SubServiceModel extends Equatable {
   factory SubServiceModel.fromJson(Map<String, dynamic> json) {
     return SubServiceModel(
       service: ServiceModel.fromJson(json),
-      subServices: (json['sub_services'] != null && json['sub_services'] != [])?((json['sub_services'])
-          .map((e) => SubServiceItemModel.fromJson(e as Map<String, dynamic>))
-          .toList()): [],
+      // subServices: (json['sub-services'] != null && json['sub-services'] != [])
+      //     ? ((json['sub-services'])
+      //         .map((e) =>
+      //             SubServiceItemModel.fromJson(e as Map<String, dynamic>))
+      //         .toList())
+      //     : [],
+        subServices: (json['sub-services'] != null)?(json['sub-services'] as List<dynamic>)
+            .map((e) => SubServiceItemModel.fromJson(e))
+            .toList(): []
     );
   }
   Map<String, dynamic> toJson() {
