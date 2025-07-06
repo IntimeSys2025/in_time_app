@@ -28,6 +28,8 @@ class HomeCubit extends Cubit<HomeState> {
   List<CategoryModel> categories = [];
 
   void getCategories() async {
+    emit(GetHomeDataLoadingState());
+
     // emit(HomeLoading());
     final result = await _getCategoriesUseCase();
     result.fold(
@@ -54,6 +56,8 @@ class HomeCubit extends Cubit<HomeState> {
   List<SliderModel> sliders = [];
 
   void getSliders() async {
+    emit(GetHomeDataLoadingState());
+
     final result = await _getSliderUseCase.call();
     result.fold(
       (failure) {
@@ -68,6 +72,7 @@ class HomeCubit extends Cubit<HomeState> {
 
   List<ServiceModel> services = [];
   void getServices() async {
+    emit(GetHomeDataLoadingState());
     final result = await _getServiceUseCase.call();
     result.fold(
       (failure) {
@@ -75,13 +80,31 @@ class HomeCubit extends Cubit<HomeState> {
       },
       (servicesData) {
         services = servicesData;
+        filteredItems = services;
         debugPrint('Services::: ${services.length}');
         emit(GetServicesSuccessState());
       },
     );
   }
- SubServiceModel? subService;
+
+  final TextEditingController searchController = TextEditingController();
+  List<ServiceModel> filteredItems = [];
+
+  void filterServices() {
+    final query = searchController.text.toLowerCase();
+    // setState(() {
+      filteredItems = services
+          .where((item) => item.title.toLowerCase().contains(query))
+          .toList();
+    // });
+    debugPrint('Filtered Items::: ${filteredItems.length}');
+    emit(HomeInitial());
+    emit(FilterServices());
+  }
+
+  SubServiceModel? subService;
   Future<void> getSubServices({required int id}) async {
+    emit(GetSubServicesLoadingState());
     final result = await _subServiceUseCase.call(id);
     result.fold(
       (failure) {
@@ -91,12 +114,13 @@ class HomeCubit extends Cubit<HomeState> {
         subService = subServiceData;
         debugPrint('SubService::: ${subServiceData.toJson()}');
         emit(HomeInitial());
-        if(subService != null){
+        if (subService != null) {
           emit(GetSubServicesSuccessState(subServiceModel: subService!));
         }
       },
     );
   }
+
   Future<void> getAvailableAppointments(int id) async {
     final result = await _appointmentsUseCas.call(id);
     result.fold(

@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:in_time_app/core/helpers/extension.dart';
 import 'package:in_time_app/core/shared_widgets/app_button_widget.dart';
+import 'package:in_time_app/features/appointment/presentation/screens/book_appointment_screen.dart';
 import 'package:in_time_app/features/home/data/models/sub_service_model.dart';
 import '../../../../core/utils/app_colors.dart';
 
-class ServiceDetailsScreen extends StatelessWidget {
+class ServiceDetailsScreen extends StatefulWidget {
   final SubServiceModel subServiceModel;
   const ServiceDetailsScreen({super.key, required this.subServiceModel});
 
   @override
+  State<ServiceDetailsScreen> createState() => _ServiceDetailsScreenState();
+}
+
+class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
+  @override
   Widget build(BuildContext context) {
-    debugPrint('ServiceDetailsScreen: ${subServiceModel.subServices.length}');
+    debugPrint(
+        'ServiceDetailsScreen: ${widget.subServiceModel.subServices.length}');
     return Scaffold(
       appBar: AppBar(
-        title: Text(subServiceModel.service.title),
+        title: Text(widget.subServiceModel.service.title),
         centerTitle: true,
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
@@ -29,7 +36,7 @@ class ServiceDetailsScreen extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.network(
-                  subServiceModel.service.imageUrl,
+                  widget.subServiceModel.service.imageUrl,
                   height: 180,
                   width: double.infinity,
                   fit: BoxFit.cover,
@@ -42,7 +49,7 @@ class ServiceDetailsScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    subServiceModel.service.title,
+                    widget.subServiceModel.service.title,
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   Row(
@@ -60,8 +67,8 @@ class ServiceDetailsScreen extends StatelessWidget {
               const SizedBox(height: 8),
 
               // Description
-               Text(
-                subServiceModel.service.description,
+              Text(
+                widget.subServiceModel.service.description,
                 style: TextStyle(color: Colors.grey),
               ),
 
@@ -75,64 +82,86 @@ class ServiceDetailsScreen extends StatelessWidget {
 
               // Sub-Services List
               Expanded(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  // physics: const NeverScrollableScrollPhysics(),
-                  itemCount: subServiceModel.subServices.length,
-                  itemBuilder: (context, index) {
-                    final subService = subServiceModel.subServices[index];
-                    return ListTile(
-                      leading: Checkbox(
-                        value: subService.id == 3,
-                        onChanged: (bool? value) {
-                          // setState(() {
-                          //   subService.isSelected = value ?? false;
-                          // });
-                        },
-                        activeColor: Colors.green,
-                      ),
-                      title: Row(
+                child: (widget.subServiceModel.subServices.isEmpty)
+                    ? Row(
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            subService.title,
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                          // ...[
-                          10.widthSpace,
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: subService.stateLabel == 'new' ?AppColors.kGreenButton:AppColors.kRed,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              subService.stateLabel,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ),
-                        // ],
+                            "There're no sub services",
+                          )
                         ],
+                      )
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        // physics: const NeverScrollableScrollPhysics(),
+                        itemCount: widget.subServiceModel.subServices.length,
+                        itemBuilder: (context, index) {
+                          final subService =
+                              widget.subServiceModel.subServices[index];
+                          return ListTile(
+                            leading: Checkbox(
+                              value: subService.isSelected,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  subService.isSelected = value ?? false;
+                                });
+                              },
+                              activeColor: Colors.green,
+                            ),
+                            title: Row(
+                              children: [
+                                Text(
+                                  subService.title,
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                                // ...[
+                                10.widthSpace,
+                                if (subService.stateLabel != 'none')
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: subService.stateLabel == 'new'
+                                          ? AppColors.kGreenButton
+                                          : AppColors.kRed,
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Text(
+                                      subService.stateLabel,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                                // ],
+                              ],
+                            ),
+                            subtitle: Text(
+                              "Price: ${subService.price.toStringAsFixed(0)} EGP",
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.grey),
+                            ),
+                          );
+                        },
                       ),
-                      subtitle: Text(
-                        "Price: \$${subService.price.toStringAsFixed(0)}",
-                        style: const TextStyle(fontSize: 14, color: Colors.grey),
-                      ),
-                    );
-                  },
-                ),
               ),
 
               AppButtonWidget(
                 height: 50,
-                title: 'Book Appointment',
-                onPressed: () {},
+                title: 'Add To Cart',
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CartScreen(subServiceModel: widget.subServiceModel,),
+                      ));
+                },
                 backgroundColor: AppColors.kGreenBackground,
                 textColor: AppColors.white,
               )
-
             ],
           ),
         ),
@@ -140,4 +169,3 @@ class ServiceDetailsScreen extends StatelessWidget {
     );
   }
 }
-

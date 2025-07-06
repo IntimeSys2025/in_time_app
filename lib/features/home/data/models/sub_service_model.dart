@@ -39,8 +39,9 @@ class SubServiceItemModel extends Equatable {
   final String description;
   final String stateLabel;
   final num price;
+  bool isSelected = false;
 
-  const SubServiceItemModel({
+   SubServiceItemModel({
     required this.id,
     required this.title,
     required this.description,
@@ -50,9 +51,9 @@ class SubServiceItemModel extends Equatable {
   factory SubServiceItemModel.fromJson(Map<String, dynamic> json) {
     return SubServiceItemModel(
       id: json['id'] as int,
-      title: json['title'] as String,
-      description: json['description'] as String,
-      stateLabel: json['state_label'] as String,
+      title: json['title'] ??'',
+      description: json['description'] ?? '',
+      stateLabel: json['state_label'] ??'',
       price: json['price'] as num,
     );
   }

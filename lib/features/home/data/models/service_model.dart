@@ -26,7 +26,7 @@ class ServiceModel extends Equatable {
       name: json['name'] as String,
       title: json['title'] as String,
       description: json['description'] as String,
-      price: json['price'] as num,
+      price: json['price'] ?? 0,
       category: json['category'] as String,
       specialty: json['specialty'] as String,
       imageUrl: json['image'] as String,
