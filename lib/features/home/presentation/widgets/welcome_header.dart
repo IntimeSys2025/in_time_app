@@ -28,7 +28,7 @@ class WelcomeHeader extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if(AppConstants.token!= '' && AppConstants.isLoggedIn)
+                if(AppConstants.token!= '' )
                 const Text(
                   "Hi,Welcome Back,",
                   style: TextStyle(
@@ -36,7 +36,7 @@ class WelcomeHeader extends StatelessWidget {
                     color: Colors.grey,
                   ),
                 ),
-                (AppConstants.token!= '' && AppConstants.isLoggedIn)?
+                (AppConstants.token!= '' )?
                 Text(
                   AppConstants.fullName,
                   style: const TextStyle(

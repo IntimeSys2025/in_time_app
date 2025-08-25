@@ -23,7 +23,7 @@ class AppButtonWidget extends StatelessWidget {
       this.textColor = AppColors.white,
       this.border =const BorderRadius.all(Radius.circular(10)),
         this.padding = 10,  this.borderColor = AppColors.transparent,
-        this.height = 40
+        this.height = 50
   });
 
   @override

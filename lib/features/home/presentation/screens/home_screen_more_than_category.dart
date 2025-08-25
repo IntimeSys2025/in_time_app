@@ -45,7 +45,7 @@ class HomeScreenMoreThanCategory extends StatelessWidget {
                       itemCount: homeCubit.categories.length,
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
+                               crossAxisCount: 3,
                               childAspectRatio:1,
                               crossAxisSpacing: 10,
                               mainAxisSpacing: 10),

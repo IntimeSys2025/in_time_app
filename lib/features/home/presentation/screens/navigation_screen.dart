@@ -60,7 +60,7 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
             ),
             NavigationDestination(
               icon: Icon(
-                Icons.calendar_month_outlined,
+                Icons.shopping_cart_outlined,
                 color: selectedIndex == 2
                     ? AppColors.kGreenBackground
                     : AppColors.grey,

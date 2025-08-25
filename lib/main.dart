@@ -15,6 +15,7 @@ import 'package:in_time_app/features/home/presentation/screens/navigation_screen
 
 import 'core/observers/cubit_observer.dart';
 import 'features/account/presentation/screens/loginScreen.dart';
+import 'features/appointment/presentation/logic/appointment_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,7 +58,11 @@ class MyApp extends StatelessWidget {
             ..getCategories()
             ..getSliders()
             ..getServices(),
-          )
+          ),
+          BlocProvider(
+            create: (context) => sl<AppointmentCubit>()
+            ..getAvailableAppointments(1),
+          ),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,

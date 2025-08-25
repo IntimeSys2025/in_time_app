@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_time_app/core/helpers/extension.dart';
 import 'package:in_time_app/core/shared_widgets/app_button_widget.dart';
 import 'package:in_time_app/features/appointment/presentation/screens/book_appointment_screen.dart';
+import 'package:in_time_app/features/appointment/presentation/screens/cart_screen.dart';
 import 'package:in_time_app/features/home/data/models/sub_service_model.dart';
 import '../../../../core/utils/app_colors.dart';
+import '../../../appointment/presentation/logic/appointment_cubit.dart';
 
 class ServiceDetailsScreen extends StatefulWidget {
   final SubServiceModel subServiceModel;
@@ -16,9 +19,11 @@ class ServiceDetailsScreen extends StatefulWidget {
 class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
   @override
   Widget build(BuildContext context) {
+    final appointmentCubit = BlocProvider.of<AppointmentCubit>(context);
     debugPrint(
         'ServiceDetailsScreen: ${widget.subServiceModel.subServices.length}');
     return Scaffold(
+      backgroundColor: AppColors.white,
       appBar: AppBar(
         title: Text(widget.subServiceModel.service.title),
         centerTitle: true,
@@ -40,6 +45,19 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                   height: 180,
                   width: double.infinity,
                   fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      height: 100,
+                      width: double.infinity,
+                      color: Colors.grey.shade300,
+                      child: const Center(
+                        child: Text(
+                          "Image not available",
+                          style: TextStyle(color: Colors.black54),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 16),
@@ -52,16 +70,16 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                     widget.subServiceModel.service.title,
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
-                  Row(
-                    children: List.generate(
-                      5,
-                      (index) => Icon(
-                        Icons.star,
-                        color: index < 4 ? Colors.amber : Colors.grey.shade300,
-                        size: 18,
-                      ),
-                    ),
-                  ),
+                  // Row(
+                  //   children: List.generate(
+                  //     5,
+                  //     (index) => Icon(
+                  //       Icons.star,
+                  //       color: index < 4 ? Colors.amber : Colors.grey.shade300,
+                  //       size: 18,
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
               const SizedBox(height: 8),
@@ -73,17 +91,17 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
               ),
 
               const SizedBox(height: 16),
-
-              const Text(
-                "Select Sub-Service",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
+              if (widget.subServiceModel.subServices.isNotEmpty)
+                const Text(
+                  "Select Sub-Service",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
               const SizedBox(height: 12),
 
               // Sub-Services List
               Expanded(
                 child: (widget.subServiceModel.subServices.isEmpty)
-                    ? Row(
+                    ? const Row(
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -107,6 +125,22 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                                 setState(() {
                                   subService.isSelected = value ?? false;
                                 });
+                                if (subService.isSelected) {
+                                  appointmentCubit.addSubServiceBooked(
+                                    subService: SubServiceModel(
+                                        service: widget.subServiceModel.service,
+                                        subServices: [
+                                          widget.subServiceModel
+                                              .subServices[index]
+                                        ]),
+                                  );
+                                } else {
+                                  appointmentCubit.removeSubServiceBooked(
+                                    serviceId:
+                                        widget.subServiceModel.service.id,
+                                    subServiceId: subService.id,
+                                  );
+                                }
                               },
                               activeColor: Colors.green,
                             ),
@@ -117,16 +151,16 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                                   style: const TextStyle(fontSize: 16),
                                 ),
                                 // ...[
-                                10.widthSpace,
+                                20.widthSpace,
                                 if (subService.stateLabel != 'none')
                                   Container(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 4),
+                                        horizontal: 20, vertical: 4),
                                     decoration: BoxDecoration(
                                       color: subService.stateLabel == 'new'
                                           ? AppColors.kGreenButton
                                           : AppColors.kRed,
-                                      borderRadius: BorderRadius.circular(12),
+                                      borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Text(
                                       subService.stateLabel,
@@ -148,7 +182,7 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                         },
                       ),
               ),
-
+              // if(widget.subServiceModel.subServices.isNotEmpty)
               AppButtonWidget(
                 height: 50,
                 title: 'Add To Cart',
@@ -156,10 +190,12 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => CartScreen(subServiceModel: widget.subServiceModel,),
+                        builder: (context) => const CartScreen(
+                            // subServiceModel: widget.subServiceModel,
+                            ),
                       ));
                 },
-                backgroundColor: AppColors.kGreenBackground,
+                // backgroundColor: AppColors.kGreenBackground,
                 textColor: AppColors.white,
               )
             ],

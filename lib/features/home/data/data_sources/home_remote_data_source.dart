@@ -5,13 +5,17 @@ import 'package:in_time_app/features/home/data/models/slider_model.dart';
 import 'package:in_time_app/features/home/data/models/sub_service_model.dart';
 import '../../../../core/network/api_consumer.dart';
 import '../../../../core/network/end_points.dart';
+import '../models/available_times_in_date_model.dart';
 
 abstract class HomeRemoteDataSource {
   Future<List<CategoryModel>> getCategories();
   Future<List<SliderModel>> getSliders();
   Future<List<ServiceModel>> getServices();
   Future<SubServiceModel> getSubServices({required int id});
-  Future<List<AppointmentModel>> getAvailableAppointments({required int id});
+  Future<List<AvailableAppointmentModel>> getAvailableAppointments(
+      {required int id});
+  Future<List<AvailableTimesInDateModel>> getAvailableTimesInDate(
+      {required Map<String,dynamic> params});
 }
 
 class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
@@ -57,13 +61,27 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   }
 
   @override
-  Future<List<AppointmentModel>> getAvailableAppointments(
+  Future<List<AvailableAppointmentModel>> getAvailableAppointments(
       {required int id}) async {
     final response = await _apiConsumer.get(
         path: '${EndPoints.getAvailableAppointments}/$id');
-    final List<AppointmentModel> appointments = [];
+    final List<AvailableAppointmentModel> appointments = [];
     for (var element in response.data['data']) {
-      appointments.add(AppointmentModel.fromJson(element));
+      appointments.add(AvailableAppointmentModel.fromJson(element));
+    }
+    return appointments;
+  }
+
+  @override
+  Future<List<AvailableTimesInDateModel>> getAvailableTimesInDate(
+      { required Map<String,dynamic> params}) async {
+    final response = await _apiConsumer.post(
+      path: '${EndPoints.getAvailableTimeInDate}/${params['id']}',
+      body: {'date': params['date']},
+    );
+    final List<AvailableTimesInDateModel> appointments = [];
+    for (var element in response.data['data']) {
+      appointments.add(AvailableTimesInDateModel.fromJson(element));
     }
     return appointments;
   }

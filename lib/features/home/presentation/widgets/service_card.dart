@@ -19,6 +19,7 @@ class ServiceCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: Colors.green.shade100)),
       padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.symmetric(vertical: 5),
       child: Row(
         children: [
           // Doctor Image
@@ -30,6 +31,11 @@ class ServiceCard extends StatelessWidget {
               fit: BoxFit.fitHeight,
               height: 150,
                width: 70,
+              errorBuilder: (context, error, stackTrace) {
+                return const Center(
+                  child: Icon(Icons.error),
+                );
+              },
             ),
           ),
 

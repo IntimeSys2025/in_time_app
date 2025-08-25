@@ -113,12 +113,17 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
       );
       result.fold(
         (failure) {
-          debugPrint('Failure:: $failure');
+          debugPrint('Failure:: $failure ,, ${failure.message}');
           emit(CreateAccountInitial());
-          emit(RegisterAccountFailureState(errorMessage: 'This user is already registered'));
+          emit(RegisterAccountFailureState(errorMessage: 'Already registered'));
         },
         (user) {
-          saveUserData(user: user);
+          // saveUserData(user: user);
+          loginPhone = signUpPhone;
+          passwordController = passwordSignUpController;
+          rememberMe = false;
+
+          logIn();
           emit(RegisterAccountSuccessState());
         },
       );

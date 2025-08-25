@@ -32,3 +32,6 @@ final class GetSubServicesSuccessState extends HomeState {
 final class FilterServices extends HomeState{
   FilterServices();
 }
+final class ToggleViewAllServices extends HomeState {
+  ToggleViewAllServices();
+}

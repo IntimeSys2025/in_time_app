@@ -1,146 +1,159 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:in_time_app/core/helpers/extension.dart';
+import 'package:in_time_app/core/shared_widgets/app_button_widget.dart';
+import 'package:in_time_app/core/utils/app_colors.dart';
+import 'package:in_time_app/features/appointment/presentation/logic/appointment_cubit.dart';
+import 'package:in_time_app/features/appointment/presentation/screens/cart_screen.dart';
+import 'package:in_time_app/features/appointment/presentation/widgets/payment_summary_widget.dart';
+import 'package:in_time_app/features/home/presentation/screens/home_screen_one_doctor.dart';
 
 import '../../../home/data/models/sub_service_model.dart';
+import '../../../home/presentation/screens/navigation_screen.dart';
+import '../widgets/cart_item_widget.dart';
+import '../widgets/date_selection_bottom_sheet.dart';
+import '../widgets/date_selection_widget.dart';
 
-class CartScreen extends StatelessWidget {
-  final SubServiceModel subServiceModel;
-  CartScreen({super.key, required this.subServiceModel});
-
-  final List<CartItem> cartItems = [
-    CartItem(
-      title: 'Achieve Your Goals',
-      subtitle: 'Practical guidance from the Core curriculum to grow...',
-      services: [
-        'Individual Therapy',
-        'Child & Adolescent Therapy',
-      ],
-      price: '\$200',
-    ),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        // leading: IconButton(
-        //   icon: Icon(Icons.arrow_back),
-        //   onPressed: () {},
-        // ),
-        title: const Text('Cart'),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: cartItems.length,
-              itemBuilder: (context, index) {
-                return CartItemWidget(item: cartItems[index]);
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green[700],
-                    minimumSize: Size(double.infinity, 50),
-                  ),
-                  onPressed: () {},
-                  child: Text('Book Appointment'),
-                ),
-                SizedBox(height: 10),
-                OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: Size(double.infinity, 50),
-                    side: BorderSide(color: Colors.green[700]!),
-                  ),
-                  onPressed: () {},
-                  child: Text('Select Another Service',
-                      style: TextStyle(color: Colors.green[700])),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class CartItem {
-  final String title;
-  final String subtitle;
-  final List<String> services;
-  final String price;
-
-  CartItem({
-    required this.title,
-    required this.subtitle,
-    required this.services,
-    required this.price,
+class BookAppointmentScreen extends StatelessWidget {
+  // final SubServiceModel subServiceModel;
+  const BookAppointmentScreen({
+    super.key,
+    // required this.subServiceModel
   });
-}
 
-class CartItemWidget extends StatelessWidget {
-  final CartItem item;
-
-  CartItemWidget({required this.item});
+  // final List<CartItem> cartItems = [
+  //   CartItem(
+  //     title: 'Achieve Your Goals',
+  //     subtitle: 'Practical guidance from the Core curriculum to grow...',
+  //     services: [
+  //       'Individual Therapy',
+  //       'Child & Adolescent Therapy',
+  //     ],
+  //     price: '\$200',
+  //   ),
+  // ];
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(8.0),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: 80,
-              height: 80,
-              color: Colors.grey[300],
-              child: Center(child: Text('Image')),
-            ),
-            SizedBox(width: 16),
-            Expanded(
+    final appointmentCubit = BlocProvider.of<AppointmentCubit>(context);
+    return BlocBuilder<AppointmentCubit, AppointmentState>(
+      buildWhen: (previous, current) => current is ShowDateSelectorStates ||
+      current is ConfirmDateAndTimeSuccessState
+      ,
+      builder: (context, state) {
+        return Scaffold(
+          backgroundColor: Color(0xFFF2F2F5),
+          appBar: AppBar(
+            // backgroundColor: Color(0xFFF2F2F5),
+            centerTitle: true,
+            // leading: IconButton(
+            //   icon: Icon(Icons.arrow_back),
+            //   onPressed: () {},
+            // ),
+            title: const Text('Book Appointment'),
+          ),
+          body: SafeArea(
+            child: SingleChildScrollView(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    item.title,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  CartItemWidget(
+                    item: appointmentCubit.selectedService!,
+                    showBookButton: false,
                   ),
-                  SizedBox(height: 4),
-                  Text(
-                    item.subtitle,
-                    style: TextStyle(color: Colors.grey[600]),
+                  // ListView.builder(
+                  //   shrinkWrap: true,
+                  //   itemCount: appointmentCubit.subServicesBooked.length ?? 0,
+                  //   itemBuilder: (context, index) {
+                  //     final subServiceModel =
+                  //         appointmentCubit.subServicesBooked[index];
+                  //     return CartItemWidget(
+                  //       item: subServiceModel,
+                  //       showBookButton: false,
+                  //     );
+                  //   },
+                  // ),
+                  10.heightSpace,
+                  Column(
+                    children: [
+                      // if (appointmentCubit.showDateSelector)
+                      DateTimeSelectorWidget(),
+                      10.heightSpace,
+                      // if (appointmentCubit.showDateSelector)
+                      PaymentSummaryWidget(
+                        itemTotal: appointmentCubit.totalPrice,
+                      ),
+
+                    ],
                   ),
-                  SizedBox(height: 8),
-                  ...item.services.map((service) => Row(
-                        children: [
-                          Icon(Icons.check, color: Colors.green, size: 16),
-                          SizedBox(width: 4),
-                          Text(service),
-                        ],
-                      )),
-                  SizedBox(height: 8),
-                  Text(
-                    'Price: ${item.price}',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
+                  10.heightSpace,
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 5),
+                        child: (appointmentCubit.selectedService != null &&
+                            appointmentCubit.selectedService!.selectedDate !=
+                                null)
+                            ? AppButtonWidget(
+                            height: 60,
+                            title: 'Go To Cart',
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CartScreen(isCheckout: true,),
+                                  ));
+                            })
+                            :
+                        // (appointmentCubit.showDateSelector )
+                        //         ?
+                        AppButtonWidget(
+                          title: 'Checkout',
+                          onPressed: () {},
+                          backgroundColor:
+                          AppColors.kGreenButton.withOpacity(0.8),
+                        )
+                    ),
+                  )
                 ],
               ),
             ),
-            IconButton(
-              icon: Icon(Icons.delete, color: Colors.red),
-              onPressed: () {},
-            ),
-          ],
-        ),
-      ),
+          ),
+          // bottomNavigationBar:
+          // // (appointmentCubit.showBottomSheet)
+          // //     ? null
+          // //     :
+          // SafeArea(
+          //         child: Padding(
+          //             padding: const EdgeInsets.symmetric(
+          //                 horizontal: 10, vertical: 5),
+          //             child: (appointmentCubit.selectedService != null &&
+          //                     appointmentCubit.selectedService!.selectedDate !=
+          //                         null)
+          //                 ? AppButtonWidget(
+          //                     height: 60,
+          //                     title: 'Go To Cart',
+          //                     onPressed: () {
+          //                       Navigator.push(
+          //                           context,
+          //                           MaterialPageRoute(
+          //                             builder: (context) => CartScreen(),
+          //                           ));
+          //                     })
+          //                 :
+          //                 // (appointmentCubit.showDateSelector )
+          //                 //         ?
+          //                 AppButtonWidget(
+          //                     title: 'Checkout',
+          //                     onPressed: () {},
+          //                     backgroundColor:
+          //                         AppColors.kGreenButton.withOpacity(0.8),
+          //                   )
+          //             ),
+          //       ),
+        );
+      },
     );
   }
 }

@@ -25,9 +25,22 @@ class DoctorDescCard extends StatelessWidget {
           // SizedBox(width: MediaQuery.of(context).size.width * 0.4,),
           Image.network(
             sliderModel.media,
-            // fit: BoxFit.fitWidth,
+            fit: BoxFit.fitHeight,
             // height: 200,
             width: MediaQuery.of(context).size.width * 0.3,
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                // height: 100,
+                // width: MediaQuery.of(context).size.width * 0.3,
+                color: AppColors.moreLightGrey.withOpacity(0.2),
+                child: Center(
+                  child: Text(
+                    'No Image Available',
+                    style: const TextStyle(color: Colors.black54),
+                  ),
+                ),
+              );
+            },
           ),
           10.widthSpace,
           // const SizedBox(width: 12),
@@ -39,7 +52,7 @@ class DoctorDescCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                  Text( sliderModel.title,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: AppFontSize.fontSize18,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -48,7 +61,9 @@ class DoctorDescCard extends StatelessWidget {
                 const SizedBox(height: 6),
                  Text(
                   sliderModel.text,
-                  style: TextStyle(
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
                     fontSize: 12,
                     color: Colors.white,
                   ),

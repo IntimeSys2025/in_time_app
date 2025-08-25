@@ -133,4 +133,10 @@ class HomeCubit extends Cubit<HomeState> {
       },
     );
   }
+  bool isViewAllServices = false;
+  void toggleViewAllServices(){
+    isViewAllServices = true;
+    // emit(HomeInitial());
+    emit(ToggleViewAllServices());
+  }
 }

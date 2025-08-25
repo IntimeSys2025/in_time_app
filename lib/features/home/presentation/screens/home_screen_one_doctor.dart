@@ -34,11 +34,12 @@ class HomeScreenOneDoctor extends StatelessWidget {
             current is GetSlidersSuccessState ||
             current is GetServicesSuccessState ||
             current is GetHomeDataLoadingState ||
+                current is ToggleViewAllServices||
       current is FilterServices,
         builder: (context, state) {
           return
           Scaffold(
-            appBar: AppBar(),
+            // appBar: AppBar(),
             body: SafeArea(
               child: state is GetHomeDataLoadingState ?
                 const Center(child: CupertinoActivityIndicator(),)
@@ -54,7 +55,7 @@ class HomeScreenOneDoctor extends StatelessWidget {
                       const CustomSearchBar(),
                       const SizedBox(height: 20),
                       if (homeCubit.sliders.isNotEmpty)
-                        DoctorDescCard(sliderModel: homeCubit.sliders.first),
+                        DoctorDescCard(sliderModel: homeCubit.sliders[1]),
                       const SizedBox(height: 20),
                       if (AppConstants.token != '' && AppConstants.isLoggedIn)
                         const Column(
@@ -82,7 +83,9 @@ class HomeScreenOneDoctor extends StatelessWidget {
                                 fontWeight: FontWeight.w500),
                           ),
                           TextButton(
-                              onPressed: () {}, child: const Text('View All'))
+                              onPressed: () {
+                                homeCubit.toggleViewAllServices();
+                              }, child: const Text('View All'))
                         ],
                       ),
                       if(homeCubit.filteredItems.isNotEmpty)
@@ -94,7 +97,7 @@ class HomeScreenOneDoctor extends StatelessWidget {
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           scrollDirection: Axis.vertical,
-                          itemCount: homeCubit.filteredItems.length,
+                          itemCount: homeCubit.isViewAllServices ? homeCubit.filteredItems.length: 1,
                           itemBuilder: (context, index) {
                             final service = homeCubit.filteredItems[index];
                             return ServiceCard(service: service);
