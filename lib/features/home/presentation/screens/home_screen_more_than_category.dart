@@ -8,6 +8,7 @@ import 'package:in_time_app/features/home/presentation/widgets/welcome_header.da
 import '../../../../core/utils/app_constants.dart';
 import '../../../../core/utils/app_font_size.dart';
 import '../widgets/category_widget.dart';
+import '../widgets/doctor_card.dart';
 import '../widgets/service_card.dart';
 
 class HomeScreenMoreThanCategory extends StatelessWidget {
@@ -84,7 +85,7 @@ class HomeScreenMoreThanCategory extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          'Explore Our Services',
+                          'Explore Our Doctors',
                           style: TextStyle(
                               fontSize: AppFontSize.fontSize20,
                               fontWeight: FontWeight.w500),
@@ -93,10 +94,27 @@ class HomeScreenMoreThanCategory extends StatelessWidget {
                             onPressed: () {}, child: const Text('View All'))
                       ],
                     ),
+                    const SizedBox(height: 10),
+                    if(homeCubit.sliders.isNotEmpty)
+                    SizedBox(
+                      height: 500,
+                      // flex: 1,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        scrollDirection: Axis.vertical,
+                        // itemCount: homeCubit.isViewAllServices ? homeCubit.filteredItems.length: 1,
+                        itemCount: homeCubit.sliders.length,
+                        itemBuilder: (context, index) {
+                          final slider = homeCubit.sliders[index];
+                          return DoctorCard(doctor: slider,);
+                        },
+                      ),
+                    ),
+
+                    // const DoctorCard(),
                     // const SizedBox(height: 10),
-                    // const ServiceCard(),
-                    // const SizedBox(height: 10),
-                    // const ServiceCard(),
+                    // const DoctorCard(),
                   ],
                 );
               },

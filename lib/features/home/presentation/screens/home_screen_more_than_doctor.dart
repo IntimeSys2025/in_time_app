@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_time_app/features/home/presentation/widgets/appointmant_card.dart';
 import 'package:in_time_app/features/home/presentation/widgets/custom_search_bar.dart';
 import 'package:in_time_app/features/home/presentation/widgets/doctor_card.dart';
@@ -6,12 +7,14 @@ import 'package:in_time_app/features/home/presentation/widgets/hospital_card.dar
 import 'package:in_time_app/features/home/presentation/widgets/welcome_header.dart';
 import '../../../../core/utils/app_constants.dart';
 import '../../../../core/utils/app_font_size.dart';
+import '../logic/home_cubit.dart';
 
 class HomeScreenMoreThanDoctor extends StatelessWidget {
   const HomeScreenMoreThanDoctor({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final homeCubit = BlocProvider.of<HomeCubit>(context);
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -56,9 +59,24 @@ class HomeScreenMoreThanDoctor extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 10),
-                const DoctorCard(),
-                const SizedBox(height: 10),
-                const DoctorCard(),
+                if(homeCubit.sliders.isNotEmpty)
+                  SizedBox(
+                    height: 400,
+                    // flex: 1,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      // itemCount: homeCubit.isViewAllServices ? homeCubit.filteredItems.length: 1,
+                      itemCount: homeCubit.sliders.length,
+                      itemBuilder: (context, index) {
+                        final slider = homeCubit.sliders[index];
+                        return DoctorCard(
+                          doctor: slider,
+                        );
+                      },
+                    ),
+                  ),
               ],
             ),
           ),

@@ -5,6 +5,7 @@ import 'package:in_time_app/core/utils/type_def.dart';
 import 'package:in_time_app/features/home/data/models/appointment_model.dart';
 import 'package:in_time_app/features/home/data/models/available_times_in_date_model.dart';
 import 'package:in_time_app/features/home/data/models/category_model.dart';
+import 'package:in_time_app/features/home/data/models/partner_model.dart';
 import 'package:in_time_app/features/home/data/models/service_model.dart';
 import 'package:in_time_app/features/home/data/models/slider_model.dart';
 import 'package:in_time_app/features/home/data/models/sub_service_model.dart';
@@ -75,10 +76,22 @@ class HomeRepoImpl implements HomeRepo {
 
   @override
   FutureResult<List<AvailableTimesInDateModel>> getAvailableTimesInDate(
-      {required  Map<String,dynamic> params}) async {
+      {required Map<String, dynamic> params}) async {
     try {
       final result =
           await _remoteDataSource.getAvailableTimesInDate(params: params);
+      return Right(result);
+    } on Failure catch (error) {
+      return Left(
+          ServerFailure(message: error.message, statusCode: error.statusCode));
+    }
+  }
+
+  @override
+  FutureResult<List<Partner>> getPartners({String? categoryId}) async {
+    try {
+      final result =
+          await _remoteDataSource.getPartners(categoryId: categoryId);
       return Right(result);
     } on Failure catch (error) {
       return Left(

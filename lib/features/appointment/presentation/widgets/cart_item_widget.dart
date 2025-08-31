@@ -22,7 +22,7 @@ class CartItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appointmentCubit = BlocProvider.of<AppointmentCubit>(context);
-    return Container(
+    return Card(
       color: AppColors.white,
       child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -93,11 +93,19 @@ class CartItemWidget extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          item.service.title,
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
+                       Row(
+                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                         children: [
+                           Text(
+                             item.service.title,
+                             style: TextStyle(
+                                 fontSize: 18, fontWeight: FontWeight.bold),
+                           ),
+                           IconButton(onPressed: (){
+                              appointmentCubit.removeServiceFromCart(serviceId: item.service.id);
+                           }, icon: Icon(Icons.delete_outlined,color: AppColors.kRed,))
+                         ],
+                       ),
                         SizedBox(height: 4),
                         Text(
                           item.service.description,
@@ -178,7 +186,7 @@ class CartItemWidget extends StatelessWidget {
                 },
               ),
               10.heightSpace,
-              if ((!appointmentCubit.showDateSelector) && showBookButton)
+              if ((!appointmentCubit.showDateSelector) && showBookButton && ( item.selectedDate == null && item.selectedTimeFormat12Hours == null))
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: AppButtonWidget(

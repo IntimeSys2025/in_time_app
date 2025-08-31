@@ -32,18 +32,19 @@ class AppointmentCubit extends Cubit<AppointmentState> {
 
   List<SubServiceModel> subServicesBooked = [];
   void addSubServiceBooked({required SubServiceModel subService}) {
+    debugPrint('subService:::: ${subService.toJson()},');
     int index1 = subServicesBooked.indexWhere(
       (element) => element.service.id == subService.service.id,
     );
     if (index1 != -1) {
-      subServicesBooked[index1].subServices.addAll(subService.subServices);
+      // subServicesBooked[index1].subServices.addAll(subService.subServices);
       int index = subServicesBooked[index1].subServices.indexWhere(
             (element) => element.id == subService.subServices.first.id,
       );
       if (index != -1) {
         subServicesBooked[index1].subServices.addAll(subService.subServices);
       } else {
-        subServicesBooked.add(subService);
+        subServicesBooked[index1].subServices.addAll(subService.subServices);
       }
     } else {
       subServicesBooked.add(subService);
@@ -61,6 +62,11 @@ class AppointmentCubit extends Cubit<AppointmentState> {
       // subServicesBooked.add(subService);
       // emit(AddSubServiceBookedState());
     }
+  }
+  void removeServiceFromCart({required int serviceId}) {
+    subServicesBooked.removeWhere((element) => element.service.id == serviceId,);
+    debugPrint('removeSubServicesBooked: ${subServicesBooked},');
+    emit(RefreshCartScreenState());
   }
   double totalPrice = 0.0;
   void calculateTotalPriceForService({required SubServiceModel service}) {

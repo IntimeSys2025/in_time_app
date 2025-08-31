@@ -1,5 +1,6 @@
 import 'package:in_time_app/features/home/data/models/appointment_model.dart';
 import 'package:in_time_app/features/home/data/models/category_model.dart';
+import 'package:in_time_app/features/home/data/models/partner_model.dart';
 import 'package:in_time_app/features/home/data/models/service_model.dart';
 import 'package:in_time_app/features/home/data/models/slider_model.dart';
 import 'package:in_time_app/features/home/data/models/sub_service_model.dart';
@@ -15,7 +16,9 @@ abstract class HomeRemoteDataSource {
   Future<List<AvailableAppointmentModel>> getAvailableAppointments(
       {required int id});
   Future<List<AvailableTimesInDateModel>> getAvailableTimesInDate(
-      {required Map<String,dynamic> params});
+      {required Map<String, dynamic> params});
+
+  Future<List<Partner>> getPartners({String? categoryId});
 }
 
 class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
@@ -74,7 +77,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
 
   @override
   Future<List<AvailableTimesInDateModel>> getAvailableTimesInDate(
-      { required Map<String,dynamic> params}) async {
+      {required Map<String, dynamic> params}) async {
     final response = await _apiConsumer.post(
       path: '${EndPoints.getAvailableTimeInDate}/${params['id']}',
       body: {'date': params['date']},
@@ -84,5 +87,17 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
       appointments.add(AvailableTimesInDateModel.fromJson(element));
     }
     return appointments;
+  }
+
+  @override
+  Future<List<Partner>> getPartners({String? categoryId}) async {
+    final response = await _apiConsumer.get(
+      path: EndPoints.getPartners,
+    );
+    final List<Partner> partners = [];
+    for(var element in response.data['data']['data']){
+      partners.add(Partner.fromJson(element));
+    }
+    return partners;
   }
 }

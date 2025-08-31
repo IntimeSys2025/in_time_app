@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:in_time_app/core/shared_widgets/app_button_widget.dart';
 import 'package:in_time_app/core/utils/app_colors.dart';
+import 'package:in_time_app/features/home/data/models/slider_model.dart';
+import 'package:in_time_app/features/home/presentation/screens/home_screen_one_doctor.dart';
 import '../screens/navigation_screen.dart';
 
 class DoctorCard extends StatelessWidget {
-  const DoctorCard({super.key});
+  final SliderModel doctor;
+  const DoctorCard({super.key, required this.doctor});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +17,7 @@ class DoctorCard extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => NavigationBarScreen(),
+              builder: (context) => HomeScreenOneDoctor(),
             ));
       },
       child: Card(
@@ -28,11 +31,14 @@ class DoctorCard extends StatelessWidget {
               // Doctor Image
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.asset(
-                  'assets/images/doctor.png', // Replace with your image
+                child: Image.network(
+                  doctor.media, // Replace with your image
                   width: 70,
                   height: 70,
                   fit: BoxFit.fitWidth,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Icon(Icons.error);
+                  },
                 ),
               ),
               const SizedBox(width: 12),
@@ -43,12 +49,12 @@ class DoctorCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Name and heart icon
-                    const Row(
+                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Amir El-Sayed",
-                          style: TextStyle(
+                          doctor.title,
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
@@ -73,8 +79,8 @@ class DoctorCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     if (screenSize.width > 447)
-                      Row(children: [
-                        const Row(
+                      const Row(children: [
+                        Row(
                           children: [
                             Icon(Icons.location_on,
                                 size: 16, color: Colors.redAccent),
@@ -83,8 +89,8 @@ class DoctorCard extends StatelessWidget {
                                 style: TextStyle(fontSize: 13, color: Colors.grey)),
                           ],
                         ),
-                        const SizedBox(width: 10),
-                        const Row(
+                        SizedBox(width: 10),
+                        Row(
                           children: [
                             Icon(Icons.circle, size: 16, color: Colors.green),
                             SizedBox(width: 4),
@@ -92,12 +98,12 @@ class DoctorCard extends StatelessWidget {
                                 style: TextStyle(fontSize: 13, color: Colors.grey)),
                           ],
                         ),
-                        const SizedBox(height: 6),
+                        SizedBox(height: 6),
                       ],),
                       if (screenSize.width < 447)
-                        Column(
+                        const Column(
                           children: [
-                            const Row(
+                            Row(
                               children: [
                                 Icon(Icons.location_on,
                                     size: 16, color: Colors.redAccent),
@@ -106,8 +112,8 @@ class DoctorCard extends StatelessWidget {
                                     style: TextStyle(fontSize: 13, color: Colors.grey)),
                               ],
                             ),
-                            const SizedBox(width: 10),
-                            const Row(
+                            SizedBox(width: 10),
+                            Row(
                               children: [
                                 Icon(Icons.circle, size: 16, color: Colors.green),
                                 SizedBox(width: 4),
@@ -115,7 +121,7 @@ class DoctorCard extends StatelessWidget {
                                     style: TextStyle(fontSize: 13, color: Colors.grey)),
                               ],
                             ),
-                            const SizedBox(height: 6),
+                            SizedBox(height: 6),
                           ],
                         ),
 
@@ -138,7 +144,9 @@ class DoctorCard extends StatelessWidget {
                         AppButtonWidget(
                           width: screenSize.width * 0.3,
                           title: 'Book Now',
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreenOneDoctor(),));
+                          },
                           backgroundColor: AppColors.kLightGreen2,
                           textColor: AppColors.black,),
                       ],),

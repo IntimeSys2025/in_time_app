@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_time_app/core/helpers/extension.dart';
 import 'package:in_time_app/core/shared_widgets/app_button_widget.dart';
+import 'package:in_time_app/core/utils/app_constants.dart';
+import 'package:in_time_app/core/utils/product_type.dart';
 import 'package:in_time_app/features/appointment/presentation/screens/book_appointment_screen.dart';
 import 'package:in_time_app/features/appointment/presentation/screens/cart_screen.dart';
 import 'package:in_time_app/features/home/data/models/sub_service_model.dart';
+import 'package:in_time_app/features/home/presentation/screens/navigation_screen.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../appointment/presentation/logic/appointment_cubit.dart';
+import 'home_screen_one_doctor.dart';
 
 class ServiceDetailsScreen extends StatefulWidget {
   final SubServiceModel subServiceModel;
@@ -30,6 +34,19 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
+        // leading: IconButton(
+        //   icon: const Icon(Icons.arrow_back),
+        //   onPressed: () {
+        //     Navigator.push(
+        //         context,
+        //         MaterialPageRoute(
+        //           builder: (context) =>
+        //               (AppConstants.productType == ProductType.oneDoctor)
+        //                   ? const NavigationBarScreen()
+        //                   : const HomeScreenOneDoctor(),
+        //         ));
+        //   },
+        // ),
       ),
       body: SafeArea(
         child: Padding(

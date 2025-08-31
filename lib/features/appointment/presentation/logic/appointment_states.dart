@@ -7,6 +7,7 @@ sealed class AppointmentState extends Equatable {
 
 final class AppointmentInitial extends AppointmentState {}
 final class ShowDateSelectorStates extends AppointmentState {}
+final class RefreshCartScreenState extends AppointmentState {}
 final class GetAvailableAppointmentInDateLoadingState extends AppointmentState {}
 final class GetAvailableAppointmentInDateSuccessState extends AppointmentState {}
 final class GetAvailableAppointmentInDateFailureState extends AppointmentState {}
