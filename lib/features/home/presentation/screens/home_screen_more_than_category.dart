@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:in_time_app/core/utils/app_colors.dart';
 import 'package:in_time_app/features/home/presentation/logic/home_cubit.dart';
 import 'package:in_time_app/features/home/presentation/logic/home_states.dart';
 import 'package:in_time_app/features/home/presentation/widgets/appointmant_card.dart';
@@ -26,16 +27,22 @@ class HomeScreenMoreThanCategory extends StatelessWidget {
       {'icon': Icons.health_and_safety, 'label': 'Wellness'},
     ];
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.moreLightGrey,
+        elevation: 0,
+        toolbarHeight: 0,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            padding: const EdgeInsets.symmetric(horizontal: 24.0,vertical: 6),
             child: BlocBuilder<HomeCubit, HomeState>(
               buildWhen: (previous, current) =>
                   current is GetCategoriesSuccessState,
               builder: (context, state) {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     const WelcomeHeader(),
                     const SizedBox(height: 20),
@@ -95,22 +102,29 @@ class HomeScreenMoreThanCategory extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 10),
-                    if(homeCubit.sliders.isNotEmpty)
-                    SizedBox(
-                      height: 500,
+                    if(homeCubit.partners.isNotEmpty)
+                    Flexible(
+                      // height: 1000,
                       // flex: 1,
                       child: ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         scrollDirection: Axis.vertical,
-                        // itemCount: homeCubit.isViewAllServices ? homeCubit.filteredItems.length: 1,
-                        itemCount: homeCubit.sliders.length,
+                        // itemCount: 3,
+                        itemCount: homeCubit.partners.length,
                         itemBuilder: (context, index) {
-                          final slider = homeCubit.sliders[index];
-                          return DoctorCard(doctor: slider,);
+                          final partner = homeCubit.partners[0];
+                          return DoctorCard(partner: partner,);
                         },
                       ),
                     ),
+                    if(homeCubit.partners.isEmpty)
+                      const Center(
+                        child: Text(
+                          'No Doctors Available',
+                          style: TextStyle(fontSize: AppFontSize.fontSize16),
+                        ),
+                      ),
 
                     // const DoctorCard(),
                     // const SizedBox(height: 10),

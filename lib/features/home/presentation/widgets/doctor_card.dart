@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:in_time_app/core/shared_widgets/app_button_widget.dart';
 import 'package:in_time_app/core/utils/app_colors.dart';
+import 'package:in_time_app/features/home/data/models/partner_model.dart';
 import 'package:in_time_app/features/home/data/models/slider_model.dart';
 import 'package:in_time_app/features/home/presentation/screens/home_screen_one_doctor.dart';
+import '../../../../core/utils/app_asset_path.dart';
 import '../screens/navigation_screen.dart';
 
 class DoctorCard extends StatelessWidget {
-  final SliderModel doctor;
-  const DoctorCard({super.key, required this.doctor});
+  final PartnerModel partner;
+  const DoctorCard({super.key, required this.partner});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +19,7 @@ class DoctorCard extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => HomeScreenOneDoctor(),
+              builder: (context) => HomeScreenOneDoctor(partner: partner,),
             ));
       },
       child: Card(
@@ -32,12 +34,16 @@ class DoctorCard extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.network(
-                  doctor.media, // Replace with your image
+                  partner.media, // Replace with your image
                   width: 70,
                   height: 70,
                   fit: BoxFit.fitWidth,
                   errorBuilder: (context, error, stackTrace) {
-                    return Icon(Icons.error);
+                    return Image.asset(AppAsset.inTimeApp,
+                      fit: BoxFit.fitWidth,
+                      height: 150,
+                      width: 70,);
+                      Icon(Icons.error);
                   },
                 ),
               ),
@@ -53,7 +59,7 @@ class DoctorCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          doctor.title,
+                          partner.name,
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -64,8 +70,8 @@ class DoctorCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
 
-                    const Text(
-                      "Specialist Cardiology",
+                     Text(
+                      partner.specialty,
                       style: TextStyle(
                         color: Colors.green,
                         fontWeight: FontWeight.w600,
@@ -73,54 +79,54 @@ class DoctorCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
 
-                    const Text(
-                      "7 Years experience",
+                     Text(
+                      partner.experience,
                       style: TextStyle(color: Colors.grey),
                     ),
                     const SizedBox(height: 4),
                     if (screenSize.width > 447)
-                      const Row(children: [
+                       Row(children: [
                         Row(
                           children: [
                             Icon(Icons.location_on,
                                 size: 16, color: Colors.redAccent),
                             SizedBox(width: 4),
-                            Text("Eloubour, Egypt",
+                            Text(partner.address,
                                 style: TextStyle(fontSize: 13, color: Colors.grey)),
                           ],
                         ),
-                        SizedBox(width: 10),
-                        Row(
-                          children: [
-                            Icon(Icons.circle, size: 16, color: Colors.green),
-                            SizedBox(width: 4),
-                            Text("76 Patient Stories",
-                                style: TextStyle(fontSize: 13, color: Colors.grey)),
-                          ],
-                        ),
+                        // SizedBox(width: 10),
+                        // Row(
+                        //   children: [
+                        //     Icon(Icons.circle, size: 16, color: Colors.green),
+                        //     SizedBox(width: 4),
+                        //     Text("76 Patient Stories",
+                        //         style: TextStyle(fontSize: 13, color: Colors.grey)),
+                        //   ],
+                        // ),
                         SizedBox(height: 6),
                       ],),
                       if (screenSize.width < 447)
-                        const Column(
+                         Column(
                           children: [
                             Row(
                               children: [
                                 Icon(Icons.location_on,
                                     size: 16, color: Colors.redAccent),
                                 SizedBox(width: 4),
-                                Text("Eloubour, Egypt",
+                                Text(partner.address,
                                     style: TextStyle(fontSize: 13, color: Colors.grey)),
                               ],
                             ),
-                            SizedBox(width: 10),
-                            Row(
-                              children: [
-                                Icon(Icons.circle, size: 16, color: Colors.green),
-                                SizedBox(width: 4),
-                                Text("76 Patient Stories",
-                                    style: TextStyle(fontSize: 13, color: Colors.grey)),
-                              ],
-                            ),
+                            // SizedBox(width: 10),
+                            // Row(
+                            //   children: [
+                            //     Icon(Icons.circle, size: 16, color: Colors.green),
+                            //     SizedBox(width: 4),
+                            //     Text("76 Patient Stories",
+                            //         style: TextStyle(fontSize: 13, color: Colors.grey)),
+                            //   ],
+                            // ),
                             SizedBox(height: 6),
                           ],
                         ),
@@ -165,7 +171,9 @@ class DoctorCard extends StatelessWidget {
                          const SizedBox(height: 6),
                         AppButtonWidget(
                           title: 'Book Now',
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) =>  HomeScreenOneDoctor(partner: partner,),));
+                          },
                           backgroundColor: AppColors.kLightGreen2,
                           textColor: AppColors.black,),
                       ],

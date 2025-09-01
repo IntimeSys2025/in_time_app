@@ -87,129 +87,133 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           }
         },
         builder: (context, state) {
-          return Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 40),
-                IconButton(
-                  icon: const Icon(Icons.arrow_back, size: 28),
-                  onPressed: () => Navigator.pop(context),
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  "Enter Verification Code",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  "We have sent the code verification to",
-                  style: TextStyle(color: Colors.grey),
-                ),
-                Text(
-                  cubit.forgetPasswordPhone?.completeNumber ?? '',
-                  style: const TextStyle(
-                      color: Colors.green, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 30),
-                Center(
-                  // child: Image.network(
-                  //     'https://s3-alpha-sig.figma.com/img/bbcc/863f/24d8773f09528ce1a0f4d9d20bff9041?Expires=1745193600&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=fFWIPy2KTaOSyOpWfzGLpeojUFZlDURkdzkhIwMP-INt1qvk4HWGdA9pAQ08UbTuzX5dptC6HPhiMbbn3viBSzAcCwJeyaKJ3UFFYEWY6bH175kxIbGs5Wyd9D-Qx76VvCPV~AyZpTsMHVEIXDnCqTG-MyNRVjyKCgHmE-PFYYFurLO2e8z9sMAwEgTZGgzNTmlu1vHxMBY217~8xua--U0WtgkiI8kuZ76lrwe1iRaWPY8~bmDMr0vjyRlOWVv2gCenetAhSU1R0KjtIABGh7GV2id5vkdM1ZKvV8Rj29ojWK6yhkCsSO-SCOfXr8mbb3upmCfuEZn5kmfInxbDMg__',
-                  //     height: 200
-                  // )
-                  child: Image.asset(
-                    'assets/images/otp.gif',
-                    height: 200,
-                  ),
-                ),
-                const SizedBox(height: 30),
-                Center(
-                  child:
-                  OtpTextField(
-                    borderWidth: 2,
-                    borderRadius: BorderRadius.circular(10),
-                    numberOfFields: 6,
-                    onSubmit: (value) {
-                      debugPrint('OTP Submit : $value');
-                      // createAccountCubit.otp = value;
-                      // navigate to the next screen
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => const EnterNationalIdScreen()));
-                    },
-                  ),
-                  // Pinput(
-                  //   length: 6,
-                  //   defaultPinTheme: PinTheme(
-                  //     width: 50,
-                  //     height: 50,
-                  //     textStyle: const TextStyle(
-                  //         fontSize: 20, fontWeight: FontWeight.bold),
-                  //     decoration: BoxDecoration(
-                  //       borderRadius: BorderRadius.circular(8),
-                  //       border: Border.all(color: Colors.grey),
-                  //     ),
-                  //   ),
-                  //   // validator: (value) {
-                  //   //   if (value == null || value.isEmpty || value.length < 6) {
-                  //   //     return 'Please enter the code';
-                  //   //   }
-                  //   //   return null;
-                  //   // },
-                  //   onCompleted: (pin) {},
-                  // ),
-                ),
-                const SizedBox(height: 20),
-                Center(
-                  child: Text(
-                    _formatTime(_secondsRemaining),
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ),
-                Center(
-                  child: TextButton(
-                    onPressed: () {
-                      _isResendEnabled ? _resendCode : null;
-                      if (_isResendEnabled) {
-                        cubit.forgetPassword();
-                      }
-                    },
-                    child: Text(
-                      "Resend it",
-                      style: TextStyle(
-                          color: _isResendEnabled ? Colors.green : Colors.grey,
-                          fontWeight: FontWeight.bold),
+          return SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 40),
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back, size: 28),
+                      onPressed: () => Navigator.pop(context),
                     ),
-                  ),
-                ),
-                const SizedBox(height: 30),
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
+                    const SizedBox(height: 20),
+                    const Text(
+                      "Enter Verification Code",
+                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                     ),
-                    onPressed: () {
-                      if (widget.isFromForgetPassword) {
-                        cubit.verifyCode();
-                      } else {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const NavigationBarScreen(),
-                            ));
-                      }
-                    },
-                    child: const Text("Verify",
-                        style: TextStyle(fontSize: 18, color: Colors.white)),
-                  ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      "We have sent the code verification to",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    Text(
+                      cubit.forgetPasswordPhone?.completeNumber ?? '',
+                      style: const TextStyle(
+                          color: Colors.green, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 30),
+                    Center(
+                      // child: Image.network(
+                      //     'https://s3-alpha-sig.figma.com/img/bbcc/863f/24d8773f09528ce1a0f4d9d20bff9041?Expires=1745193600&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=fFWIPy2KTaOSyOpWfzGLpeojUFZlDURkdzkhIwMP-INt1qvk4HWGdA9pAQ08UbTuzX5dptC6HPhiMbbn3viBSzAcCwJeyaKJ3UFFYEWY6bH175kxIbGs5Wyd9D-Qx76VvCPV~AyZpTsMHVEIXDnCqTG-MyNRVjyKCgHmE-PFYYFurLO2e8z9sMAwEgTZGgzNTmlu1vHxMBY217~8xua--U0WtgkiI8kuZ76lrwe1iRaWPY8~bmDMr0vjyRlOWVv2gCenetAhSU1R0KjtIABGh7GV2id5vkdM1ZKvV8Rj29ojWK6yhkCsSO-SCOfXr8mbb3upmCfuEZn5kmfInxbDMg__',
+                      //     height: 200
+                      // )
+                      child: Image.asset(
+                        'assets/images/otp.gif',
+                        height: 200,
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    Center(
+                      child:
+                      OtpTextField(
+                        borderWidth: 2,
+                        borderRadius: BorderRadius.circular(10),
+                        numberOfFields: 6,
+                        onSubmit: (value) {
+                          debugPrint('OTP Submit : $value');
+                          // createAccountCubit.otp = value;
+                          // navigate to the next screen
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => const EnterNationalIdScreen()));
+                        },
+                      ),
+                      // Pinput(
+                      //   length: 6,
+                      //   defaultPinTheme: PinTheme(
+                      //     width: 50,
+                      //     height: 50,
+                      //     textStyle: const TextStyle(
+                      //         fontSize: 20, fontWeight: FontWeight.bold),
+                      //     decoration: BoxDecoration(
+                      //       borderRadius: BorderRadius.circular(8),
+                      //       border: Border.all(color: Colors.grey),
+                      //     ),
+                      //   ),
+                      //   // validator: (value) {
+                      //   //   if (value == null || value.isEmpty || value.length < 6) {
+                      //   //     return 'Please enter the code';
+                      //   //   }
+                      //   //   return null;
+                      //   // },
+                      //   onCompleted: (pin) {},
+                      // ),
+                    ),
+                    const SizedBox(height: 20),
+                    Center(
+                      child: Text(
+                        _formatTime(_secondsRemaining),
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                    Center(
+                      child: TextButton(
+                        onPressed: () {
+                          _isResendEnabled ? _resendCode : null;
+                          if (_isResendEnabled) {
+                            cubit.forgetPassword();
+                          }
+                        },
+                        child: Text(
+                          "Resend it",
+                          style: TextStyle(
+                              color: _isResendEnabled ? Colors.green : Colors.grey,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                        ),
+                        onPressed: () {
+                          if (widget.isFromForgetPassword) {
+                            cubit.verifyCode();
+                          } else {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const NavigationBarScreen(),
+                                ));
+                          }
+                        },
+                        child: const Text("Verify",
+                            style: TextStyle(fontSize: 18, color: Colors.white)),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           );
         },

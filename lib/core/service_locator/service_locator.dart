@@ -14,6 +14,7 @@ import 'package:in_time_app/features/home/data/repositories/home_repo_impl.dart'
 import 'package:in_time_app/features/home/domain/repositories/home_repo.dart';
 import 'package:in_time_app/features/home/domain/use_cases/appointments_use_case.dart';
 import 'package:in_time_app/features/home/domain/use_cases/get_categories_use_case.dart';
+import 'package:in_time_app/features/home/domain/use_cases/get_partners_use_case.dart';
 import 'package:in_time_app/features/home/domain/use_cases/get_services_use_case.dart';
 import 'package:in_time_app/features/home/domain/use_cases/get_slider_use_case.dart';
 import 'package:in_time_app/features/home/domain/use_cases/sub_service_use_case.dart';
@@ -38,13 +39,17 @@ sealed class ServiceLocator {
         sl<VerifyCodeUseCas>(),
         sl<ResetPasswordUseCas>()));
 
-    sl.registerLazySingleton(() => HomeCubit(sl<GetCategoriesUseCase>(),
-        sl<GetSliderUseCase>(), sl<GetServiceUseCase>(),
-    sl<SubServiceUseCase>(), sl<AppointmentsUseCas>()));
-    sl.registerLazySingleton(() => AppointmentCubit(
-      sl<AppointmentsUseCas>(),
-      sl<GetAvailableTimesInDateUseCase>()
-    ),);
+    sl.registerLazySingleton(() => HomeCubit(
+        sl<GetCategoriesUseCase>(),
+        sl<GetSliderUseCase>(),
+        sl<GetServiceUseCase>(),
+        sl<SubServiceUseCase>(),
+        sl<AppointmentsUseCas>(),
+        sl<PartnersUseCase>()));
+    sl.registerLazySingleton(
+      () => AppointmentCubit(
+          sl<AppointmentsUseCas>(), sl<GetAvailableTimesInDateUseCase>()),
+    );
 
     /// register use cases
     sl.registerLazySingleton<RegisterUseCase>(
@@ -66,7 +71,9 @@ sealed class ServiceLocator {
     sl.registerLazySingleton(() => GetServiceUseCase(sl<HomeRepo>()));
     sl.registerLazySingleton(() => SubServiceUseCase(sl<HomeRepo>()));
     sl.registerLazySingleton(() => AppointmentsUseCas(sl<HomeRepo>()));
-    sl.registerLazySingleton(() => GetAvailableTimesInDateUseCase(sl<HomeRepo>()));
+    sl.registerLazySingleton(
+        () => GetAvailableTimesInDateUseCase(sl<HomeRepo>()));
+    sl.registerLazySingleton(() => PartnersUseCase(sl<HomeRepo>()));
 
     /// register Repositories
     sl.registerLazySingleton<CreateAccountRepo>(

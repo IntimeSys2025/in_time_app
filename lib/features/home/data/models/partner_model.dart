@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-class Partner extends Equatable {
-  const Partner({
+class PartnerModel extends Equatable {
+  const PartnerModel({
     required this.id,
     required this.name,
     required this.specialty,
@@ -12,16 +12,16 @@ class Partner extends Equatable {
     required this.media,
   });
 
-  final int? id;
-  final String? name;
-  final String? specialty;
-  final String? category;
-  final String? address;
-  final String? phone;
-  final String? experience;
-  final String? media;
+  final int id;
+  final String name;
+  final String specialty;
+  final String category;
+  final String address;
+  final String phone;
+  final String experience;
+  final String media;
 
-  Partner copyWith({
+  PartnerModel copyWith({
     int? id,
     String? name,
     String? specialty,
@@ -31,7 +31,7 @@ class Partner extends Equatable {
     String? experience,
     String? media,
   }) {
-    return Partner(
+    return PartnerModel(
       id: id ?? this.id,
       name: name ?? this.name,
       specialty: specialty ?? this.specialty,
@@ -43,8 +43,8 @@ class Partner extends Equatable {
     );
   }
 
-  factory Partner.fromJson(Map<String, dynamic> json){
-    return Partner(
+  factory PartnerModel.fromJson(Map<String, dynamic> json){
+    return PartnerModel(
       id: json["id"],
       name: json["name"],
       specialty: json["specialty"],

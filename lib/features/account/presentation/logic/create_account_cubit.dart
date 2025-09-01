@@ -113,7 +113,7 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
       );
       result.fold(
         (failure) {
-          debugPrint('Failure:: $failure ,, ${failure.message}');
+          // debugPrint('Failure:: $failure ,, ${failure.message}');
           emit(CreateAccountInitial());
           emit(RegisterAccountFailureState(errorMessage: 'Already registered'));
         },
@@ -123,7 +123,7 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
           passwordController = passwordSignUpController;
           rememberMe = false;
 
-          logIn();
+          logIn(fromSignUp: true);
           emit(RegisterAccountSuccessState());
         },
       );
@@ -146,7 +146,7 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
   }
 
   TextEditingController passwordController = TextEditingController();
-  void logIn() async {
+  void logIn({bool? fromSignUp}) async {
     if (loginPhone?.number == null) {
       emit(CreateAccountInitial());
       emit(SignInFailureState(
@@ -164,7 +164,9 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
       },
       (success) {
        saveUserData(user: success);
-        emit(SignInSuccessState());
+       if(fromSignUp == false || fromSignUp == null){
+         emit(SignInSuccessState());
+       }
       },
     );
   }

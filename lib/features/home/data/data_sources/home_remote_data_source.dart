@@ -18,7 +18,7 @@ abstract class HomeRemoteDataSource {
   Future<List<AvailableTimesInDateModel>> getAvailableTimesInDate(
       {required Map<String, dynamic> params});
 
-  Future<List<Partner>> getPartners({String? categoryId});
+  Future<List<PartnerModel>> getPartners({String? categoryId});
 }
 
 class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
@@ -90,13 +90,13 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   }
 
   @override
-  Future<List<Partner>> getPartners({String? categoryId}) async {
+  Future<List<PartnerModel>> getPartners({String? categoryId}) async {
     final response = await _apiConsumer.get(
       path: EndPoints.getPartners,
     );
-    final List<Partner> partners = [];
+    final List<PartnerModel> partners = [];
     for(var element in response.data['data']['data']){
-      partners.add(Partner.fromJson(element));
+      partners.add(PartnerModel.fromJson(element));
     }
     return partners;
   }

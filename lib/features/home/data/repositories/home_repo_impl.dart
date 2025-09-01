@@ -88,7 +88,7 @@ class HomeRepoImpl implements HomeRepo {
   }
 
   @override
-  FutureResult<List<Partner>> getPartners({String? categoryId}) async {
+  FutureResult<List<PartnerModel>> getPartners({String? categoryId}) async {
     try {
       final result =
           await _remoteDataSource.getPartners(categoryId: categoryId);

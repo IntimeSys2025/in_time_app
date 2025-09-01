@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_time_app/features/home/data/models/category_model.dart';
+import 'package:in_time_app/features/home/data/models/partner_model.dart';
 import 'package:in_time_app/features/home/data/models/slider_model.dart';
 import 'package:in_time_app/features/home/data/models/sub_service_model.dart';
 import 'package:in_time_app/features/home/domain/use_cases/appointments_use_case.dart';
 import 'package:in_time_app/features/home/domain/use_cases/get_categories_use_case.dart';
+import 'package:in_time_app/features/home/domain/use_cases/get_partners_use_case.dart';
 import 'package:in_time_app/features/home/domain/use_cases/get_services_use_case.dart';
 import 'package:in_time_app/features/home/domain/use_cases/get_slider_use_case.dart';
 import 'package:in_time_app/features/home/domain/use_cases/sub_service_use_case.dart';
@@ -17,12 +19,14 @@ class HomeCubit extends Cubit<HomeState> {
   final GetServiceUseCase _getServiceUseCase;
   final SubServiceUseCase _subServiceUseCase;
   final AppointmentsUseCas _appointmentsUseCas;
+  final PartnersUseCase _partnersUseCase;
   HomeCubit(
       this._getCategoriesUseCase,
       this._getSliderUseCase,
       this._getServiceUseCase,
       this._subServiceUseCase,
-      this._appointmentsUseCas)
+      this._appointmentsUseCas,
+      this._partnersUseCase)
       : super(HomeInitial());
 
   List<CategoryModel> categories = [];
@@ -93,9 +97,9 @@ class HomeCubit extends Cubit<HomeState> {
   void filterServices() {
     final query = searchController.text.toLowerCase();
     // setState(() {
-      filteredItems = services
-          .where((item) => item.title.toLowerCase().contains(query))
-          .toList();
+    filteredItems = services
+        .where((item) => item.title.toLowerCase().contains(query))
+        .toList();
     // });
     debugPrint('Filtered Items::: ${filteredItems.length}');
     emit(HomeInitial());
@@ -121,22 +125,37 @@ class HomeCubit extends Cubit<HomeState> {
     );
   }
 
-  Future<void> getAvailableAppointments(int id) async {
-    final result = await _appointmentsUseCas.call(id);
-    result.fold(
-      (failure) {
-        // emit(HomeError(failure.message));
-      },
-      (appointmentsData) {
-        debugPrint('Appointments::: ${appointmentsData.length}');
-        // emit(GetSubServicesSuccessState());
-      },
-    );
-  }
+  // Future<void> getAvailableAppointments(int id) async {
+  //   final result = await _appointmentsUseCas.call(id);
+  //   result.fold(
+  //     (failure) {
+  //       // emit(HomeError(failure.message));
+  //     },
+  //     (appointmentsData) {
+  //       debugPrint('Appointments::: ${appointmentsData.length}');
+  //       // emit(GetSubServicesSuccessState());
+  //     },
+  //   );
+  // }
   bool isViewAllServices = false;
-  void toggleViewAllServices(){
+  void toggleViewAllServices() {
     isViewAllServices = true;
     // emit(HomeInitial());
     emit(ToggleViewAllServices());
+  }
+
+  List<PartnerModel> partners = [];
+  void getPartners() async {
+    final result = await _partnersUseCase.call(null);
+
+    result.fold(
+      (failure) {
+        debugPrint('Failure: ${failure.message}');
+      },
+      (success) {
+        partners = success;
+        debugPrint('Success:: ${partners.length}');
+      },
+    );
   }
 }

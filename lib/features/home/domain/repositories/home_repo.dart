@@ -16,5 +16,5 @@ abstract class HomeRepo {
       {required int id});
   FutureResult<List<AvailableTimesInDateModel>> getAvailableTimesInDate(
       {required Map<String, dynamic> params});
-  FutureResult<List<Partner>> getPartners({String? categoryId});
+  FutureResult<List<PartnerModel>> getPartners({String? categoryId});
 }

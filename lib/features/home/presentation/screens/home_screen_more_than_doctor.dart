@@ -5,6 +5,7 @@ import 'package:in_time_app/features/home/presentation/widgets/custom_search_bar
 import 'package:in_time_app/features/home/presentation/widgets/doctor_card.dart';
 import 'package:in_time_app/features/home/presentation/widgets/hospital_card.dart';
 import 'package:in_time_app/features/home/presentation/widgets/welcome_header.dart';
+import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_constants.dart';
 import '../../../../core/utils/app_font_size.dart';
 import '../logic/home_cubit.dart';
@@ -16,12 +17,18 @@ class HomeScreenMoreThanDoctor extends StatelessWidget {
   Widget build(BuildContext context) {
     final homeCubit = BlocProvider.of<HomeCubit>(context);
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.moreLightGrey,
+        elevation: 0,
+        toolbarHeight: 0,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 const WelcomeHeader(),
                 const SizedBox(height: 20),
@@ -29,7 +36,7 @@ class HomeScreenMoreThanDoctor extends StatelessWidget {
                 const SizedBox(height: 20),
                 const HospitalCard(),
                 const SizedBox(height: 20),
-                if(AppConstants.token!= '' && AppConstants.isLoggedIn)
+                if (AppConstants.token != '' && AppConstants.isLoggedIn)
                   const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -44,8 +51,6 @@ class HomeScreenMoreThanDoctor extends StatelessWidget {
                       SizedBox(height: 20),
                     ],
                   ),
-
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -59,20 +64,19 @@ class HomeScreenMoreThanDoctor extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 10),
-                if(homeCubit.sliders.isNotEmpty)
-                  SizedBox(
-                    height: 400,
+                if (homeCubit.partners.isNotEmpty)
+                  Flexible(
                     // flex: 1,
                     child: ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       scrollDirection: Axis.vertical,
                       // itemCount: homeCubit.isViewAllServices ? homeCubit.filteredItems.length: 1,
-                      itemCount: homeCubit.sliders.length,
+                      itemCount: homeCubit.partners.length,
                       itemBuilder: (context, index) {
-                        final slider = homeCubit.sliders[index];
+                        final partner = homeCubit.partners[index];
                         return DoctorCard(
-                          doctor: slider,
+                          partner: partner,
                         );
                       },
                     ),
@@ -85,5 +89,3 @@ class HomeScreenMoreThanDoctor extends StatelessWidget {
     );
   }
 }
-
-

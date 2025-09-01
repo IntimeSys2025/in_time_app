@@ -55,13 +55,14 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => sl<HomeCubit>()
-            ..getCategories()
-            ..getSliders()
-            ..getServices(),
+              ..getCategories()
+              ..getPartners()
+              ..getSliders()
+              ..getServices(),
           ),
           BlocProvider(
-            create: (context) => sl<AppointmentCubit>()
-            ..getAvailableAppointments(1),
+            create: (context) =>
+                sl<AppointmentCubit>()..getAvailableAppointments(1),
           ),
         ],
         child: MaterialApp(
