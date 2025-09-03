@@ -84,7 +84,7 @@ class HomeCubit extends Cubit<HomeState> {
       },
       (servicesData) {
         services = servicesData;
-        filteredItems = services;
+        filteredServices = services;
         debugPrint('Services::: ${services.length}');
         emit(GetServicesSuccessState());
       },
@@ -92,16 +92,16 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   final TextEditingController searchController = TextEditingController();
-  List<ServiceModel> filteredItems = [];
+  List<ServiceModel> filteredServices = [];
 
   void filterServices() {
     final query = searchController.text.toLowerCase();
     // setState(() {
-    filteredItems = services
+    filteredServices = services
         .where((item) => item.title.toLowerCase().contains(query))
         .toList();
     // });
-    debugPrint('Filtered Items::: ${filteredItems.length}');
+    debugPrint('Filtered Items::: ${filteredServices.length}');
     emit(HomeInitial());
     emit(FilterServices());
   }

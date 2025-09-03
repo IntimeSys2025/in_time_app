@@ -3,6 +3,7 @@ import 'package:in_time_app/core/utils/app_colors.dart';
 import 'package:in_time_app/core/utils/product_type.dart';
 import 'package:in_time_app/features/home/presentation/screens/home_screen_more_than_category.dart';
 import 'package:in_time_app/features/home/presentation/screens/home_screen_more_than_doctor.dart';
+import 'package:in_time_app/features/profile/presentation/screens/profile_screen.dart';
 
 import '../../../../core/utils/app_constants.dart';
 import 'home_screen_one_doctor.dart';
@@ -15,7 +16,7 @@ class NavigationBarScreen extends StatefulWidget {
 }
 
 class _NavigationBarScreenState extends State<NavigationBarScreen> {
-  int selectedIndex = 0;
+  int selectedIndex = 3;
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +73,7 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
             ),
             NavigationDestination(
               icon: Icon(
-                Icons.menu,
+                Icons.person_2_outlined,
                 color: selectedIndex == 3
                     ? AppColors.kGreenBackground
                     : AppColors.grey,
@@ -80,7 +81,7 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
                     ? AppConstants.bigIcon
                     : AppConstants.smallIcon,
               ),
-              label: 'more',
+              label: 'profile',
             ),
           ],
         ),
@@ -92,7 +93,7 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
                   : const HomeScreenMoreThanCategory(),
           Container(),
           Container(),
-          Container(),
+          ProfileScreen(),
         ][selectedIndex]);
   }
 }

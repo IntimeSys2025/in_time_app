@@ -94,7 +94,7 @@ class HomeScreenOneDoctor extends StatelessWidget {
                               ],
                             ),
                           const SizedBox(height: 20),
-                          if (homeCubit.filteredItems.isNotEmpty)
+                          if (homeCubit.filteredServices.isNotEmpty)
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -111,9 +111,9 @@ class HomeScreenOneDoctor extends StatelessWidget {
                                     child: const Text('View All'))
                               ],
                             ),
-                          if (homeCubit.filteredItems.isNotEmpty)
+                          if (homeCubit.filteredServices.isNotEmpty)
                             const SizedBox(height: 10),
-                          if (homeCubit.filteredItems.isNotEmpty)
+                          if (homeCubit.filteredServices.isNotEmpty)
                             Flexible(
                               // flex: 1,
                               child: ListView.builder(
@@ -121,16 +121,16 @@ class HomeScreenOneDoctor extends StatelessWidget {
                                 physics: const NeverScrollableScrollPhysics(),
                                 scrollDirection: Axis.vertical,
                                 itemCount: homeCubit.isViewAllServices
-                                    ? homeCubit.filteredItems.length
+                                    ? homeCubit.filteredServices.length
                                     : 1,
                                 itemBuilder: (context, index) {
                                   final service =
-                                      homeCubit.filteredItems[index];
+                                      homeCubit.filteredServices[index];
                                   return ServiceCard(service: service);
                                 },
                               ),
                             ),
-                          if (homeCubit.filteredItems.isEmpty)
+                          if (homeCubit.filteredServices.isEmpty)
                             const Center(
                               child: Text(
                                 'No Services Available',
