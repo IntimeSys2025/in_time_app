@@ -18,13 +18,7 @@ class ProfileInfo extends StatelessWidget {
           // scale: 0.1
 
         ),
-        // borderRadius: BorderRadius.circular(20),
-        // child: Image.network(
-        //   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRn86xfBndHDFKOZsH0umR4sHKTBZulYhZkJ8qWCmrmq3Dnx_eOypBoVXo5Fm0BcPITxFk&usqp=CAU',
-        //   errorBuilder: (context, error, stackTrace) {
-        //     return const Icon(Icons.person);
-        //   },
-        // )
+
 
       ),
       title: Text(

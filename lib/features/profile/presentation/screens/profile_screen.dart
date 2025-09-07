@@ -30,15 +30,15 @@ class ProfileScreen extends StatelessWidget {
               Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   child: Divider(
-                    thickness: 5,
-                    color: AppColors.moreLightGrey.withValues(alpha: 0.3),
+                    thickness: 8,
+                    color: AppColors.moreLightGrey.withValues(alpha: 0.1),
                   )),
               const AboutSection(),
               Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   child: Divider(
-                    thickness: 5,
-                    color: AppColors.moreLightGrey.withValues(alpha: 0.3),
+                    thickness: 8,
+                    color: AppColors.moreLightGrey.withValues(alpha: 0.1),
                   )),
               const ManageAccountSection()
             ],
