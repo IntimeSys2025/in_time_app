@@ -12,7 +12,7 @@ class ServiceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('ServiceCard: ${service.toJson()}');
+    // debugPrint('ServiceCard: ${service.toJson()}');
     final homeCubit = BlocProvider.of<HomeCubit>(context);
     return Container(
       decoration: BoxDecoration(

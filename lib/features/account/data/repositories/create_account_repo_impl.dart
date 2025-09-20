@@ -6,6 +6,7 @@ import 'package:in_time_app/core/utils/type_def.dart';
 import 'package:in_time_app/features/account/data/data_source/create_account_data_source.dart';
 import 'package:in_time_app/features/account/data/models/arguments/login_params.dart';
 import 'package:in_time_app/features/account/data/models/arguments/register_params.dart';
+import 'package:in_time_app/features/account/data/models/failure_register_model.dart';
 import 'package:in_time_app/features/account/data/models/user_model.dart';
 import 'package:in_time_app/features/account/domain/repositories/create_account_repo.dart';
 
@@ -43,8 +44,10 @@ class CreateAccountRepoImpl implements CreateAccountRepo {
       final result = await _remoteDataSource.register(params: params);
       return Right(result);
     } on Failure catch (error) {
+      debugPrint('Register Error: ${error.message}');
+      final FailureRegisterModel failure = FailureRegisterModel.fromJson(error.message);
       return Left(
-          ServerFailure(message: error.message, statusCode: error.statusCode));
+          ServerFailure(message: failure, statusCode: error.statusCode));
     }
     // } else {
     //   return Left(ServerFailure(

@@ -16,24 +16,24 @@ import '../../../../core/utils/app_font_size.dart';
 import '../widgets/service_card.dart';
 
 class HomeScreenOneDoctor extends StatelessWidget {
-  final PartnerModel? partner;
-  const HomeScreenOneDoctor({super.key, this.partner});
+  // final PartnerModel? partner;
+  const HomeScreenOneDoctor({super.key,});
 
   @override
   Widget build(BuildContext context) {
     final homeCubit = BlocProvider.of<HomeCubit>(context);
-    SliderModel? slider;
-    if (partner != null) {
-      slider = SliderModel(
-          title: partner!.name,
-          text: partner!.specialty,
-          isButton: 0,
-          buttonText: '',
-          buttonLink: '',
-          media: partner!.media);
-    }else if (homeCubit.sliders.isNotEmpty){
-      slider = homeCubit.sliders[1];
-    }
+    // SliderModel? slider;
+    // if (partner != null) {
+    //   slider = SliderModel(
+    //       title: partner!.name,
+    //       text: partner!.specialty,
+    //       isButton: 0,
+    //       buttonText: '',
+    //       buttonLink: '',
+    //       media: partner!.media);
+    // }else if (homeCubit.sliders.isNotEmpty){
+    //   slider = homeCubit.sliders[1];
+    // }
     return BlocConsumer<HomeCubit, HomeState>(
       listener: (context, state) {
         if (state is GetSubServicesSuccessState) {
@@ -75,8 +75,8 @@ class HomeScreenOneDoctor extends StatelessWidget {
                           const SizedBox(height: 20),
                           const CustomSearchBar(),
                           const SizedBox(height: 20),
-                          if(slider != null)
-                          DoctorDescCard(sliderModel: slider),
+                          // if(slider != null)
+                          DoctorDescCard(sliderModel: homeCubit.sliders[0]),
                           const SizedBox(height: 20),
                           if (AppConstants.token != '' &&
                               AppConstants.isLoggedIn)

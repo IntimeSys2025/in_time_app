@@ -49,10 +49,10 @@ class PartnerModel extends Equatable {
       name: json["name"],
       specialty: json["specialty"],
       category: json["category"],
-      address: json["address"],
-      phone: json["phone"],
-      experience: json["experience"],
-      media: json["media"],
+      address: json["address"] ?? '',
+      phone: json["phone"] ?? '',
+      experience: json["experience"] ?? '',
+      media: json["media"] ?? '',
     );
   }
 

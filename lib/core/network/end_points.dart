@@ -13,5 +13,7 @@ sealed class EndPoints {
   static const String getAvailableAppointments = 'api/frontend/available-appointments';
   static const String getAvailableTimeInDate = 'api/frontend/available-appointments';
   static const String getPartners = 'api/frontend/partners/list';
+  static const String getPartnerDetails = 'api/frontend/partners/details/';
+
 
 }

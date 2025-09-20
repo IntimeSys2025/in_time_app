@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:in_time_app/features/home/data/models/partner_details_model.dart';
 
 import '../../data/models/sub_service_model.dart';
 
@@ -13,25 +14,45 @@ final class GetCategoriesSuccessState extends HomeState {
   GetCategoriesSuccessState();
 }
 
-final class GetSlidersSuccessState extends HomeState{
-   GetSlidersSuccessState();
+final class GetSlidersSuccessState extends HomeState {
+  GetSlidersSuccessState();
 }
-final class GetHomeDataLoadingState extends HomeState{
+
+final class GetHomeDataLoadingState extends HomeState {
   GetHomeDataLoadingState();
 }
-final class GetServicesSuccessState extends HomeState{
+
+final class GetServicesSuccessState extends HomeState {
   GetServicesSuccessState();
 }
-final class GetSubServicesLoadingState extends HomeState{
+
+final class GetSubServicesLoadingState extends HomeState {
   GetSubServicesLoadingState();
 }
+
 final class GetSubServicesSuccessState extends HomeState {
   final SubServiceModel subServiceModel;
   GetSubServicesSuccessState({required this.subServiceModel});
 }
-final class FilterServices extends HomeState{
+
+final class FilterServices extends HomeState {
   FilterServices();
 }
+
 final class ToggleViewAllServices extends HomeState {
   ToggleViewAllServices();
+}
+
+final class GetPartnerDetailsLoadingState extends HomeState {
+  GetPartnerDetailsLoadingState();
+}
+
+final class GetPartnerDetailsSuccessState extends HomeState {
+  final PartnerDetailsModel partnerDetails;
+  GetPartnerDetailsSuccessState({required this.partnerDetails});
+}
+
+final class GetPartnerDetailsFailureState extends HomeState {
+  final String errorMessage;
+  GetPartnerDetailsFailureState({required this.errorMessage});
 }

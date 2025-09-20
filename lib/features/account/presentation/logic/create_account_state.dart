@@ -24,7 +24,8 @@ class RegisterAccountSuccessState extends CreateAccountState {}
 
 class RegisterAccountFailureState extends CreateAccountState {
   final String errorMessage;
-  RegisterAccountFailureState({required this.errorMessage});
+   FailureRegisterModel? failure;
+  RegisterAccountFailureState( {required this.errorMessage, this.failure});
 }
 
 class SignInLoadingState extends CreateAccountState {}

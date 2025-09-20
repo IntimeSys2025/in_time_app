@@ -1,4 +1,5 @@
 import 'package:in_time_app/features/home/data/models/category_model.dart';
+import 'package:in_time_app/features/home/data/models/partner_details_model.dart';
 import 'package:in_time_app/features/home/data/models/partner_model.dart';
 import 'package:in_time_app/features/home/data/models/slider_model.dart';
 import 'package:in_time_app/features/home/data/models/sub_service_model.dart';
@@ -17,4 +18,5 @@ abstract class HomeRepo {
   FutureResult<List<AvailableTimesInDateModel>> getAvailableTimesInDate(
       {required Map<String, dynamic> params});
   FutureResult<List<PartnerModel>> getPartners({String? categoryId});
+  FutureResult<PartnerDetailsModel> getPartnerDetails({required String partnerId});
 }

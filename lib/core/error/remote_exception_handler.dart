@@ -1,11 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../localization/locale_keys.g.dart';
 import '../network/status_code.dart';
 
 abstract class RemoteExceptionHandler {
-  static String handleException(DioException error) {
+  static dynamic handleException(DioException error) {
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
         return LocaleKeys.connectionTimeout.tr();
@@ -27,6 +28,8 @@ abstract class RemoteExceptionHandler {
             return LocaleKeys.conflict.tr();
           case StatusCode.internalServerError:
             return LocaleKeys.internalServerError.tr();
+          case StatusCode.unprocessableEntity:
+            return error.response?.data;
           default:
             return LocaleKeys.serverError.tr();
         }

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_time_app/core/utils/app_colors.dart';
 import 'package:in_time_app/features/home/presentation/logic/home_cubit.dart';
 import 'package:in_time_app/features/home/presentation/logic/home_states.dart';
+import 'package:in_time_app/features/home/presentation/screens/partner_details_screen.dart';
 import 'package:in_time_app/features/home/presentation/widgets/appointmant_card.dart';
 import 'package:in_time_app/features/home/presentation/widgets/custom_search_bar.dart';
 import 'package:in_time_app/features/home/presentation/widgets/welcome_header.dart';
@@ -11,6 +12,7 @@ import '../../../../core/utils/app_font_size.dart';
 import '../widgets/category_widget.dart';
 import '../widgets/doctor_card.dart';
 import '../widgets/service_card.dart';
+import 'home_screen_one_doctor.dart';
 
 class HomeScreenMoreThanCategory extends StatelessWidget {
   const HomeScreenMoreThanCategory({super.key});
@@ -36,7 +38,19 @@ class HomeScreenMoreThanCategory extends StatelessWidget {
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0,vertical: 6),
-            child: BlocBuilder<HomeCubit, HomeState>(
+            child: BlocConsumer<HomeCubit, HomeState>(
+              listener: (context, state) {
+                if (state is GetPartnerDetailsSuccessState) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PartnerDetailsScreen(
+                          partnerDetails: state.partnerDetails,
+                          // partner: partner,
+                        ),
+                      ));
+                }
+              },
               buildWhen: (previous, current) =>
                   current is GetCategoriesSuccessState,
               builder: (context, state) {
@@ -46,8 +60,8 @@ class HomeScreenMoreThanCategory extends StatelessWidget {
                   children: [
                     const WelcomeHeader(),
                     const SizedBox(height: 20),
-                    const CustomSearchBar(),
-                    const SizedBox(height: 20),
+                    // const CustomSearchBar(),
+                    // const SizedBox(height: 20),
                     GridView.builder(
                       shrinkWrap: true,
                       itemCount: homeCubit.categories.length,
@@ -113,8 +127,17 @@ class HomeScreenMoreThanCategory extends StatelessWidget {
                         // itemCount: 3,
                         itemCount: homeCubit.partners.length,
                         itemBuilder: (context, index) {
-                          final partner = homeCubit.partners[0];
-                          return DoctorCard(partner: partner,);
+                          final partner = homeCubit.partners[index];
+                          return DoctorCard(partner: partner,
+                          // onTap:  () {
+                          //   homeCubit.getPartnerDetails(partnerId: partner.id.toString());
+                          //   // Navigator.push(
+                          //   //     context,
+                          //   //     MaterialPageRoute(
+                          //   //       builder: (context) => HomeScreenOneDoctor(partner: partner,),
+                          //   //     ));
+                          // },
+                          );
                         },
                       ),
                     ),

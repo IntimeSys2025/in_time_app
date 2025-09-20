@@ -12,6 +12,7 @@ import 'package:in_time_app/features/home/domain/use_cases/get_slider_use_case.d
 import 'package:in_time_app/features/home/domain/use_cases/sub_service_use_case.dart';
 import 'package:in_time_app/features/home/presentation/logic/home_states.dart';
 import '../../data/models/service_model.dart';
+import '../../domain/use_cases/get_partner_details_use_case.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   final GetCategoriesUseCase _getCategoriesUseCase;
@@ -20,13 +21,15 @@ class HomeCubit extends Cubit<HomeState> {
   final SubServiceUseCase _subServiceUseCase;
   final AppointmentsUseCas _appointmentsUseCas;
   final PartnersUseCase _partnersUseCase;
+  final PartnerDetailsUseCase _partnerDetailsUseCase;
   HomeCubit(
       this._getCategoriesUseCase,
       this._getSliderUseCase,
       this._getServiceUseCase,
       this._subServiceUseCase,
       this._appointmentsUseCas,
-      this._partnersUseCase)
+      this._partnersUseCase,
+      this._partnerDetailsUseCase)
       : super(HomeInitial());
 
   List<CategoryModel> categories = [];
@@ -157,5 +160,25 @@ class HomeCubit extends Cubit<HomeState> {
         debugPrint('Success:: ${partners.length}');
       },
     );
+  }
+
+  void getPartnerDetails({required String partnerId}) async {
+    emit(GetPartnerDetailsLoadingState());
+    final result = await _partnerDetailsUseCase.call(partnerId);
+
+    result.fold(
+      (failure) {
+        emit(GetPartnerDetailsFailureState(errorMessage: failure.message));
+
+        debugPrint('Failure: ${failure.message}');
+      },
+      (success) {
+        // partners = success;
+        emit(GetPartnerDetailsSuccessState(partnerDetails: success));
+        filteredServices  = success.services ?? [];
+        // debugPrint('Success:: ${success.toJson()}');
+      },
+    );
+    // emit(HomeInitial());
   }
 }

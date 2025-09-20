@@ -23,13 +23,13 @@ class ServiceModel extends Equatable {
   factory ServiceModel.fromJson(Map<String, dynamic> json) {
     return ServiceModel(
       id: json['id'] as int,
-      name: json['name'] as String,
-      title: json['title'] as String,
-      description: json['description'] as String,
+      name: json['name'] ?? '',
+      title: json['title'] ?? '',
+      description: json['description'] ?? '',
       price: json['price'] ?? 0,
-      category: json['category'] as String,
-      specialty: json['specialty'] as String,
-      imageUrl: json['image'] as String,
+      category: json['category']  ?? '',
+      specialty: json['specialty'] ?? '',
+      imageUrl: json['image'] ?? '',
     );
   }
   Map<String, dynamic> toJson() {

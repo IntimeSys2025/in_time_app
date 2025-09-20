@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_time_app/core/utils/app_colors.dart';
+import 'package:in_time_app/core/utils/app_font_size.dart';
 import 'package:in_time_app/features/account/presentation/logic/create_account_cubit.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
@@ -26,11 +27,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final cubit = BlocProvider.of<CreateAccountCubit>(context);
     return Scaffold(
       body: BlocConsumer<CreateAccountCubit, CreateAccountState>(
-        buildWhen: (previous, current) => current is CreateAccountInitial||
-        current is RegisterAccountLoadingState ||
+        buildWhen: (previous, current) =>
+            current is CreateAccountInitial ||
+            current is RegisterAccountLoadingState ||
             current is RegisterAccountSuccessState ||
             current is RegisterAccountFailureState,
-
         listener: (context, state) {
           if (state is RegisterAccountSuccessState) {
             Navigator.push(
@@ -38,256 +39,314 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 MaterialPageRoute(
                   builder: (context) => OtpVerificationScreen(),
                 ));
-          }else if(state is RegisterAccountFailureState){
+          } else if (state is RegisterAccountFailureState &&
+              state.failure != null) {
+            // ScaffoldMessenger.of(context).showSnackBar(
+            //   SnackBar(
+            //     content: Text(state.errorMessage),
+            //     backgroundColor: Colors.red,
+            //   ),
+            // );
+
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text(state.errorMessage,style: const TextStyle(
+                      fontSize: AppFontSize.fontSize18
+                  ),),
+
+
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Icon(Icons.error_outline,color: AppColors.kRed,),
+                      if(state.failure!.errors?.mobile.isNotEmpty ?? false)
+                      Text(state.failure!.errors?.mobile.first ?? ''),
+
+                      if(state.failure!.errors?.dateOfBirth.isNotEmpty ?? false)
+                      Text(state.failure!.errors?.dateOfBirth.first ?? ''),
+
+                      if(state.failure!.errors?.firstName.isNotEmpty ?? false)
+                      Text(state.failure!.errors?.firstName.first ?? ''),
+
+                      if(state.failure!.errors?.password.isNotEmpty ?? false)
+                      Text(state.failure!.errors?.password.first ?? ''),
+                    ],
+                  ),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Try Again'))
+                  ],
+                );
+              },
+            );
+          } else if (state is RegisterAccountFailureState) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.errorMessage),
                 backgroundColor: Colors.red,
               ),
             );
-
           }
         },
-       builder: (context, state) {
-         return SafeArea(
-           child: SingleChildScrollView(
-             padding: const EdgeInsets.all(20),
-             child: Column(
-               crossAxisAlignment: CrossAxisAlignment.start,
-               children: [
-                 // const SizedBox(height: 40),
-                 Column(
-                   crossAxisAlignment: CrossAxisAlignment.start,
-                   children: [
-                     Image.asset("assets/images/logo_green.png", height: 60),
-                     // Replace with your logo
-                     const SizedBox(height: 10),
-                     RichText(
-                       text: const TextSpan(
-                         text: "Welcome to ",
-                         style: TextStyle(fontSize: 24, color: Colors.black),
-                         children: [
-                           TextSpan(
-                             text: "inTime",
-                             style: TextStyle(
-                                 fontWeight: FontWeight.bold, color: Colors.green),
-                           ),
-                         ],
-                       ),
-                     ),
-                     const SizedBox(height: 5),
-                     const Text("Hello there, Sign Up to continue",
-                         style: TextStyle(color: Colors.grey)),
-                   ],
-                 ),
-                 const SizedBox(height: 20),
-                 Form(
-                   key: cubit.phoneNumberFormKey,
-                   child: Column(
-                     children: [
-                       Row(
-                         children: [
-                           Expanded(
-                               child: _buildTextField(
-                                   controller: cubit.firstNameController,
-                                   // onChanged: (value) {
-                                   //
-                                   // },
-                                   "First name",
-                                   "Enter your first name",
-                                   inputFormatters: [
-                                     FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
-                                     LengthLimitingTextInputFormatter(30),
-                                   ])),
-                           const SizedBox(width: 10),
-                           Expanded(
-                               child: _buildTextField(
-                                   controller: cubit.lastNameController,
-                                   "Last name",
-                                   "Enter your last name",
-                                   inputFormatters: [
-                                     FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
-                                     LengthLimitingTextInputFormatter(30),
-                                   ])),
-                         ],
-                       ),
-                       const SizedBox(height: 20),
-                       // _buildTextField("Mobile Number", "+966 XXX XXX XXXX"),
-                       Directionality(
-                           textDirection: TextDirection.ltr,
-                           child: IntlPhoneField(
-                             invalidNumberMessage: 'Invalid phone Number',
-                             decoration: const InputDecoration(
-                               labelText: 'Phone Number',
-                               border: OutlineInputBorder(
-                                 borderSide: BorderSide(),
-                               ),
-                             ),
-                             initialCountryCode: 'EG',
-                             // countries: [],
-                             validator: (value) {
-                               if(value == null || value.number.isEmpty) {
-                                 return 'Please enter a valid phone number';
-                               }
-                               debugPrint('Val:: ${value?.completeNumber}');
-                               return null;
-                               // return createAccountCubit.validatePhoneNumber(value!);
-                             },
-                             inputFormatters: [
-                               FilteringTextInputFormatter.digitsOnly
-                             ],
-                             keyboardType: TextInputType.phone,
-                             // countries: ["SA"],
-                             onChanged: (phone) {
-                               cubit.signUpPhone = phone;
-                             },
-                           )),
-                       const SizedBox(height: 10),
-                       _buildTextField(isVisible: isVisiblePassword, onPressed: () {
-                         setState(() {
-                           isVisiblePassword = !isVisiblePassword;
-                         });
-                       },
-                           controller: cubit.passwordSignUpController,
-                           "Password",
-                           "Enter your password",
-                           isPassword: true,
-                           inputFormatters:  [
-                             FilteringTextInputFormatter.allow(RegExp(r'.*')), // Accepts anything
-                           ]
-                       ),
-                       const SizedBox(height: 10),
-                       _buildTextField("Confirm Password", "Enter your password",
-                           isPassword: true,
-                           onPressed: () {
-                             setState(() {
-                               isVisibleConfirmPassword = !isVisibleConfirmPassword;
-                             });
-                           },
-                           isVisible: isVisibleConfirmPassword,
-                           controller: cubit.confirmPasswordController,
-                           inputFormatters:  [
-                             FilteringTextInputFormatter.allow(RegExp(r'.*')), // Accepts anything
-                           ]),
-                     ],
-                   ),
-                 ),
+        builder: (context, state) {
+          return SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // const SizedBox(height: 40),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Image.asset("assets/images/logo_green.png", height: 60),
+                      // Replace with your logo
+                      const SizedBox(height: 10),
+                      RichText(
+                        text: const TextSpan(
+                          text: "Welcome to ",
+                          style: TextStyle(fontSize: 24, color: Colors.black),
+                          children: [
+                            TextSpan(
+                              text: "inTime",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.green),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      const Text("Hello there, Sign Up to continue",
+                          style: TextStyle(color: Colors.grey)),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Form(
+                    key: cubit.phoneNumberFormKey,
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                                child: _buildTextField(
+                                    controller: cubit.firstNameController,
+                                    // onChanged: (value) {
+                                    //
+                                    // },
+                                    "First name",
+                                    "Enter your first name",
+                                    inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'[a-zA-Z\s]')),
+                                  LengthLimitingTextInputFormatter(30),
+                                ])),
+                            const SizedBox(width: 10),
+                            Expanded(
+                                child: _buildTextField(
+                                    controller: cubit.lastNameController,
+                                    "Last name",
+                                    "Enter your last name",
+                                    inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'[a-zA-Z\s]')),
+                                  LengthLimitingTextInputFormatter(30),
+                                ])),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        // _buildTextField("Mobile Number", "+966 XXX XXX XXXX"),
+                        Directionality(
+                            textDirection: TextDirection.ltr,
+                            child: IntlPhoneField(
+                              invalidNumberMessage: 'Invalid phone Number',
+                              decoration: const InputDecoration(
+                                labelText: 'Phone Number',
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(),
+                                ),
+                              ),
+                              initialCountryCode: 'EG',
+                              // countries: [],
+                              validator: (value) {
+                                if (value == null || value.number.isEmpty) {
+                                  return 'Please enter a valid phone number';
+                                }
+                                debugPrint('Val:: ${value?.completeNumber}');
+                                return null;
+                                // return createAccountCubit.validatePhoneNumber(value!);
+                              },
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
+                              keyboardType: TextInputType.phone,
+                              // countries: ["SA"],
+                              onChanged: (phone) {
+                                cubit.signUpPhone = phone;
+                              },
+                            )),
+                        const SizedBox(height: 10),
+                        _buildTextField(isVisible: isVisiblePassword,
+                            onPressed: () {
+                          setState(() {
+                            isVisiblePassword = !isVisiblePassword;
+                          });
+                        },
+                            controller: cubit.passwordSignUpController,
+                            "Password",
+                            "Enter your password",
+                            isPassword: true,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'.*')), // Accepts anything
+                            ]),
+                        const SizedBox(height: 10),
+                        _buildTextField(
+                            "Confirm Password", "Enter your password",
+                            isPassword: true, onPressed: () {
+                          setState(() {
+                            isVisibleConfirmPassword =
+                                !isVisibleConfirmPassword;
+                          });
+                        },
+                            isVisible: isVisibleConfirmPassword,
+                            controller: cubit.confirmPasswordController,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'.*')), // Accepts anything
+                            ]),
+                      ],
+                    ),
+                  ),
 
-                 const SizedBox(height: 10),
-                 Directionality(
-                     textDirection: TextDirection.ltr,
-                     child: IntlPhoneField(
-                       invalidNumberMessage: 'Invalid phone Number',
-                       decoration: const InputDecoration(
-                         labelText: 'Additional Phone Number',
-                         border: OutlineInputBorder(
-                           borderSide: BorderSide(),
-                         ),
-                       ),
-                       initialCountryCode: 'EG',
-                       validator: (value) {
-                         debugPrint('Val:: ${value?.completeNumber}');
-                         return null;
-                         // return createAccountCubit.validatePhoneNumber(value!);
-                       },
-                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                       keyboardType: TextInputType.phone,
-                       // countries: ["SA"],
-                       onChanged: (phone) {
-                         cubit.signUpAdditionalPhone = phone;
-                       },
-                     )),
-                 const SizedBox(height: 10),
+                  const SizedBox(height: 10),
+                  Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: IntlPhoneField(
+                        invalidNumberMessage: 'Invalid phone Number',
+                        decoration: const InputDecoration(
+                          labelText: 'Additional Phone Number',
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(),
+                          ),
+                        ),
+                        initialCountryCode: 'EG',
+                        validator: (value) {
+                          debugPrint('Val:: ${value?.completeNumber}');
+                          return null;
+                          // return createAccountCubit.validatePhoneNumber(value!);
+                        },
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        keyboardType: TextInputType.phone,
+                        // countries: ["SA"],
+                        onChanged: (phone) {
+                          cubit.signUpAdditionalPhone = phone;
+                        },
+                      )),
+                  const SizedBox(height: 10),
 
-                 // Gender Selection
-                 const Text("Gender",
-                     style: TextStyle(fontWeight: FontWeight.bold)),
-                 Row(
-                   children: [
-                     _buildRadioButton("male"),
-                     _buildRadioButton("female"),
-                   ],
-                 ),
-                 const SizedBox(height: 10),
+                  // Gender Selection
+                  const Text("Gender",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  Row(
+                    children: [
+                      _buildRadioButton("male"),
+                      _buildRadioButton("female"),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
 
-                 _buildTextField("Date of birth", "Enter your Date Of Birth",
-                     isDatePicker: true, controller: cubit.dateOfBirthController),
-                 const SizedBox(height: 10),
+                  _buildTextField("Date of birth", "Enter your Date Of Birth",
+                      isDatePicker: true,
+                      controller: cubit.dateOfBirthController),
+                  const SizedBox(height: 10),
 
-                 // Terms and Privacy Checkboxes
-                 Row(
-                   children: [
-                     Checkbox(
-                       value: cubit.termsAccepted,
-                       onChanged: (value) =>
-                           setState(() => cubit.termsAccepted = value!),
-                     ),
-                     const Text("I agree to the "),
-                     const Text("Terms & Conditions",
-                         style: TextStyle(
-                             color: Colors.green, fontWeight: FontWeight.bold)),
-                   ],
-                 ),
-                 Row(
-                   children: [
-                     Checkbox(
-                       value: cubit.privacyAccepted,
-                       onChanged: (value) =>
-                           setState(() => cubit.privacyAccepted = value!),
-                     ),
-                     const Text("I agree to the "),
-                     const Text("Privacy Policy",
-                         style: TextStyle(
-                             color: Colors.green, fontWeight: FontWeight.bold)),
-                   ],
-                 ),
-                 const SizedBox(height: 20),
+                  // Terms and Privacy Checkboxes
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: cubit.termsAccepted,
+                        onChanged: (value) =>
+                            setState(() => cubit.termsAccepted = value!),
+                      ),
+                      const Text("I agree to the "),
+                      const Text("Terms & Conditions",
+                          style: TextStyle(
+                              color: Colors.green,
+                              fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: cubit.privacyAccepted,
+                        onChanged: (value) =>
+                            setState(() => cubit.privacyAccepted = value!),
+                      ),
+                      const Text("I agree to the "),
+                      const Text("Privacy Policy",
+                          style: TextStyle(
+                              color: Colors.green,
+                              fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
 
-                 // Sign Up Button with Fingerprint Icon
-                 SizedBox(
-                   width: double.infinity,
-                   height: 50,
-                   child: (state is RegisterAccountLoadingState)?ElevatedButton(
-                     style: ElevatedButton.styleFrom(
-                         backgroundColor: Colors.green,
-                         shape: RoundedRectangleBorder(
-                             borderRadius: BorderRadius.circular(10))),
-                     onPressed: () {
-                       // cubit.register();
-                     },
-                     child: Center(
-                       child: CircularProgressIndicator(
-                         color: AppColors.white,
-                       ),
-                     ),
-                   ):ElevatedButton(
-                     style: ElevatedButton.styleFrom(
-                         backgroundColor: Colors.green,
-                         shape: RoundedRectangleBorder(
-                             borderRadius: BorderRadius.circular(10))),
-                     onPressed: () {
-                       if(cubit.phoneNumberFormKey.currentState!.validate()){
-                         cubit.register();
-                       }
-
-                     },
-                     child: const Row(
-                       mainAxisAlignment: MainAxisAlignment.center,
-                       children: [
-                         Text("Sign Up",
-                             style: TextStyle(fontSize: 18, color: Colors.white)),
-                         SizedBox(width: 10),
-                         // Icon(Icons.fingerprint, color: Colors.white),
-                       ],
-                     ),
-                   ),
-                 ),
-                 const SizedBox(height: 20),
-               ],
-             ),
-           ),
-         );
-       },
+                  // Sign Up Button with Fingerprint Icon
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: (state is RegisterAccountLoadingState)
+                        ? ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10))),
+                            onPressed: () {
+                              // cubit.register();
+                            },
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: AppColors.white,
+                              ),
+                            ),
+                          )
+                        : ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10))),
+                            onPressed: () {
+                              if (cubit.phoneNumberFormKey.currentState!
+                                  .validate()) {
+                                cubit.register();
+                              }
+                            },
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text("Sign Up",
+                                    style: TextStyle(
+                                        fontSize: 18, color: Colors.white)),
+                                SizedBox(width: 10),
+                                // Icon(Icons.fingerprint, color: Colors.white),
+                              ],
+                            ),
+                          ),
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -320,18 +379,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
           // debugPrint('Date:: $date ,, ${date.runtimeType}');
         }
       },
-      validator: isPassword ? validatePassword :(value) {
-        if (isPassword) {
-          debugPrint('ValPass:: ${validatePassword(value)}');
-          return validatePassword(value);
-        }else{
-          if (value == null || value.isEmpty) {
-            return hintText;
-          }
-          return null;
-        }
-
-      },
+      validator: isPassword
+          ? validatePassword
+          : (value) {
+              if (isPassword) {
+                debugPrint('ValPass:: ${validatePassword(value)}');
+                return validatePassword(value);
+              } else {
+                if (value == null || value.isEmpty) {
+                  return hintText;
+                }
+                return null;
+              }
+            },
       obscureText: isPassword && !isVisible,
       decoration: InputDecoration(
         labelText: label,
@@ -365,6 +425,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ],
     );
   }
+
   String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Password is required';
@@ -380,5 +441,4 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     return null; // Password is valid
   }
-
 }

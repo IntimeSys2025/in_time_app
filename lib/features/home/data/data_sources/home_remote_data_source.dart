@@ -1,5 +1,6 @@
 import 'package:in_time_app/features/home/data/models/appointment_model.dart';
 import 'package:in_time_app/features/home/data/models/category_model.dart';
+import 'package:in_time_app/features/home/data/models/partner_details_model.dart';
 import 'package:in_time_app/features/home/data/models/partner_model.dart';
 import 'package:in_time_app/features/home/data/models/service_model.dart';
 import 'package:in_time_app/features/home/data/models/slider_model.dart';
@@ -19,6 +20,8 @@ abstract class HomeRemoteDataSource {
       {required Map<String, dynamic> params});
 
   Future<List<PartnerModel>> getPartners({String? categoryId});
+  Future<PartnerDetailsModel> getPartnerDetails({required String partnerId});
+
 }
 
 class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
@@ -99,5 +102,14 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
       partners.add(PartnerModel.fromJson(element));
     }
     return partners;
+  }
+
+  @override
+  Future<PartnerDetailsModel> getPartnerDetails({required String partnerId}) async{
+    final response = await _apiConsumer.get(path: '${EndPoints.getPartnerDetails}$partnerId');
+    return PartnerDetailsModel.fromJson(response.data['data']);
+
+
+
   }
 }

@@ -29,16 +29,11 @@ class DoctorDescCard extends StatelessWidget {
             // height: 200,
             width: MediaQuery.of(context).size.width * 0.3,
             errorBuilder: (context, error, stackTrace) {
-              return Container(
-                // height: 100,
-                // width: MediaQuery.of(context).size.width * 0.3,
-                color: AppColors.moreLightGrey.withOpacity(0.2),
-                child: Center(
-                  child: Text(
-                    'No Image Available',
-                    style: const TextStyle(color: Colors.black54),
-                  ),
-                ),
+              return Image.asset(
+                AppAsset.inTimeApp,
+                fit: BoxFit.fitWidth,
+                // height: 150,
+                width: 70,
               );
             },
           ),

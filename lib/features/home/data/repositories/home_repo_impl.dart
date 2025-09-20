@@ -5,6 +5,7 @@ import 'package:in_time_app/core/utils/type_def.dart';
 import 'package:in_time_app/features/home/data/models/appointment_model.dart';
 import 'package:in_time_app/features/home/data/models/available_times_in_date_model.dart';
 import 'package:in_time_app/features/home/data/models/category_model.dart';
+import 'package:in_time_app/features/home/data/models/partner_details_model.dart';
 import 'package:in_time_app/features/home/data/models/partner_model.dart';
 import 'package:in_time_app/features/home/data/models/service_model.dart';
 import 'package:in_time_app/features/home/data/models/slider_model.dart';
@@ -97,5 +98,17 @@ class HomeRepoImpl implements HomeRepo {
       return Left(
           ServerFailure(message: error.message, statusCode: error.statusCode));
     }
+  }
+
+  @override
+  FutureResult<PartnerDetailsModel> getPartnerDetails({required String partnerId}) async{
+    try{
+      final result = await _remoteDataSource.getPartnerDetails(partnerId: partnerId);
+      return Right(result);
+
+    }on Failure catch(error){
+      return Left(ServerFailure(message: error.message,statusCode: error.statusCode));
+    }
+
   }
 }

@@ -9,6 +9,7 @@ import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_constants.dart';
 import '../../../../core/utils/app_font_size.dart';
 import '../logic/home_cubit.dart';
+import 'home_screen_one_doctor.dart';
 
 class HomeScreenMoreThanDoctor extends StatelessWidget {
   const HomeScreenMoreThanDoctor({super.key});
@@ -31,8 +32,8 @@ class HomeScreenMoreThanDoctor extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const WelcomeHeader(),
-                const SizedBox(height: 20),
-                const CustomSearchBar(),
+                // const SizedBox(height: 20),
+                // const CustomSearchBar(),
                 const SizedBox(height: 20),
                 const HospitalCard(),
                 const SizedBox(height: 20),
@@ -76,6 +77,13 @@ class HomeScreenMoreThanDoctor extends StatelessWidget {
                       itemBuilder: (context, index) {
                         final partner = homeCubit.partners[index];
                         return DoctorCard(
+                          // onTap:  () {
+                          //   Navigator.push(
+                          //       context,
+                          //       MaterialPageRoute(
+                          //         builder: (context) => HomeScreenOneDoctor(partner: partner,),
+                          //       ));
+                          // },
                           partner: partner,
                         );
                       },

@@ -1,16 +1,21 @@
+import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:in_time_app/core/network/api_consumer.dart';
 import 'package:in_time_app/core/utils/app_constants.dart';
 import 'package:in_time_app/features/account/data/models/arguments/login_params.dart';
 import 'package:in_time_app/features/account/data/models/arguments/verify_code_params.dart';
+import 'package:in_time_app/features/account/data/models/failure_register_model.dart';
 import 'package:in_time_app/features/account/domain/use_cases/forget_password_use_case.dart';
 import 'package:in_time_app/features/account/domain/use_cases/login_use_case.dart';
 import 'package:in_time_app/features/account/domain/use_cases/register_use_case.dart';
 import 'package:in_time_app/features/account/domain/use_cases/reset_password.dart';
 import 'package:in_time_app/features/account/domain/use_cases/verify_code_use_case.dart';
 import 'package:intl_phone_field/phone_number.dart';
+import '../../../../core/network/end_points.dart';
+import '../../../../core/service_locator/service_locator.dart';
 import '../../../../core/storage/secure_storage.dart';
 import '../../data/models/arguments/register_params.dart';
 import '../../data/models/arguments/reset_passwprd_params.dart';
@@ -99,8 +104,6 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
         return;
       }
 
-      // emit(CreateAccountInitial());
-      // emit(RegisterAccountLoadingState());
       final result = await _registerUseCase.call(
         RegisterParams(
             firstName: firstNameController.text,
@@ -113,12 +116,12 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
       );
       result.fold(
         (failure) {
-          // debugPrint('Failure:: $failure ,, ${failure.message}');
+          final FailureRegisterModel message = failure.message;
           emit(CreateAccountInitial());
-          emit(RegisterAccountFailureState(errorMessage: 'Already registered'));
+          emit(RegisterAccountFailureState(errorMessage: message.message ?? 'The given data was invalid.',
+          failure: message));
         },
         (user) {
-          // saveUserData(user: user);
           loginPhone = signUpPhone;
           passwordController = passwordSignUpController;
           rememberMe = false;
@@ -127,6 +130,34 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
           emit(RegisterAccountSuccessState());
         },
       );
+
+      /// new
+      // final Map<String, dynamic> result = await callRegisterApi(
+      //     params: RegisterParams(
+      //         firstName: firstNameController.text,
+      //         lastName: lastNameController.text,
+      //         mobile: signUpPhone?.completeNumber ?? '',
+      //         password: passwordSignUpController.text,
+      //         passwordConfirmation: confirmPasswordController.text,
+      //         dateBirth:
+      //             dateOfBirthController.text ?? DateTime.now().toString(),
+      //         gender: gender ?? ''));
+      // if (result["status_code"] == 200) {
+      //   loginPhone = signUpPhone;
+      //   passwordController = passwordSignUpController;
+      //   rememberMe = false;
+      //
+      //   logIn(fromSignUp: true);
+      //   emit(RegisterAccountSuccessState());
+      // } else {
+      //   final FailureRegisterModel failure =
+      //       FailureRegisterModel.fromJson(result["data"]);
+      //
+      //   emit(CreateAccountInitial());
+      //   emit(RegisterAccountFailureState(
+      //       errorMessage: failure.message ?? 'The given data was invalid.',
+      //       failure: failure));
+      // }
     }
   }
 
@@ -160,28 +191,30 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
         rememberMe: rememberMe));
     result.fold(
       (failure) {
-        emit(SignInFailureState(errorMessage: 'Invalid phone number or password'));
+        emit(SignInFailureState(
+            errorMessage: 'Invalid phone number or password'));
       },
       (success) {
-       saveUserData(user: success);
-       if(fromSignUp == false || fromSignUp == null){
-         emit(SignInSuccessState());
-       }
+        saveUserData(user: success);
+        if (fromSignUp == false || fromSignUp == null) {
+          emit(SignInSuccessState());
+        }
       },
     );
   }
-  saveUserData({required UserModel user })async{
-    if(rememberMe){
+
+  saveUserData({required UserModel user}) async {
+    if (rememberMe) {
       saveBoolValue(key: 'loggedIn', value: user.rememberMe);
     }
     saveStringValue(key: 'user_id', value: user.id.toString());
-    saveStringValue(key: 'user_name', value: '${user.firstName} ${user.lastName}');
+    saveStringValue(
+        key: 'user_name', value: '${user.firstName} ${user.lastName}');
     saveStringValue(key: 'mobile', value: user.mobile);
     saveStringValue(key: 'token', value: user.token);
     AppConstants.isLoggedIn = await getBoolValue(key: 'loggedIn');
     AppConstants.token = (await getStringValue(key: 'token')) ?? '';
     AppConstants.fullName = await getStringValue(key: 'user_name') ?? '';
-
   }
 
   /// forget password section
@@ -194,7 +227,8 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
           .call(forgetPasswordPhone!.completeNumber.toString());
       result.fold(
         (failure) {
-          emit(ForgetPasswordFailureState(errorMessage: 'The mobile number is not valid'));
+          emit(ForgetPasswordFailureState(
+              errorMessage: 'The mobile number is not valid'));
         },
         (success) {
           code = success;
@@ -239,8 +273,7 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
       TextEditingController();
   void resetPassword() async {
     emit(ResetPasswordLoadingState());
-    if (resetPasswordController.text !=
-        resetConfirmPasswordController.text) {
+    if (resetPasswordController.text != resetConfirmPasswordController.text) {
       emit(CreateAccountInitial());
       emit(ResetPasswordFailureState(errorMessage: 'passwords do not match'));
       return;
@@ -258,4 +291,26 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
       },
     );
   }
+}
+
+Future<Map<String, dynamic>> callRegisterApi(
+    {required RegisterParams params}) async {
+  final Dio dio = Dio();
+  Response response = await dio.post('${EndPoints.baseUrl}${EndPoints.register}',data: params.toJson());
+  debugPrint("FFFFFFFFF: ${response.statusCode} ,, ${response.data}");
+  return {"status_code": response.statusCode, "data": response.data};
+  // try {
+  //   return {"status_code": response.statusCode, "data": response.data};
+  //
+  //   print(response.data);
+  // } catch (e) {
+  //   print('Error: $e');
+  //   return {"status_code": 400, "data": "Server Error"};
+  // }
+
+
+
+  // final response = await sl<ApiConsumer>()
+  //     .post(path: EndPoints.register, body: params.toJson());
+  // return {"status_code": response.statusCode, "data": response.data};
 }

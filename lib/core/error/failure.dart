@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 
 @immutable
 class Failure extends Equatable {
-  final String message;
+  final dynamic message;
   final int statusCode;
 
   const Failure({required this.message, required this.statusCode});
