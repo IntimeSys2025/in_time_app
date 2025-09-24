@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:in_time_app/core/helpers/extension.dart';
 import 'package:in_time_app/core/utils/app_colors.dart';
 import 'package:in_time_app/core/utils/app_font_size.dart';
 import 'package:in_time_app/features/account/presentation/logic/create_account_cubit.dart';
+import 'package:in_time_app/features/account/presentation/screens/loginScreen.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
 import 'otp_verification_screen.dart';
@@ -52,26 +54,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  title: Text(state.errorMessage,style: const TextStyle(
-                      fontSize: AppFontSize.fontSize18
-                  ),),
-
-
+                  title: Text(
+                    state.errorMessage,
+                    style: const TextStyle(fontSize: AppFontSize.fontSize18),
+                  ),
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       // Icon(Icons.error_outline,color: AppColors.kRed,),
-                      if(state.failure!.errors?.mobile.isNotEmpty ?? false)
-                      Text(state.failure!.errors?.mobile.first ?? ''),
+                      if (state.failure!.errors?.mobile.isNotEmpty ?? false)
+                        Text(state.failure!.errors?.mobile.first ?? ''),
 
-                      if(state.failure!.errors?.dateOfBirth.isNotEmpty ?? false)
-                      Text(state.failure!.errors?.dateOfBirth.first ?? ''),
+                      if (state.failure!.errors?.dateOfBirth.isNotEmpty ??
+                          false)
+                        Text(state.failure!.errors?.dateOfBirth.first ?? ''),
 
-                      if(state.failure!.errors?.firstName.isNotEmpty ?? false)
-                      Text(state.failure!.errors?.firstName.first ?? ''),
+                      if (state.failure!.errors?.firstName.isNotEmpty ?? false)
+                        Text(state.failure!.errors?.firstName.first ?? ''),
 
-                      if(state.failure!.errors?.password.isNotEmpty ?? false)
-                      Text(state.failure!.errors?.password.first ?? ''),
+                      if (state.failure!.errors?.password.isNotEmpty ?? false)
+                        Text(state.failure!.errors?.password.first ?? ''),
                     ],
                   ),
                   actions: [
@@ -126,7 +128,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           style: TextStyle(color: Colors.grey)),
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  20.heightSpace,
+                  Row(
+                    children: [
+                      Text('Do you have an account?',style: TextStyle(
+                          fontSize: AppFontSize.fontSize16
+                      ),),
+                      5.widthSpace,
+                      GestureDetector(
+                        onTap: (){
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LoginScreen(),
+                              ));
+                        },
+                          child: Text(
+                        'Login',
+                        style: TextStyle(color: AppColors.green,fontSize: AppFontSize.fontSize16),
+                      )),
+                    ],
+                  ),
+                  20.heightSpace,
+
                   Form(
                     key: cubit.phoneNumberFormKey,
                     child: Column(
@@ -273,6 +297,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     children: [
                       Checkbox(
                         value: cubit.termsAccepted,
+                        activeColor: AppColors.green,
                         onChanged: (value) =>
                             setState(() => cubit.termsAccepted = value!),
                       ),
@@ -287,6 +312,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     children: [
                       Checkbox(
                         value: cubit.privacyAccepted,
+                        activeColor: AppColors.green,
                         onChanged: (value) =>
                             setState(() => cubit.privacyAccepted = value!),
                       ),
@@ -374,6 +400,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
             firstDate: DateTime(1900),
             lastDate: DateTime.now(),
           );
+
+          debugPrint('Calendar :: ${date}');
           cubit.setDateOfBirth(date ?? DateTime.now());
           // cubit.dateOfBirthController.text = date.toString();
           // debugPrint('Date:: $date ,, ${date.runtimeType}');
@@ -417,6 +445,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       children: [
         Radio(
           value: value,
+          activeColor: AppColors.green,
           groupValue: cubit.gender,
           onChanged: (newValue) =>
               setState(() => cubit.gender = newValue as String),

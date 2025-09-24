@@ -20,6 +20,7 @@ import '../../../../core/storage/secure_storage.dart';
 import '../../data/models/arguments/register_params.dart';
 import '../../data/models/arguments/reset_passwprd_params.dart';
 import '../../data/models/user_model.dart';
+import 'package:intl/intl.dart';
 part 'create_account_state.dart';
 
 class CreateAccountCubit extends Cubit<CreateAccountState> {
@@ -54,8 +55,10 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
   bool privacyAccepted = false;
 
   setDateOfBirth(DateTime date) {
+    debugPrint('Date time:: $date');
     dateOfBirth = date;
-    String formattedDate = DateFormat('yyyy-MM-dd').format(date);
+    String formattedDate = DateFormat('yyyy-MM-dd','en').format(date);
+    // String formattedDate = DateFormat.yMMMMd().format(date);
     dateOfBirthController.text = formattedDate;
   }
 
@@ -83,6 +86,13 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
         emit(RegisterAccountFailureState(
             errorMessage: 'Please enter a valid phone number'));
         return;
+      }
+      if(gender == null){
+        emit(CreateAccountInitial());
+        emit(RegisterAccountFailureState(
+            errorMessage: 'please choose your gender'));
+        return;
+
       }
       if (!availableDate()) {
         debugPrint('age::: ${availableDate()}');

@@ -12,13 +12,16 @@ import 'package:in_time_app/features/account/presentation/logic/create_account_c
 import 'package:in_time_app/features/home/presentation/logic/home_cubit.dart';
 import 'package:in_time_app/features/home/presentation/screens/home_screen_one_doctor.dart';
 import 'package:in_time_app/features/home/presentation/screens/navigation_screen.dart';
-
 import 'core/observers/cubit_observer.dart';
 import 'features/account/presentation/screens/loginScreen.dart';
 import 'features/appointment/presentation/logic/appointment_cubit.dart';
+import 'package:intl/date_symbol_data_local.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await initializeDateFormatting();
 
   /// initialize easy localization
   await EasyLocalization.ensureInitialized();
