@@ -75,7 +75,7 @@ class HomeScreenOneDoctor extends StatelessWidget {
                           const SizedBox(height: 20),
                           const CustomSearchBar(),
                           const SizedBox(height: 20),
-                          // if(slider != null)
+                          if(homeCubit.sliders.isNotEmpty)
                           DoctorDescCard(sliderModel: homeCubit.sliders[0]),
                           const SizedBox(height: 20),
                           if (AppConstants.token != '' &&
