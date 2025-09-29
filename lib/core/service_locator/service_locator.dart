@@ -19,6 +19,7 @@ import 'package:in_time_app/features/home/domain/use_cases/get_partners_use_case
 import 'package:in_time_app/features/home/domain/use_cases/get_services_use_case.dart';
 import 'package:in_time_app/features/home/domain/use_cases/get_slider_use_case.dart';
 import 'package:in_time_app/features/home/domain/use_cases/sub_service_use_case.dart';
+import 'package:in_time_app/features/profile/presentation/logic/profile_cubit.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import '../../features/account/domain/use_cases/register_use_case.dart';
 import '../../features/home/domain/use_cases/get_appointment_in_date.dart';
@@ -52,6 +53,8 @@ sealed class ServiceLocator {
       () => AppointmentCubit(
           sl<AppointmentsUseCas>(), sl<GetAvailableTimesInDateUseCase>()),
     );
+    sl.registerLazySingleton(
+          () => ProfileCubit());
 
     /// register use cases
     sl.registerLazySingleton<RegisterUseCase>(

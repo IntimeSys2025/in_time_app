@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:in_time_app/core/utils/app_colors.dart';
 
 class AppTextField extends StatelessWidget {
   final String hintText;
@@ -24,14 +25,15 @@ class AppTextField extends StatelessWidget {
     this.maxLines = 1,
     this.minLines = 1,
     this.readOnly = false,
-    this.icon,required this.labelText, required this.obscureText,
+    this.icon,
+    required this.labelText,
+    required this.obscureText,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       obscureText: obscureText,
-
       maxLines: maxLines,
       minLines: minLines,
       controller: controller,
@@ -41,8 +43,11 @@ class AppTextField extends StatelessWidget {
         labelText: labelText,
         hintText: hintText,
         prefixIcon: icon,
+        focusColor: AppColors.green,
 
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: AppColors.green)),
       ),
       validator: validator,
       onChanged: (value) {},

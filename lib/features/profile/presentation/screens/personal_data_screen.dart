@@ -5,6 +5,8 @@ import 'package:in_time_app/core/shared_widgets/app_button_widget.dart';
 import 'package:in_time_app/core/shared_widgets/app_text_button.dart';
 import 'package:in_time_app/core/shared_widgets/app_text_field.dart';
 import 'package:in_time_app/core/utils/app_colors.dart';
+import 'package:in_time_app/core/utils/app_font_size.dart';
+import 'package:in_time_app/features/profile/presentation/screens/change_password_screen.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
 class PersonalDataScreen extends StatelessWidget {
@@ -99,7 +101,25 @@ class PersonalDataScreen extends StatelessWidget {
                       hintText: '',
                       controller: TextEditingController()),
                 ),
-                AppTextButton(title: 'Change',)
+                5.widthSpace,
+                GestureDetector(
+                  onTap: () {
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //       builder: (context) => ChangePasswordScreen(),
+                    //     ));
+                  },
+                  child: const Text(
+                    'Change',
+                    style: TextStyle(
+                        color: AppColors.green,
+                        fontSize: AppFontSize.fontSize16,
+                        fontWeight: FontWeight.w600,
+                        decoration: TextDecoration.underline,
+                        decorationColor: AppColors.green),
+                  ),
+                )
               ],
             ),
             20.heightSpace,
@@ -144,15 +164,15 @@ class PersonalDataScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar:
-          SafeArea(
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
-              child: AppButtonWidget(title: 'Save Changes',
-                  backgroundColor: AppColors.green,
-                  onPressed: () {}),
-            ),
-          ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          child: AppButtonWidget(
+              title: 'Save Changes',
+              backgroundColor: AppColors.green,
+              onPressed: () {}),
+        ),
+      ),
     );
   }
 }

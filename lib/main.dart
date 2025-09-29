@@ -12,11 +12,11 @@ import 'package:in_time_app/features/account/presentation/logic/create_account_c
 import 'package:in_time_app/features/home/presentation/logic/home_cubit.dart';
 import 'package:in_time_app/features/home/presentation/screens/home_screen_one_doctor.dart';
 import 'package:in_time_app/features/home/presentation/screens/navigation_screen.dart';
+import 'package:in_time_app/features/profile/presentation/logic/profile_cubit.dart';
 import 'core/observers/cubit_observer.dart';
 import 'features/account/presentation/screens/loginScreen.dart';
 import 'features/appointment/presentation/logic/appointment_cubit.dart';
 import 'package:intl/date_symbol_data_local.dart';
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -67,14 +67,17 @@ class MyApp extends StatelessWidget {
             create: (context) =>
                 sl<AppointmentCubit>()..getAvailableAppointments(1),
           ),
+          BlocProvider(
+            create: (context) => sl<ProfileCubit>(),
+          ),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           // title: 'Flutter Demo',
-          // theme: ThemeData(
-          //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          //   useMaterial3: true,
-          // ),
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: AppColors.kGreenButton),
+            useMaterial3: true,
+          ),
           home:
               // const NavigationBarScreen()
 

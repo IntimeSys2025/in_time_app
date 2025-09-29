@@ -106,7 +106,7 @@ class _DateSelectionBottomSheetState extends State<DateSelectionBottomSheet> {
                         TableCalendar(
                           firstDay: DateTime.now().toUtc(),
                           // lastDay: DateTime.utc(2030, 8, 31),
-                          lastDay: DateTime.now().toUtc().add(Duration(days: 365)),
+                          lastDay: DateTime.now().toUtc().add(const Duration(days: 365)),
                           eventLoader: getEventForDay,
                           focusedDay: _focusedDay,
                           calendarFormat: _calendarFormat,
