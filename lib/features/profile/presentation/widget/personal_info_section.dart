@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:in_time_app/core/helpers/extension.dart';
 import 'package:in_time_app/features/profile/presentation/screens/account_security_screen.dart';
+import 'package:in_time_app/features/profile/presentation/screens/notification_screen.dart';
 import 'package:in_time_app/features/profile/presentation/screens/personal_data_screen.dart';
 import 'package:in_time_app/features/profile/presentation/widget/profile_action.dart';
 
@@ -39,7 +40,13 @@ class PersonalInfoSection extends StatelessWidget {
         ProfileAction(
             title: 'Notifacation',
             icon: const Icon(Icons.notifications_none),
-            onPressed: () {}),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NotificationsScreen(),
+                  ));
+            }),
       ],
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:in_time_app/core/helpers/extension.dart';
+import 'package:in_time_app/features/profile/presentation/screens/contact_us_screen.dart';
 import 'package:in_time_app/features/profile/presentation/widget/profile_action.dart';
 
 class AboutSection extends StatelessWidget {
@@ -19,7 +20,9 @@ class AboutSection extends StatelessWidget {
         ProfileAction(
             title: 'Contact Us',
             icon: const Icon(Icons.error_outline),
-            onPressed: () {}),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const ContactUsScreen(),));
+            }),
         ProfileAction(
             title: 'Privacy & Policy',
             icon: const Icon(Icons.lock_outline),
