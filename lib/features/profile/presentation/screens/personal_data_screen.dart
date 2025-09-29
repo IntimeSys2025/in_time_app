@@ -104,11 +104,11 @@ class PersonalDataScreen extends StatelessWidget {
                 5.widthSpace,
                 GestureDetector(
                   onTap: () {
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //       builder: (context) => ChangePasswordScreen(),
-                    //     ));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChangePasswordScreen(),
+                        ));
                   },
                   child: const Text(
                     'Change',

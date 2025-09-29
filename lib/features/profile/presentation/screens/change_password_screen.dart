@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:in_time_app/core/helpers/extension.dart';
 import 'package:in_time_app/core/shared_widgets/app_button_widget.dart';
 
 import '../../../../core/shared_widgets/app_text_field.dart';
+import '../../../../core/shared_widgets/password_text_field_widget.dart';
 
 class ChangePasswordScreen extends StatelessWidget {
   const ChangePasswordScreen({super.key});
@@ -14,27 +16,42 @@ class ChangePasswordScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         child: Column(
           children: [
-            AppTextField(
-                obscureText: true,
-                labelText: 'Password',
-                hintText: '',
-                controller: TextEditingController()),
+            10.heightSpace,
+            AppPasswordTextFieldWidget(
+              controller: TextEditingController(),
+              obscureText: true,
+              suffixIcon: IconButton(onPressed: (){}, icon: const Icon(Icons.visibility_off)),
+              title: 'Password',
+            ),
+            10.heightSpace,
+            AppPasswordTextFieldWidget(
+              controller: TextEditingController(),
+              obscureText: true,
+              suffixIcon: IconButton(onPressed: (){}, icon: const Icon(Icons.visibility_off)),
+              title: 'New Password',
+            ),
+            10.heightSpace,
+            AppPasswordTextFieldWidget(
+              controller: TextEditingController(),
+              obscureText: true,
+              suffixIcon: IconButton(onPressed: (){}, icon: const Icon(Icons.visibility_off)),
+              title: 'Confirm Password',
+            )
           ],
         ),
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: AppButtonWidget(
             title: 'Update',
-            onPressed: () {  },
+            onPressed: () {},
           ),
         ),
       ),
-
     );
   }
 }
