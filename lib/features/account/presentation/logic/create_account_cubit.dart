@@ -283,23 +283,24 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
       TextEditingController();
   void resetPassword() async {
     emit(ResetPasswordLoadingState());
-    if (resetPasswordController.text != resetConfirmPasswordController.text) {
-      emit(CreateAccountInitial());
-      emit(ResetPasswordFailureState(errorMessage: 'passwords do not match'));
-      return;
-    }
-    final result = await _resetPasswordUseCas.call(ResetPasswordParams(
-        password: resetPasswordController.text,
-        passwordConfirmation: resetConfirmPasswordController.text,
-        token: AppConstants.userToken));
-    result.fold(
-      (failure) {
-        emit(ResetPasswordFailureState(errorMessage: failure.message));
-      },
-      (success) {
-        emit(ResetPasswordSuccessState(successMessage: success));
-      },
-    );
+    emit(ResetPasswordSuccessState(successMessage: 'success'));
+    // if (resetPasswordController.text != resetConfirmPasswordController.text) {
+    //   emit(CreateAccountInitial());
+    //   emit(ResetPasswordFailureState(errorMessage: 'passwords do not match'));
+    //   return;
+    // }
+    // final result = await _resetPasswordUseCas.call(ResetPasswordParams(
+    //     password: resetPasswordController.text,
+    //     passwordConfirmation: resetConfirmPasswordController.text,
+    //     token: AppConstants.userToken));
+    // result.fold(
+    //   (failure) {
+    //     emit(ResetPasswordFailureState(errorMessage: failure.message));
+    //   },
+    //   (success) {
+    //     emit(ResetPasswordSuccessState(successMessage: success));
+    //   },
+    // );
   }
 }
 

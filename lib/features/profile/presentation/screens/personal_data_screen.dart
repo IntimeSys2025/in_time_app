@@ -9,6 +9,8 @@ import 'package:in_time_app/core/utils/app_font_size.dart';
 import 'package:in_time_app/features/profile/presentation/screens/change_password_screen.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
+import '../../../account/presentation/screens/reset_password_screen.dart';
+
 class PersonalDataScreen extends StatelessWidget {
   const PersonalDataScreen({super.key});
 
@@ -104,10 +106,15 @@ class PersonalDataScreen extends StatelessWidget {
                 5.widthSpace,
                 GestureDetector(
                   onTap: () {
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //       builder: (context) => ChangePasswordScreen(),
+                    //     ));
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ChangePasswordScreen(),
+                          builder: (context) => const ResetPasswordScreen(),
                         ));
                   },
                   child: const Text(
