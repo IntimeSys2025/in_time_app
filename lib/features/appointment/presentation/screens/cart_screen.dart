@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_time_app/core/shared_widgets/app_button_widget.dart';
 import '../../../../core/utils/app_constants.dart';
 import '../../../../core/utils/product_type.dart';
+import '../../../checkout/presentation/screens/checkout_screen.dart';
 import '../../../home/presentation/screens/home_screen_one_doctor.dart';
 import '../../../home/presentation/screens/navigation_screen.dart';
 import '../logic/appointment_cubit.dart';
@@ -41,7 +42,7 @@ class CartScreen extends StatelessWidget {
             child: ListView.builder(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
-              itemCount: appointmentCubit.subServicesBooked.length ?? 0,
+              itemCount: appointmentCubit.subServicesBooked.length,
               itemBuilder: (context, index) {
                 final subServiceModel =
                     appointmentCubit.subServicesBooked[index];
@@ -61,7 +62,9 @@ class CartScreen extends StatelessWidget {
                       // AppButtonWidget(title: 'Checkout', onPressed: () {}),
                       isCheckout
                           ? AppButtonWidget(
-                              height: 60, title: 'Checkout', onPressed: () {})
+                              height: 60, title: 'Checkout', onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => const CheckoutScreen(),));
+                      })
                           : AppButtonWidget(
                               height: 60,
                               title: 'Select Another Service',
