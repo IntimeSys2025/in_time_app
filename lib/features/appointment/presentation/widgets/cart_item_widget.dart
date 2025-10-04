@@ -8,6 +8,7 @@ import '../../../../core/shared_widgets/app_button_widget.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../home/data/models/sub_service_model.dart';
 import '../logic/appointment_cubit.dart';
+import 'doctor_info_card.dart';
 
 class CartItemWidget extends StatelessWidget {
   final bool showBookButton;
@@ -28,11 +29,12 @@ class CartItemWidget extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              if (isCheckout  && item.selectedDate != null && item.selectedTimeFormat12Hours != null)
+              if (isCheckout &&
+                  item.selectedDate != null &&
+                  item.selectedTimeFormat12Hours != null)
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     Text(
                       '${DateFormat('MMMM d, yyyy').format(item.selectedDate!)} - ${item.selectedTimeFormat12Hours}',
                       style: const TextStyle(
@@ -93,19 +95,25 @@ class CartItemWidget extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                       Row(
-                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                         children: [
-                           Text(
-                             item.service.title,
-                             style: TextStyle(
-                                 fontSize: 18, fontWeight: FontWeight.bold),
-                           ),
-                           IconButton(onPressed: (){
-                              appointmentCubit.removeServiceFromCart(serviceId: item.service.id);
-                           }, icon: Icon(Icons.delete_outlined,color: AppColors.kRed,))
-                         ],
-                       ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              item.service.title,
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            IconButton(
+                                onPressed: () {
+                                  appointmentCubit.removeServiceFromCart(
+                                      serviceId: item.service.id);
+                                },
+                                icon: Icon(
+                                  Icons.delete_outlined,
+                                  color: AppColors.kRed,
+                                ))
+                          ],
+                        ),
                         SizedBox(height: 4),
                         Text(
                           item.service.description,
@@ -185,8 +193,19 @@ class CartItemWidget extends StatelessWidget {
                   );
                 },
               ),
-              10.heightSpace,
-              if ((!appointmentCubit.showDateSelector) && showBookButton && ( item.selectedDate == null && item.selectedTimeFormat12Hours == null))
+              // 10.heightSpace,
+              // if(!isCheckout)
+              const Column(
+                children: [
+                  Divider(),
+                  DoctorInfoCard(),
+                ],
+              ),
+              // 10.heightSpace,
+              if ((!appointmentCubit.showDateSelector) &&
+                  showBookButton &&
+                  (item.selectedDate == null &&
+                      item.selectedTimeFormat12Hours == null))
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: AppButtonWidget(
