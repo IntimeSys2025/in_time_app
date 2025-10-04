@@ -45,8 +45,10 @@ class PaymentDetailsScreen extends StatelessWidget {
               ),
             ),
             10.heightSpace,
-            const Divider(),
+            // const Divider(),[
+            DashedLine(),
             10.heightSpace,
+
             ReceiptItem(label: 'Provider', value: 'Euphoria & Spa Beauty'),
             ReceiptItem(
                 label: 'Address', value: '123 Main Street, Anytown, USA'),
@@ -56,7 +58,7 @@ class PaymentDetailsScreen extends StatelessWidget {
             ReceiptItem(label: 'Booking Hours', value: '10.30 AM'),
             ReceiptItem(label: 'Specialist', value: 'Ali Ahmed'),
             ReceiptItem(label: 'Service', value: 'Achieve Your Goals'),
-            Divider(),
+            const Divider(),
             ReceiptItem(
               label: 'Total',
               value: '\$152.70',
