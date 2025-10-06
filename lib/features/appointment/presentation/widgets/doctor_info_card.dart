@@ -9,9 +9,10 @@ class DoctorInfoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: const Text(' Amir El-Sayed'),
-      subtitle:  Text('Specialist Cardiology',style: TextStyle(
-        color: AppColors.kGreenButton
-      ),),
+      subtitle: const Text(
+        'Specialist Cardiology',
+        style: TextStyle(color: AppColors.kGreenButton),
+      ),
       leading: Image.asset(AppAsset.doctorImage),
     );
   }

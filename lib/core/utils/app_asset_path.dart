@@ -7,5 +7,6 @@ sealed class AppAsset {
   static const String doctorImage = '$images/doctor.png';
   static const String servicesImage = '$images/service.png';
   static const String wallet = '$images/wallet.png';
+  static const String emptyCart = '$images/empty_cart.png';
 
 }

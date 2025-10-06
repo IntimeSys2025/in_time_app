@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:in_time_app/core/helpers/extension.dart';
 import 'package:in_time_app/core/shared_widgets/app_button_widget.dart';
 
+import '../../../home/presentation/screens/navigation_screen.dart';
 import '../widgets/receipt_item.dart';
 
 class PaymentDetailsScreen extends StatelessWidget {
@@ -70,7 +71,15 @@ class PaymentDetailsScreen extends StatelessWidget {
       bottomNavigationBar: SafeArea(
           child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        child: AppButtonWidget(title: 'Download PDF', onPressed: () {}),
+        child: AppButtonWidget(
+            title: 'Download PDF',
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const NavigationBarScreen(),
+                  ));
+            }),
       )),
     );
   }
