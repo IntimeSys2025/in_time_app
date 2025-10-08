@@ -34,6 +34,7 @@ sealed class AppColors {
   static const Color kGreenButton = Color(0xff66C87B);
   static const Color kLightGreen = Color(0xFFE5F5E8);
   static const Color kLightGreen2 = Color(0xFF0E6F3EB);
+  static const Color kLightGreen3 = Color(0xFF52B963);
 
   static const Color kVeryDarkGreen = Color(0xFF103913);
   static const Color kGreenBackground = Color(0xFF42944F);

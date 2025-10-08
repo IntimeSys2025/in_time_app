@@ -7,6 +7,7 @@ class AppTextButton extends StatelessWidget {
   final String title;
   final void Function()? onPressed;
   final Color textColor;
+
    AppTextButton({super.key, required this.title, this.onPressed,  this.textColor =AppColors.green});
 
   @override

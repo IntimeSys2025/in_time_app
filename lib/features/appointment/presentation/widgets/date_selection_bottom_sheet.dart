@@ -12,7 +12,8 @@ import 'package:in_time_app/features/appointment/presentation/widgets/available_
 import 'package:table_calendar/table_calendar.dart';
 
 class DateSelectionBottomSheet extends StatefulWidget {
-  const DateSelectionBottomSheet({super.key});
+  final bool isReschedule;
+  const DateSelectionBottomSheet({super.key, this.isReschedule = false});
 
   @override
   State<DateSelectionBottomSheet> createState() =>
@@ -66,15 +67,17 @@ class _DateSelectionBottomSheetState extends State<DateSelectionBottomSheet> {
           builder: (context, scrollController) {
             // return Text('data');
             return Container(
-              decoration: const BoxDecoration(color: AppColors.white,
-                  borderRadius: BorderRadius.only(topRight: Radius.circular(20),topLeft: Radius.circular(20)),
+              decoration: const BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(20),
+                      topLeft: Radius.circular(20)),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.moreLightGrey,
-                      blurRadius: 10,
-                      spreadRadius: 10,
-                      offset: Offset(0.0, 1.0)
-                    )
+                        color: AppColors.moreLightGrey,
+                        blurRadius: 10,
+                        spreadRadius: 10,
+                        offset: Offset(0.0, 1.0))
                   ]),
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -106,7 +109,9 @@ class _DateSelectionBottomSheetState extends State<DateSelectionBottomSheet> {
                         TableCalendar(
                           firstDay: DateTime.now().toUtc(),
                           // lastDay: DateTime.utc(2030, 8, 31),
-                          lastDay: DateTime.now().toUtc().add(const Duration(days: 365)),
+                          lastDay: DateTime.now()
+                              .toUtc()
+                              .add(const Duration(days: 365)),
                           eventLoader: getEventForDay,
                           focusedDay: _focusedDay,
                           calendarFormat: _calendarFormat,
@@ -189,8 +194,11 @@ class _DateSelectionBottomSheetState extends State<DateSelectionBottomSheet> {
                                                   appointmentCubit
                                                           .selectedDate ??
                                                       DateTime.now());
-                                          DateTime dateTime = DateTime.parse("$dateFormat ${time.startTime}");
-                                          String timeFormat = DateFormat('h:mm a').format(dateTime);
+                                          DateTime dateTime = DateTime.parse(
+                                              "$dateFormat ${time.startTime}");
+                                          String timeFormat =
+                                              DateFormat('h:mm a')
+                                                  .format(dateTime);
 
                                           return AvailableTimeWidget(
                                             // time: 'From ${time.startTime} \nTo ${time.endTime}',
@@ -220,7 +228,8 @@ class _DateSelectionBottomSheetState extends State<DateSelectionBottomSheet> {
                               child: AppButtonWidget(
                                   title: 'Confirm',
                                   onPressed: () {
-                                    appointmentCubit.confirmDateAndTime();
+                                    appointmentCubit.confirmDateAndTime(
+                                        isReschedule: widget.isReschedule);
                                   }))
 
                         //       await showDatePicker(

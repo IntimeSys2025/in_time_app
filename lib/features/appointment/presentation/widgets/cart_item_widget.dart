@@ -202,7 +202,8 @@ class CartItemWidget extends StatelessWidget {
                 ],
               ),
               // 10.heightSpace,
-              if ((!appointmentCubit.showDateSelector) &&
+              if (
+              (!appointmentCubit.showDateSelector) &&
                   showBookButton &&
                   (item.selectedDate == null &&
                       item.selectedTimeFormat12Hours == null))

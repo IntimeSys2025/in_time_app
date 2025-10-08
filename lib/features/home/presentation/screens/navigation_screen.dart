@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:in_time_app/core/utils/app_colors.dart';
 import 'package:in_time_app/core/utils/product_type.dart';
+import 'package:in_time_app/features/booking/presentation/screens/my_booking_screen.dart';
 import 'package:in_time_app/features/cart/presentation/screens/my_cart_screen.dart';
 import 'package:in_time_app/features/home/presentation/screens/home_screen_more_than_category.dart';
 import 'package:in_time_app/features/home/presentation/screens/home_screen_more_than_doctor.dart';
@@ -92,7 +93,7 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
             : (AppConstants.productType == ProductType.moreThanOneDoctor)
                 ? const HomeScreenMoreThanDoctor()
                 : const HomeScreenMoreThanCategory(),
-        Container(),
+        const MyBookingScreen(),
         const MyCartScreen(),
         const ProfileScreen(),
       ][selectedIndex],

@@ -40,7 +40,7 @@ class AppointmentCubit extends Cubit<AppointmentState> {
       // subServicesBooked[index1].subServices.addAll(subService.subServices);
       int index = subServicesBooked[index1].subServices.indexWhere(
             (element) => element.id == subService.subServices.first.id,
-      );
+          );
       if (index != -1) {
         subServicesBooked[index1].subServices.addAll(subService.subServices);
       } else {
@@ -50,31 +50,39 @@ class AppointmentCubit extends Cubit<AppointmentState> {
       subServicesBooked.add(subService);
     }
   }
-  void removeSubServiceBooked({required int serviceId, required int subServiceId}) {
+
+  void removeSubServiceBooked(
+      {required int serviceId, required int subServiceId}) {
     int index = subServicesBooked.indexWhere(
-          (element) => element.service.id == serviceId,
+      (element) => element.service.id == serviceId,
     );
     debugPrint('index: $index');
     if (index != -1) {
-      subServicesBooked[index].subServices.removeWhere((element) => element.id == subServiceId,);
+      subServicesBooked[index].subServices.removeWhere(
+            (element) => element.id == subServiceId,
+          );
       debugPrint('subServicesBooked: ${subServicesBooked.first.subServices},');
     } else {
       // subServicesBooked.add(subService);
       // emit(AddSubServiceBookedState());
     }
   }
+
   void removeServiceFromCart({required int serviceId}) {
-    subServicesBooked.removeWhere((element) => element.service.id == serviceId,);
+    subServicesBooked.removeWhere(
+      (element) => element.service.id == serviceId,
+    );
     debugPrint('removeSubServicesBooked: ${subServicesBooked},');
     emit(RefreshCartScreenState());
   }
+
   double totalPrice = 0.0;
   void calculateTotalPriceForService({required SubServiceModel service}) {
     totalPrice = 0;
     // for (var service in subServicesBooked) {
-      for (var subService in service.subServices) {
-        totalPrice += subService.price;
-      }
+    for (var subService in service.subServices) {
+      totalPrice += subService.price;
+    }
     // }
     // emit(CalculateTotalPriceState(totalPrice: totalPrice));
   }
@@ -125,25 +133,26 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     );
   }
 
-   String? selectedTimeFormat12Hours;
+  String? selectedTimeFormat12Hours;
 
   // String setSelectedTimeFormat12Hours(String time) {
   //   DateTime dateTime = DateTime.parse("$dateFormat ${time.startTime}");
   //   String timeFormat = DateFormat('h:mm a').format(dateTime);
   // }
-  void setTime({required AvailableTimesInDateModel time , required String selectedTimeFormatted}) async {
+  void setTime(
+      {required AvailableTimesInDateModel time,
+      required String selectedTimeFormatted}) async {
     selectedTime = time;
     selectedTimeFormat12Hours = selectedTimeFormatted;
-    if(selectedService != null){
+    if (selectedService != null) {
       selectedService?.selectedTimeFormat12Hours = selectedTimeFormat12Hours;
-
     }
     emit(AppointmentInitial());
     emit(UpdateSelectedTimeState());
   }
 
   bool showGoToCartButton = false;
-  void confirmDateAndTime() {
+  void confirmDateAndTime({bool isReschedule = false}) {
     if (selectedDate == null) {
       emit(ConfirmDateAndTimeFailureState(
           message: 'Please select a valid date'));
@@ -156,20 +165,31 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     }
     if (selectedDate != null && selectedTime != null) {
       showGoToCartButton = true;
-      if(selectedService != null){
+      if (selectedService != null) {
         selectedService?.selectedDate = selectedDate;
         selectedService?.selectedTime = selectedTime;
       }
-
-
       // toggleShowBottomSheet();
       emit(ConfirmDateAndTimeSuccessState());
+      if (isReschedule) {
+        emit(SuccessRescheduleBookingState());
+      }
     }
   }
 
   SubServiceModel? selectedService;
-  void setSelectedService({required SubServiceModel service}){
+  void setSelectedService({required SubServiceModel service}) {
     selectedService = service;
     calculateTotalPriceForService(service: service);
+  }
+
+  /// reschedule booking
+  void rescheduleBooking() {
+    emit(ConfirmRescheduleBookingState());
+  }
+  void cancelBooking({SubServiceModel? item})async{
+    removeServiceFromCart(serviceId: item!.service.id);
+    emit(CancelBookingState());
+    
   }
 }
