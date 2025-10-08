@@ -6,6 +6,7 @@ import 'package:in_time_app/features/booking/presentation/widgets/action_item.da
 import 'package:in_time_app/features/booking/presentation/widgets/booking_item.dart';
 import 'package:in_time_app/features/booking/presentation/widgets/empty_booking.dart';
 import 'package:in_time_app/features/booking/presentation/widgets/reschedule_completed_popup.dart';
+import 'package:in_time_app/features/rating/presentation/widgets/rating_popup.dart';
 
 import '../../../appointment/presentation/logic/appointment_cubit.dart';
 import '../../../appointment/presentation/widgets/cart_item_widget.dart';
@@ -65,7 +66,11 @@ class MyBookingScreen extends StatelessWidget {
                           title: 'Upcoming', onTap: () {}, selected: true)),
                   Expanded(
                       child: ActionItem(
-                          title: 'History', onTap: () {}, selected: false)),
+                          title: 'History', onTap: () {
+                            showDialog(context: context, builder: (context) {
+                              return RatingPopup();
+                            },);
+                      }, selected: false)),
                 ],
               ),
             ),
