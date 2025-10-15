@@ -19,6 +19,12 @@ import 'package:in_time_app/features/home/domain/use_cases/get_partners_use_case
 import 'package:in_time_app/features/home/domain/use_cases/get_services_use_case.dart';
 import 'package:in_time_app/features/home/domain/use_cases/get_slider_use_case.dart';
 import 'package:in_time_app/features/home/domain/use_cases/sub_service_use_case.dart';
+import 'package:in_time_app/features/profile/data/data_source/profile_remote_data_source.dart';
+import 'package:in_time_app/features/profile/data/repositories/profile_repo_impl.dart';
+import 'package:in_time_app/features/profile/domain/repositories/profile_repo.dart';
+import 'package:in_time_app/features/profile/domain/use_case/get_help_center_use_case.dart';
+import 'package:in_time_app/features/profile/domain/use_case/get_privacy_use_case.dart';
+import 'package:in_time_app/features/profile/domain/use_case/get_terms_use_case.dart';
 import 'package:in_time_app/features/profile/presentation/logic/profile_cubit.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import '../../features/account/domain/use_cases/register_use_case.dart';
@@ -53,8 +59,8 @@ sealed class ServiceLocator {
       () => AppointmentCubit(
           sl<AppointmentsUseCas>(), sl<GetAvailableTimesInDateUseCase>()),
     );
-    sl.registerLazySingleton(
-          () => ProfileCubit());
+    sl.registerLazySingleton(() => ProfileCubit(sl<TermsConditionsUseCase>(),
+        sl<PrivacyPolicyUseCase>(), sl<HelpCenterUseCase>()));
 
     /// register use cases
     sl.registerLazySingleton<RegisterUseCase>(
@@ -80,6 +86,15 @@ sealed class ServiceLocator {
         () => GetAvailableTimesInDateUseCase(sl<HomeRepo>()));
     sl.registerLazySingleton(() => PartnersUseCase(sl<HomeRepo>()));
     sl.registerLazySingleton(() => PartnerDetailsUseCase(sl<HomeRepo>()));
+    sl.registerLazySingleton(
+      () => TermsConditionsUseCase(sl<ProfileRepo>()),
+    );
+    sl.registerLazySingleton(
+      () => PrivacyPolicyUseCase(sl<ProfileRepo>()),
+    );
+    sl.registerLazySingleton(
+      () => HelpCenterUseCase(sl<ProfileRepo>()),
+    );
 
     /// register Repositories
     sl.registerLazySingleton<CreateAccountRepo>(
@@ -88,6 +103,8 @@ sealed class ServiceLocator {
     );
     sl.registerLazySingleton<HomeRepo>(() =>
         HomeRepoImpl(sl<HomeRemoteDataSourceImpl>(), sl<NetworkStatus>()));
+    sl.registerLazySingleton<ProfileRepo>(() => ProfileRepoImpl(
+        sl<ProfileRemoteDataSourceImpl>(), sl<NetworkStatus>()));
 
     ///register Data Source
     sl.registerLazySingleton<CreateAccountDataSourceImpl>(
@@ -95,6 +112,9 @@ sealed class ServiceLocator {
     );
     sl.registerLazySingleton<HomeRemoteDataSourceImpl>(
         () => HomeRemoteDataSourceImpl(sl<ApiConsumer>()));
+    sl.registerLazySingleton<ProfileRemoteDataSourceImpl>(
+      () => ProfileRemoteDataSourceImpl(sl<ApiConsumer>()),
+    );
 
     /// Core
     sl.registerLazySingleton<NetworkStatus>(() => NetworkStatusImpl(sl()));

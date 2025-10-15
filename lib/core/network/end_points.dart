@@ -15,5 +15,9 @@ sealed class EndPoints {
   static const String getPartners = 'api/frontend/partners/list';
   static const String getPartnerDetails = 'api/frontend/partners/details/';
 
+  static const String getTermsCondition = 'api/frontend/content/terms-conditions';
+  static const String getPrivacyPolicy = 'api/frontend/content/privacy-policy';
+  static const String getHelpCenter = 'api/frontend/content/help-center';
+
 
 }
