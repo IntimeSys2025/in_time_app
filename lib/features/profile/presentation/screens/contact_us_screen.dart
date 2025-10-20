@@ -75,24 +75,28 @@ class ContactUsScreen extends StatelessWidget {
                 hintText: 'We are pleased to contact you...',
                 controller: TextEditingController(),
                 labelText: 'Description',
-
-                minLines: 6,
+                minLines: 4,
                 maxLines: 9,
+                maxLength: 400,
                 obscureText: false),
 
-            20.heightSpace,
+            40.heightSpace,
+            AppButtonWidget(
+                title: 'Confirm',
+                backgroundColor: AppColors.green,
+                onPressed: () {})
           ],
         ),
       ),
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          child: AppButtonWidget(
-              title: 'Contact Us',
-              backgroundColor: AppColors.green,
-              onPressed: () {}),
-        ),
-      ),
+      // bottomNavigationBar: SafeArea(
+      //   child: Padding(
+      //     padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      //     child: AppButtonWidget(
+      //         title: 'Contact Us',
+      //         backgroundColor: AppColors.green,
+      //         onPressed: () {}),
+      //   ),
+      // ),
     );
   }
 }

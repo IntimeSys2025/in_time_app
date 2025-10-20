@@ -14,6 +14,7 @@ class AppTextField extends StatelessWidget {
   final int minLines;
   final bool readOnly;
   final bool obscureText;
+  final int? maxLength;
 
   const AppTextField({
     super.key,
@@ -28,6 +29,7 @@ class AppTextField extends StatelessWidget {
     this.icon,
     required this.labelText,
     required this.obscureText,
+    this.maxLength,
   });
 
   @override
@@ -44,13 +46,13 @@ class AppTextField extends StatelessWidget {
         hintText: hintText,
         prefixIcon: icon,
         focusColor: AppColors.green,
-
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide(color: AppColors.green)),
       ),
       validator: validator,
       onChanged: (value) {},
+      maxLength: maxLength,
     );
   }
 }

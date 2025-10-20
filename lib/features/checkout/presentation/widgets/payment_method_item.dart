@@ -22,7 +22,7 @@ class PaymentMethodItem extends StatelessWidget {
                 width: 2),
             borderRadius: BorderRadius.circular(15)),
         child: ListTile(
-          title: const Text('Apple Pay'),
+          title:  Text(title),
           subtitle: (subTitle != null) ? Text(subTitle!) : null,
           leading: Image.asset(AppAsset.wallet, height: 50),
           onTap: () {},

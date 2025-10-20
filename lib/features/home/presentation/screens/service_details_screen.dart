@@ -82,16 +82,16 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                     widget.subServiceModel.service.title,
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
-                  // Row(
-                  //   children: List.generate(
-                  //     5,
-                  //     (index) => Icon(
-                  //       Icons.star,
-                  //       color: index < 4 ? Colors.amber : Colors.grey.shade300,
-                  //       size: 18,
-                  //     ),
-                  //   ),
-                  // ),
+                  Row(
+                    children: List.generate(
+                      5,
+                      (index) => Icon(
+                        Icons.star,
+                        color: index < 4 ? Colors.amber : Colors.grey.shade300,
+                        size: 18,
+                      ),
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 8),
@@ -164,18 +164,22 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                                 ),
                                 // ...[
                                 20.widthSpace,
-                                if (subService.stateLabel != 'none')
+                                if (subService.stateLabel != 'none' && subService.stateLabel != '' )
                                   Container(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 20, vertical: 4),
                                     decoration: BoxDecoration(
                                       color: subService.stateLabel == 'new'
-                                          ? AppColors.kGreenButton
-                                          : AppColors.kRed,
+                                          ? AppColors.tagGreen
+                                          : (subService.stateLabel ==
+                                                  'best seller')
+                                              ? AppColors.tagYellow
+                                              : AppColors.tagRed,
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Text(
-                                      subService.stateLabel,
+                                        '${subService.stateLabel[0].toUpperCase()}${subService.stateLabel.substring(1)}',
+                                      // subService.stateLabel,
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 12,

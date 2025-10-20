@@ -83,14 +83,14 @@ class AccountSecurityScreen extends StatelessWidget {
                   },
                 ),
               ),
-              const Divider(),
-              ListTile(
-                title: Text('Google Authenticator'),
-                trailing: Icon(Icons.chevron_right,size: 35,),
-                onTap: () {
-                  // Navigate to Google Authenticator settings
-                },
-              ),
+              // const Divider(),
+              // ListTile(
+              //   title: Text('Google Authenticator'),
+              //   trailing: Icon(Icons.chevron_right,size: 35,),
+              //   onTap: () {
+              //     // Navigate to Google Authenticator settings
+              //   },
+              // ),
             ],
           )
         ),

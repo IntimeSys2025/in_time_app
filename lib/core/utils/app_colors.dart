@@ -23,6 +23,12 @@ sealed class AppColors {
   static const Color kBottomSheet = Color(0xffF5F8FF);
   static const Color kCategoryColor = Color(0xFFEEF8EF);
 
+  /// tags color
+  static const Color tagRed = Color(0xffFF7979);
+  static const Color tagYellow = Color(0xffFBBC04);
+  static const Color tagGreen = Color(0xff52B963);
+
+
 
 
   static const Color kMintGreen = Color(0xff0E7178);

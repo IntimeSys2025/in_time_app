@@ -42,7 +42,7 @@ class ChoosePaymentDialogue extends StatelessWidget {
           Align(
               alignment: Alignment.bottomCenter,
               child: AppButtonWidget(
-                  title: 'Add Card',
+                  title: 'Confirm',
                   onPressed: () {
                     Navigator.pop(context);
                   }))

@@ -54,6 +54,7 @@ class HomeScreenOneDoctor extends StatelessWidget {
           current is FilterServices,
       builder: (context, state) {
         return Scaffold(
+          // backgroundColor: AppColors.white,
           appBar: AppBar(
             backgroundColor: AppColors.moreLightGrey,
             elevation: 0,
@@ -85,8 +86,8 @@ class HomeScreenOneDoctor extends StatelessWidget {
                                 Text(
                                   'Upcoming Appointments',
                                   style: TextStyle(
-                                      fontSize: AppFontSize.fontSize20,
-                                      fontWeight: FontWeight.w500),
+                                      fontSize: AppFontSize.fontSize16,
+                                      fontWeight: FontWeight.w600),
                                 ),
                                 SizedBox(height: 10),
                                 AppointmentCard(),
@@ -100,14 +101,16 @@ class HomeScreenOneDoctor extends StatelessWidget {
                                 const Text(
                                   'Explore Our Services',
                                   style: TextStyle(
-                                      fontSize: AppFontSize.fontSize20,
-                                      fontWeight: FontWeight.w500),
+                                      fontSize: AppFontSize.fontSize16,
+                                      fontWeight: FontWeight.w600),
                                 ),
                                 TextButton(
                                     onPressed: () {
                                       homeCubit.toggleViewAllServices();
                                     },
-                                    child: const Text('View All'))
+                                    child: const Text('View All',style: TextStyle(
+                                      decoration: TextDecoration.underline
+                                    ),))
                               ],
                             ),
                           if (homeCubit.filteredServices.isNotEmpty)
