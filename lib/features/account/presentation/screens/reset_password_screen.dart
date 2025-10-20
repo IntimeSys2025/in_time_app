@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:in_time_app/core/helpers/extension.dart';
+import 'package:in_time_app/core/shared_widgets/app_text_field.dart';
 import 'package:in_time_app/core/utils/app_asset_path.dart';
 import 'package:in_time_app/core/utils/app_colors.dart';
 import 'package:in_time_app/features/home/presentation/screens/home_screen_one_doctor.dart';
 
+import '../../../../core/shared_widgets/password_text_field_widget.dart';
 import '../../../home/presentation/screens/navigation_screen.dart';
 import '../logic/create_account_cubit.dart';
 
@@ -17,6 +20,8 @@ class ResetPasswordScreen extends StatefulWidget {
 }
 
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
+
+  bool _obsecureOldPassword = true;
   bool _obscureNewPassword = true;
   bool _obscureConfirmPassword = true;
 
@@ -28,12 +33,13 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     final cubit = BlocProvider.of<CreateAccountCubit>(context);
     return Scaffold(
       backgroundColor: AppColors.white,
-      // appBar: AppBar(
-      //   leading: const BackButton(),
-      //   title: const Text(''),
-      //   elevation: 0,
-      //   backgroundColor: Colors.white,
-      // ),
+      appBar: AppBar(
+        leading: const BackButton(),
+        title: const Text('Reset password'),
+        centerTitle: true,
+        elevation: 0,
+        backgroundColor: Colors.white,
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: SafeArea(
@@ -113,57 +119,79 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   //     )),
                   // const SizedBox(height: 16),
                   Form(
-                  key: cubit.resetPasswordFormKey,
+                      key: cubit.resetPasswordFormKey,
                       child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextFormField(
-                        controller: cubit.resetPasswordController,
-                        obscureText: _obscureNewPassword,
-                        validator: validatePassword,
-                        decoration: InputDecoration(
-                          labelText: 'Enter New Password',
-                          hintText: 'Enter New Password',
-                          suffixIcon: IconButton(
-                            icon: Icon(_obscureNewPassword
-                                ? Icons.visibility_off
-                                : Icons.visibility),
-                            onPressed: () {
-                              setState(() {
-                                _obscureNewPassword = !_obscureNewPassword;
-                              });
-                            },
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextFormField(
+                            controller: cubit.resetPasswordController,
+                            obscureText: _obscureNewPassword,
+                            validator: validatePassword,
+                            decoration: InputDecoration(
+                              labelText: 'Enter Old Password',
+                              hintText: 'Enter Old Password',
+                              suffixIcon: IconButton(
+                                icon: Icon(_obscureNewPassword
+                                    ? Icons.visibility_off
+                                    : Icons.visibility),
+                                onPressed: () {
+                                  setState(() {
+                                    _obsecureOldPassword = !_obsecureOldPassword;
+                                  });
+                                },
+                              ),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12)),
+                            ),
                           ),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      // Confirm Password Field
-                      TextFormField(
-                        controller: cubit.resetConfirmPasswordController,
-                        obscureText: _obscureConfirmPassword,
-                        validator: validatePassword,
-                        decoration: InputDecoration(
-                          labelText: 'Confirm Password',
-                          hintText: 'Confirm Password',
-                          suffixIcon: IconButton(
-                            icon: Icon(_obscureConfirmPassword
-                                ? Icons.visibility_off
-                                : Icons.visibility),
-                            onPressed: () {
-                              setState(() {
-                                _obscureConfirmPassword =
-                                    !_obscureConfirmPassword;
-                              });
-                            },
+                          16.heightSpace,
+                          TextFormField(
+                            controller: cubit.resetPasswordController,
+                            obscureText: _obscureNewPassword,
+                            validator: validatePassword,
+                            decoration: InputDecoration(
+                              labelText: 'Enter New Password',
+                              hintText: 'Enter New Password',
+                              suffixIcon: IconButton(
+                                icon: Icon(_obscureNewPassword
+                                    ? Icons.visibility_off
+                                    : Icons.visibility),
+                                onPressed: () {
+                                  setState(() {
+                                    _obscureNewPassword = !_obscureNewPassword;
+                                  });
+                                },
+                              ),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12)),
+                            ),
                           ),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                        ),
-                      ),
-                    ],
-                  )),
+                          16.heightSpace,
+                          // Confirm Password Field
+                          TextFormField(
+                            controller: cubit.resetConfirmPasswordController,
+                            obscureText: _obscureConfirmPassword,
+                            validator: validatePassword,
+                            decoration: InputDecoration(
+                              labelText: 'Confirm Password',
+                              hintText: 'Confirm Password',
+                              suffixIcon: IconButton(
+                                icon: Icon(_obscureConfirmPassword
+                                    ? Icons.visibility_off
+                                    : Icons.visibility),
+                                onPressed: () {
+                                  setState(() {
+                                    _obscureConfirmPassword =
+                                        !_obscureConfirmPassword;
+                                  });
+                                },
+                              ),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12)),
+                            ),
+                          ),
+                        ],
+                      )),
                   const SizedBox(height: 32),
                   // Update Password Button
                   SizedBox(
@@ -199,10 +227,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                             )
                         : ElevatedButton(
                             onPressed: () {
-                              if (cubit.resetPasswordFormKey.currentState!.validate()){
+                              if (cubit.resetPasswordFormKey.currentState!
+                                  .validate()) {
                                 cubit.resetPassword();
                               }
-
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.green,

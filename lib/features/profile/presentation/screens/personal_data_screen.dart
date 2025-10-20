@@ -24,6 +24,7 @@ class PersonalDataScreen extends StatelessWidget {
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 10),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
               child: Stack(
@@ -94,42 +95,68 @@ class PersonalDataScreen extends StatelessWidget {
                     // cubit.loginPhone = phone;
                   },
                 )),
-            Row(
-              children: [
-                Expanded(
-                  child: AppTextField(
-                      obscureText: true,
-                      labelText: 'Password',
-                      hintText: '',
-                      controller: TextEditingController()),
-                ),
-                5.widthSpace,
-                GestureDetector(
-                  onTap: () {
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //       builder: (context) => ChangePasswordScreen(),
-                    //     ));
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ResetPasswordScreen(),
-                        ));
-                  },
-                  child: const Text(
-                    'Change',
-                    style: TextStyle(
-                        color: AppColors.green,
-                        fontSize: AppFontSize.fontSize16,
-                        fontWeight: FontWeight.w600,
-                        decoration: TextDecoration.underline,
-                        decorationColor: AppColors.green),
+            10.heightSpace,
+            const Text('Additional Mobile Number'),
+            10.heightSpace,
+            Directionality(
+                textDirection: TextDirection.ltr,
+                child: IntlPhoneField(
+                  invalidNumberMessage: 'Invalid phone Number',
+                  decoration: const InputDecoration(
+                    labelText: 'Phone Number',
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(),
+                    ),
                   ),
-                )
-              ],
-            ),
-            20.heightSpace,
+                  initialCountryCode: 'EG',
+                  validator: (value) {
+                    debugPrint('Val:: ${value?.completeNumber}');
+                    return null;
+                    // return createAccountCubit.validatePhoneNumber(value!);
+                  },
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  keyboardType: TextInputType.phone,
+                  // countries: ["SA"],
+                  onChanged: (phone) {
+                    // cubit.loginPhone = phone;
+                  },
+                )),
+            // Row(
+            //   children: [
+            //     Expanded(
+            //       child: AppTextField(
+            //           obscureText: true,
+            //           labelText: 'Password',
+            //           hintText: '',
+            //           controller: TextEditingController()),
+            //     ),
+            //     5.widthSpace,
+            //     GestureDetector(
+            //       onTap: () {
+            //         // Navigator.push(
+            //         //     context,
+            //         //     MaterialPageRoute(
+            //         //       builder: (context) => ChangePasswordScreen(),
+            //         //     ));
+            //         Navigator.push(
+            //             context,
+            //             MaterialPageRoute(
+            //               builder: (context) => const ResetPasswordScreen(),
+            //             ));
+            //       },
+            //       child: const Text(
+            //         'Change',
+            //         style: TextStyle(
+            //             color: AppColors.green,
+            //             fontSize: AppFontSize.fontSize16,
+            //             fontWeight: FontWeight.w600,
+            //             decoration: TextDecoration.underline,
+            //             decorationColor: AppColors.green),
+            //       ),
+            //     )
+            //   ],
+            // ),
+            // 20.heightSpace,
 
             /// Date of birth
             TextFormField(
@@ -167,7 +194,33 @@ class PersonalDataScreen extends StatelessWidget {
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               ),
+            ),
+            20.heightSpace,
+            Align(
+              alignment: Alignment.bottomRight,
+              child: TextButton(
+                onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ResetPasswordScreen(),
+                            ));
+                },
+                child: const Text(
+                  'Change password',
+                  style: TextStyle(decoration: TextDecoration.underline),
+                ),
+              ),
             )
+            // AppButtonWidget(
+            //     title: 'Change password',
+            //     onPressed: () {
+            //       Navigator.push(
+            //           context,
+            //           MaterialPageRoute(
+            //             builder: (context) => const ResetPasswordScreen(),
+            //           ));
+            //     })
           ],
         ),
       ),

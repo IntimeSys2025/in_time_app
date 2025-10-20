@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:in_time_app/core/helpers/extension.dart';
 import 'package:in_time_app/features/home/data/models/partner_model.dart';
 import 'package:in_time_app/features/home/data/models/slider_model.dart';
 import 'package:in_time_app/features/home/presentation/logic/home_cubit.dart';
@@ -75,7 +76,7 @@ class HomeScreenOneDoctor extends StatelessWidget {
                           const WelcomeHeader(),
                           const SizedBox(height: 20),
                           const CustomSearchBar(),
-                          const SizedBox(height: 20),
+                          50.heightSpace,
                           if(homeCubit.sliders.isNotEmpty)
                           DoctorDescCard(sliderModel: homeCubit.sliders[0]),
                           const SizedBox(height: 20),

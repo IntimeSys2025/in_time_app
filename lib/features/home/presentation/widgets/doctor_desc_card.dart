@@ -13,17 +13,133 @@ class DoctorDescCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // height: 180,
-      decoration: BoxDecoration(
-        color: AppColors.kGreenBackground, // Green background
-        borderRadius: BorderRadius.circular(16),
-      ),
-      padding: const EdgeInsets.all( 16),
-      child: Row(
-        children: [
-          // SizedBox(width: MediaQuery.of(context).size.width * 0.4,),
-          Image.network(
+    return
+        //   Center(
+        //   child: Stack(
+        //     clipBehavior: Clip.none, // allows the image to overflow
+        //     children: [
+        //       // The green container
+        //       Container(
+        //         width: 320,
+        //         height: 150,
+        //         decoration: BoxDecoration(
+        //           color: const Color(0xFF4CAF50), // green background
+        //           borderRadius: BorderRadius.circular(16),
+        //         ),
+        //         child: Padding(
+        //           padding: const EdgeInsets.fromLTRB(140, 20, 20, 20),
+        //           child: Column(
+        //             crossAxisAlignment: CrossAxisAlignment.start,
+        //             children: [
+        //               const Text(
+        //                 "Ali AbdelAziz",
+        //                 style: TextStyle(
+        //                   color: Colors.white,
+        //                   fontSize: 20,
+        //                   fontWeight: FontWeight.bold,
+        //                 ),
+        //               ),
+        //               const SizedBox(height: 8),
+        //               const Text(
+        //                 "Over 7 years helping individuals build\nconfidence, and maintain healthy routines",
+        //                 style: TextStyle(
+        //                   color: Colors.white,
+        //                   fontSize: 13,
+        //                 ),
+        //               ),
+        //               const Spacer(),
+        //               ElevatedButton(
+        //                 onPressed: () {},
+        //                 style: ElevatedButton.styleFrom(
+        //                   backgroundColor: Colors.white,
+        //                   foregroundColor: Colors.black,
+        //                   shape: RoundedRectangleBorder(
+        //                     borderRadius: BorderRadius.circular(12),
+        //                   ),
+        //                 ),
+        //                 child: const Text("Book Now"),
+        //               ),
+        //             ],
+        //           ),
+        //         ),
+        //       ),
+        //
+        //       // Doctor image (positioned partially above the container)
+        //       Positioned(
+        //         left: 0,
+        //         top: -20,
+        //         bottom: 0,// makes it go above the container
+        //         child: Image.network(
+        //           sliderModel.media, // your image path
+        //           width: 130,
+        //           fit: BoxFit.cover,
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // );
+
+        Stack(
+      clipBehavior: Clip.none,
+      children: [
+
+        Container(
+          // height: 200,
+          decoration: BoxDecoration(
+            color: AppColors.kGreenBackground, // Green background
+            borderRadius: BorderRadius.circular(16),
+          ),
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              const SizedBox(
+                width: 130,
+              ),
+              // 10.widthSpace,
+              // Doctor Info and Button
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      sliderModel.title,
+                      style: const TextStyle(
+                        fontSize: AppFontSize.fontSize18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      sliderModel.text,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.white,
+                      ),
+                    ),
+                    12.heightSpace,
+
+                    // Book Now button
+                    if (sliderModel.buttonText != '')
+                      AppButtonWidget(
+                          title: sliderModel.buttonText,
+                          backgroundColor: AppColors.white,
+                          textColor: AppColors.black,
+                          onPressed: () {}),
+                    12.heightSpace,
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        Positioned(
+          top: -40,
+          bottom: 0,
+          child: Image.network(
             sliderModel.media,
             fit: BoxFit.fitHeight,
             // height: 200,
@@ -31,67 +147,14 @@ class DoctorDescCard extends StatelessWidget {
             errorBuilder: (context, error, stackTrace) {
               return Image.asset(
                 AppAsset.inTimeApp,
-                fit: BoxFit.fitWidth,
-                // height: 150,
-                width: 70,
+                fit: BoxFit.cover,
+                height: 200,
+                width: 130,
               );
             },
           ),
-          10.widthSpace,
-          // const SizedBox(width: 12),
-
-          // Doctor Info and Button
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                 Text( sliderModel.title,
-                  style: const TextStyle(
-                    fontSize: AppFontSize.fontSize18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                 Text(
-                  sliderModel.text,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 12),
-
-                // Book Now button
-                if(sliderModel.isButton == 1)
-                AppButtonWidget(
-                    title: sliderModel.buttonText,
-                    backgroundColor: AppColors.white,
-                    textColor: AppColors.black,
-                    onPressed: () {}),
-                const SizedBox(height: 12),
-                // SizedBox(
-                //   height: 36,
-                //   child: ElevatedButton(
-                //     onPressed: () {},
-                //     style: ElevatedButton.styleFrom(
-                //       backgroundColor: Colors.white,
-                //       foregroundColor: Colors.black,
-                //       shape: RoundedRectangleBorder(
-                //         borderRadius: BorderRadius.circular(30),
-                //       ),
-                //     ),
-                //     child: const Text('Book Now'),
-                //   ),
-                // ),
-              ],
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
 
     Stack(

@@ -26,7 +26,7 @@ class AppointmentCard extends StatelessWidget {
                   fontSize: 16,
                 ),
               ),
-              Icon(Icons.more_vert, color: Colors.grey),
+              // Icon(Icons.more_vert, color: Colors.grey),
             ],
           ),
 

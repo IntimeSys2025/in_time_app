@@ -47,7 +47,7 @@ class ManageAccountSection extends StatelessWidget {
                 borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
               ),
               builder: (BuildContext context) {
-                return CustomBottomSheet(title: 'Delete Account',onPressed: (){},);
+                return CustomBottomSheet(title: 'Delete',onPressed: (){},);
               },
             );
           },
