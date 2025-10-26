@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:in_time_app/core/utils/app_colors.dart';
+import 'package:in_time_app/core/utils/app_font_size.dart';
 import 'package:in_time_app/core/utils/product_type.dart';
 import 'package:in_time_app/features/booking/presentation/screens/my_booking_screen.dart';
 import 'package:in_time_app/features/cart/presentation/screens/my_cart_screen.dart';
@@ -8,6 +9,7 @@ import 'package:in_time_app/features/home/presentation/screens/home_screen_more_
 import 'package:in_time_app/features/profile/presentation/screens/profile_screen.dart';
 
 import '../../../../core/utils/app_constants.dart';
+import '../../../account/presentation/screens/loginScreen.dart';
 import 'home_screen_one_doctor.dart';
 
 class NavigationBarScreen extends StatefulWidget {
@@ -87,13 +89,41 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
           ),
         ],
       ),
-      body: <Widget>[
+      body: [
         (AppConstants.productType == ProductType.oneDoctor)
             ? const HomeScreenOneDoctor()
             : (AppConstants.productType == ProductType.moreThanOneDoctor)
                 ? const HomeScreenMoreThanDoctor()
                 : const HomeScreenMoreThanCategory(),
-        const MyBookingScreen(),
+        (AppConstants.token != '')
+            ? const MyBookingScreen()
+            : Center(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Do you have an account?",
+                      style: TextStyle(fontSize: AppFontSize.fontSize16),
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LoginScreen(),
+                              ));
+                        },
+                        child: const Text(
+                          'Login',
+                          style: TextStyle(
+                            decoration: TextDecoration.underline,
+                            fontSize: AppFontSize.fontSize16,
+                          ),
+                        ))
+                  ],
+                ),
+              ),
         const MyCartScreen(),
         const ProfileScreen(),
       ][selectedIndex],

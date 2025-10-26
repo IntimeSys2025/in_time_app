@@ -74,13 +74,13 @@ class HomeScreenOneDoctor extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           const WelcomeHeader(),
-                          const SizedBox(height: 20),
+                          20.heightSpace,
                           const CustomSearchBar(),
                           50.heightSpace,
                           if(homeCubit.sliders.isNotEmpty)
                           DoctorDescCard(sliderModel: homeCubit.sliders[0]),
                           const SizedBox(height: 20),
-                          // if (AppConstants.token != '' && AppConstants.isLoggedIn)
+                          if (AppConstants.token != '' )
                             const Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [

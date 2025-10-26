@@ -4,7 +4,8 @@ import 'package:in_time_app/features/account/presentation/screens/loginScreen.da
 import '../../../../core/utils/app_constants.dart';
 
 class WelcomeHeader extends StatelessWidget {
-  const WelcomeHeader({super.key});
+  final bool showNotificationIcon;
+  const WelcomeHeader({super.key,  this.showNotificationIcon = true});
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +56,7 @@ class WelcomeHeader extends StatelessWidget {
           ],
         ),
         // Notification bell icon
+        if(showNotificationIcon)
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(

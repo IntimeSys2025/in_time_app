@@ -5,6 +5,8 @@ import 'package:in_time_app/features/profile/presentation/widget/manage_account_
 import 'package:in_time_app/features/profile/presentation/widget/personal_info_section.dart';
 import 'package:in_time_app/features/profile/presentation/widget/profile_info.dart';
 import '../../../../core/utils/app_colors.dart';
+import '../../../../core/utils/app_constants.dart';
+import '../../../home/presentation/widgets/welcome_header.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -24,7 +26,7 @@ class ProfileScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               10.heightSpace,
-              const ProfileInfo(),
+              (AppConstants.userToken != '')?const ProfileInfo():const WelcomeHeader(showNotificationIcon: false,),
               10.heightSpace,
               const PersonalInfoSection(),
               Padding(
@@ -34,12 +36,14 @@ class ProfileScreen extends StatelessWidget {
                     color: AppColors.moreLightGrey.withValues(alpha: 0.1),
                   )),
               const AboutSection(),
+              if(AppConstants.token != '')
               Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   child: Divider(
                     thickness: 8,
                     color: AppColors.moreLightGrey.withValues(alpha: 0.1),
                   )),
+              if(AppConstants.token != '')
               const ManageAccountSection()
             ],
           ),

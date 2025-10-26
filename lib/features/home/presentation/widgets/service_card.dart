@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_time_app/core/shared_widgets/app_button_widget.dart';
 import 'package:in_time_app/core/utils/app_asset_path.dart';
+import 'package:in_time_app/features/account/presentation/screens/loginScreen.dart';
 import 'package:in_time_app/features/home/data/models/service_model.dart';
 import 'package:in_time_app/features/home/presentation/logic/home_cubit.dart';
 import '../../../../core/utils/app_colors.dart';
+import '../../../../core/utils/app_constants.dart';
 
 class ServiceCard extends StatelessWidget {
   final ServiceModel service;
@@ -75,6 +77,10 @@ class ServiceCard extends StatelessWidget {
                     textColor: AppColors.black,
                     backgroundColor: AppColors.kLightGreen,
                     onPressed: () {
+                      if (AppConstants.token == ''){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen(),));
+                        return;
+                      }
                       homeCubit.getSubServices(id: service.id);
 
                     })

@@ -88,7 +88,7 @@ class HomeCubit extends Cubit<HomeState> {
       (servicesData) {
         services = servicesData;
         filteredServices = services;
-        debugPrint('Services::: ${services.length}');
+        // debugPrint('Services::: ${services.length}');
         emit(GetServicesSuccessState());
       },
     );
