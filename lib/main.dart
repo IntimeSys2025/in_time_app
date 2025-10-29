@@ -37,6 +37,7 @@ void main() async {
   AppConstants.isLoggedIn = await getBoolValue(key: 'loggedIn');
   AppConstants.userToken = (await getStringValue(key: 'token')) ?? '';
   AppConstants.fullName = await getStringValue(key: 'user_name') ?? '';
+  AppConstants.userMobile = await getStringValue(key: 'mobile') ?? '';
 
   runApp(EasyLocalization(
       supportedLocales: AppLocalization.locales,

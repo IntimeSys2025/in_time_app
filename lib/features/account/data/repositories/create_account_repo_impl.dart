@@ -116,6 +116,8 @@ class CreateAccountRepoImpl implements CreateAccountRepo {
       final result = await _remoteDataSource.logout();
       return Right(result);
     } on Failure catch (error) {
+      // debugPrint('ERROR:: ${error}');
+      // final String errorMessage = error.m;
       return Left(
           ServerFailure(message: error.message, statusCode: error.statusCode));
     }

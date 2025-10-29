@@ -28,3 +28,7 @@ class LogoutSuccessState extends ProfileState {
   final String message;
   LogoutSuccessState({required this.message});
 }
+class LogoutFailureState extends ProfileState {
+  final String message;
+  LogoutFailureState({required this.message});
+}

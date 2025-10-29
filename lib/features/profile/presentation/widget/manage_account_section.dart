@@ -30,6 +30,7 @@ class ManageAccountSection extends StatelessWidget {
                 builder: (BuildContext context) {
                   return CustomBottomSheet(title: 'Logout',onPressed: (){
                     profileCubit.logout();
+                    Navigator.pop(context);
 
                   },);
                 },

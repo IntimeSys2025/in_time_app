@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_time_app/core/utils/app_constants.dart';
 import 'package:in_time_app/features/account/domain/use_cases/logout_use_case.dart';
@@ -7,6 +8,7 @@ import 'package:in_time_app/features/profile/domain/use_case/get_help_center_use
 import 'package:in_time_app/features/profile/domain/use_case/get_privacy_use_case.dart';
 import 'package:in_time_app/features/profile/domain/use_case/get_terms_use_case.dart';
 
+import '../../../../core/storage/secure_storage.dart';
 import '../../data/models/terms_conditions_model.dart';
 part 'profile_states.dart';
 
@@ -87,10 +89,21 @@ class ProfileCubit extends Cubit<ProfileState> {
   void logout() async {
     final result = await _logoutUseCase.call();
     result.fold(
-      (failure) {},
+      (failure) {
+        // debugPrint('ggg: ${failure.message}');
+        emit(LogoutFailureState(message: failure.message));
+      },
       (success) {
         AppConstants.userToken =='';
         AppConstants.isLoggedIn = false;
+        saveStringValue(key: 'user_id', value: '');
+        saveStringValue(key: 'user_name', value: '');
+        saveStringValue(key: 'mobile', value: '');
+        saveStringValue(key: 'token', value: '');
+        // AppConstants.isLoggedIn = await getBoolValue(key: 'loggedIn');
+        // AppConstants.userToken = (await getStringValue(key: 'token')) ?? '';
+        // AppConstants.fullName = await getStringValue(key: 'user_name') ?? '';
+
         emit(LogoutSuccessState(message: success));
       },
     );

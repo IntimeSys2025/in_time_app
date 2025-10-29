@@ -33,7 +33,19 @@ class ProfileScreen extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => const LoginScreen(),
-                ));
+                )).then((value) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(state.message),
+                backgroundColor: AppColors.kGreenButton,
+                duration: const Duration(seconds: 3),
+              ));
+                },);
+          }else if(state is LogoutFailureState){
+
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(state.message),
+              backgroundColor: AppColors.kRed,
+            ));
           }
         },
         child: SingleChildScrollView(

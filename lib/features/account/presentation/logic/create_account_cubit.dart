@@ -218,8 +218,7 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
       saveBoolValue(key: 'loggedIn', value: user.rememberMe);
     }
     saveStringValue(key: 'user_id', value: user.id.toString());
-    saveStringValue(
-        key: 'user_name', value: '${user.firstName} ${user.lastName}');
+    saveStringValue(key: 'user_name', value: '${user.firstName} ${user.lastName}');
     saveStringValue(key: 'mobile', value: user.mobile);
     saveStringValue(key: 'token', value: user.token);
     AppConstants.isLoggedIn = await getBoolValue(key: 'loggedIn');
