@@ -21,7 +21,7 @@ sealed class AppConstants {
  // ];
 
  static bool isLoggedIn = false;
- static String token = '';
+ static String userToken = '';
  static String fullName ='';
   static const ProductType productType = ProductType.oneDoctor;
   static const imageURL =
@@ -37,5 +37,5 @@ sealed class AppConstants {
   static const double smallIcon = 30;
 
   /// TODO: make user token more secure
-  static String userToken = '';
+  // static String userToken = '';
 }

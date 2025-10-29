@@ -95,7 +95,7 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
             : (AppConstants.productType == ProductType.moreThanOneDoctor)
                 ? const HomeScreenMoreThanDoctor()
                 : const HomeScreenMoreThanCategory(),
-        (AppConstants.token != '')
+        (AppConstants.userToken != '')
             ? const MyBookingScreen()
             : Center(
                 child: Row(

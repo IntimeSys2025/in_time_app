@@ -72,7 +72,7 @@ class PartnerDetailsScreen extends StatelessWidget {
                     // if(slider != null)
                       DoctorDescCard(sliderModel: partnerDetails.sliderModel),
                     const SizedBox(height: 20),
-                    if (AppConstants.token != '' &&
+                    if (AppConstants.userToken != '' &&
                         AppConstants.isLoggedIn)
                       const Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

@@ -5,6 +5,7 @@ import 'package:in_time_app/features/account/data/repositories/create_account_re
 import 'package:in_time_app/features/account/domain/repositories/create_account_repo.dart';
 import 'package:in_time_app/features/account/domain/use_cases/forget_password_use_case.dart';
 import 'package:in_time_app/features/account/domain/use_cases/login_use_case.dart';
+import 'package:in_time_app/features/account/domain/use_cases/logout_use_case.dart';
 import 'package:in_time_app/features/account/domain/use_cases/reset_password.dart';
 import 'package:in_time_app/features/account/domain/use_cases/verify_code_use_case.dart';
 import 'package:in_time_app/features/account/presentation/logic/create_account_cubit.dart';
@@ -60,7 +61,8 @@ sealed class ServiceLocator {
           sl<AppointmentsUseCas>(), sl<GetAvailableTimesInDateUseCase>()),
     );
     sl.registerLazySingleton(() => ProfileCubit(sl<TermsConditionsUseCase>(),
-        sl<PrivacyPolicyUseCase>(), sl<HelpCenterUseCase>()));
+        sl<PrivacyPolicyUseCase>(), sl<HelpCenterUseCase>(),
+    sl<LogoutUseCase>()));
 
     /// register use cases
     sl.registerLazySingleton<RegisterUseCase>(
@@ -94,6 +96,9 @@ sealed class ServiceLocator {
     );
     sl.registerLazySingleton(
       () => HelpCenterUseCase(sl<ProfileRepo>()),
+    );
+    sl.registerLazySingleton(
+      () => LogoutUseCase(sl<CreateAccountRepo>()),
     );
 
     /// register Repositories

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
+import 'package:in_time_app/core/utils/app_constants.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import '../error/failure.dart';
@@ -25,6 +26,19 @@ class DioConsumer implements ApiConsumer {
       }
       ..sendTimeout = const Duration(seconds: 200)
       ..receiveTimeout = const Duration(seconds: 200);
+
+    ///add authorization token
+    dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (options, handler) async {
+        // final token = await SecureStorage.getToken();
+        if (AppConstants.userToken != '') {
+          options.headers['Authorization'] = 'Bearer ${AppConstants.userToken}';
+
+        }
+        return handler.next(options);
+      },
+    ));
+
 
     /// Add pretty DioLogger to log all the requests and responses
     if (!kReleaseMode) {

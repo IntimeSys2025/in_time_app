@@ -45,7 +45,8 @@ class CreateAccountRepoImpl implements CreateAccountRepo {
       return Right(result);
     } on Failure catch (error) {
       debugPrint('Register Error: ${error.message}');
-      final FailureRegisterModel failure = FailureRegisterModel.fromJson(error.message);
+      final FailureRegisterModel failure =
+          FailureRegisterModel.fromJson(error.message);
       return Left(
           ServerFailure(message: failure, statusCode: error.statusCode));
     }
@@ -93,12 +94,10 @@ class CreateAccountRepoImpl implements CreateAccountRepo {
   }
 
   @override
-  FutureResult<String> verifyCode(
-      {required VerifyCodeParams params}) async {
+  FutureResult<String> verifyCode({required VerifyCodeParams params}) async {
     // if (await _networkStatus.isConnected) {
     try {
-      final result =
-          await _remoteDataSource.verifyCode(params: params);
+      final result = await _remoteDataSource.verifyCode(params: params);
       return Right(result);
     } on Failure catch (error) {
       return Left(
@@ -109,5 +108,16 @@ class CreateAccountRepoImpl implements CreateAccountRepo {
     //       message: LocaleKeys.noInternet.tr(),
     //       statusCode: StatusCode.noInternet));
     // }
+  }
+
+  @override
+  FutureResult<String> logout() async {
+    try {
+      final result = await _remoteDataSource.logout();
+      return Right(result);
+    } on Failure catch (error) {
+      return Left(
+          ServerFailure(message: error.message, statusCode: error.statusCode));
+    }
   }
 }

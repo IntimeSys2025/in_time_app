@@ -64,7 +64,7 @@ class PersonalInfoSection extends StatelessWidget {
                   ));
             }),
         ProfileAction(
-            title: 'Notifacation',
+            title: 'Notification',
             icon: const Icon(Icons.notifications_none),
             onPressed: () {
               Navigator.push(

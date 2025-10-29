@@ -77,7 +77,7 @@ class ServiceCard extends StatelessWidget {
                     textColor: AppColors.black,
                     backgroundColor: AppColors.kLightGreen,
                     onPressed: () {
-                      if (AppConstants.token == ''){
+                      if (AppConstants.userToken == ''){
                         Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen(),));
                         return;
                       }

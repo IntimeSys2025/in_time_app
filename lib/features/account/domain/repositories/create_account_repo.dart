@@ -11,6 +11,6 @@ abstract class CreateAccountRepo {
   FutureResult<UserModel> login({required LoginParams params});
   FutureResult<String> forgetPassword({required String phone});
   FutureResult<String> verifyCode({required VerifyCodeParams params});
-  FutureResult<String> resetPassword(
-      {required ResetPasswordParams params});
+  FutureResult<String> resetPassword({required ResetPasswordParams params});
+  FutureResult<String> logout();
 }

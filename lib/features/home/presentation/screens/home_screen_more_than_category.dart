@@ -86,7 +86,7 @@ class HomeScreenMoreThanCategory extends StatelessWidget {
 
                     // const HospitalCard(),
                     const SizedBox(height: 20),
-                    if (AppConstants.token != '' && AppConstants.isLoggedIn)
+                    if (AppConstants.userToken != '' && AppConstants.isLoggedIn)
                       const Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

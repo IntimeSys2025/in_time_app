@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_time_app/core/utils/app_colors.dart';
 import 'package:in_time_app/core/utils/app_font_size.dart';
+import 'package:in_time_app/features/profile/presentation/logic/profile_cubit.dart';
 import 'package:in_time_app/features/profile/presentation/widget/custom_bottom_sheet.dart';
 import 'package:in_time_app/features/profile/presentation/widget/profile_action.dart';
 
@@ -9,6 +11,7 @@ class ManageAccountSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final profileCubit = BlocProvider.of<ProfileCubit>(context);
     return Column(
       children: [
         ProfileAction(
@@ -25,7 +28,10 @@ class ManageAccountSection extends StatelessWidget {
                   borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
                 ),
                 builder: (BuildContext context) {
-                  return CustomBottomSheet(title: 'Logout',onPressed: (){},);
+                  return CustomBottomSheet(title: 'Logout',onPressed: (){
+                    profileCubit.logout();
+
+                  },);
                 },
               );
 

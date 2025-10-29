@@ -14,6 +14,7 @@ abstract class CreateAccountDataSource {
   Future<String> forgetPassword({required String phone});
   Future<String> verifyCode({required VerifyCodeParams params});
   Future<String> resetPassword({required ResetPasswordParams params});
+  Future<String> logout();
 }
 
 class CreateAccountDataSourceImpl implements CreateAccountDataSource {
@@ -57,6 +58,13 @@ class CreateAccountDataSourceImpl implements CreateAccountDataSource {
   Future<String> resetPassword({required ResetPasswordParams params}) async {
     final response = await _apiConsumer.post(
         path: EndPoints.resetPassword, body: params.toJson());
+    return response.data['message'];
+  }
+
+  @override
+  Future<String> logout() async{
+    final response = await _apiConsumer.get(
+        path: EndPoints.logout,);
     return response.data['message'];
   }
 }

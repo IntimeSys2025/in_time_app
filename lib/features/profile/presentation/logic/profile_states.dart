@@ -22,5 +22,9 @@ class GetContentPagesFailure extends ProfileState {}
 class GetHelpCenterSuccess extends ProfileState {
   final List<HelpCenterModel> data;
   GetHelpCenterSuccess({required this.data});
+}
 
+class LogoutSuccessState extends ProfileState {
+  final String message;
+  LogoutSuccessState({required this.message});
 }
