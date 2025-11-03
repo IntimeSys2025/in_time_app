@@ -15,36 +15,46 @@ class ManageAccountSection extends StatelessWidget {
     return Column(
       children: [
         ProfileAction(
-            title: 'Logout',
-            icon: const Icon(
-              Icons.logout,
-              color: AppColors.kRed,
-            ),
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                backgroundColor: Colors.white,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-                ),
-                builder: (BuildContext context) {
-                  return CustomBottomSheet(title: 'Logout',onPressed: (){
-                    profileCubit.logout();
-                    Navigator.pop(context);
-
-                  },);
-                },
-              );
-
-            },
-        showArrow: false,),
+          title: 'Logout',
+          icon: const Icon(
+            Icons.logout,
+            color: AppColors.kRed,
+          ),
+          onPressed: () {
+            showModalBottomSheet(
+              isDismissible: false,
+              context: context,
+              backgroundColor: Colors.white,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+              ),
+              builder: (BuildContext context) {
+                return BlocBuilder<ProfileCubit, ProfileState>(
+                  builder: (context, state) {
+                    return (state is LogoutLoadingState)
+                        ? const Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : CustomBottomSheet(
+                            title: 'Logout',
+                            onPressed: () {
+                              profileCubit.logout();
+                              Navigator.pop(context);
+                            },
+                          );
+                  },
+                );
+              },
+            );
+          },
+          showArrow: false,
+        ),
         ProfileAction(
           title: 'Delete Account ',
-          icon:  const Text(
-           'X',
-            style: TextStyle(color: AppColors.kRed,
-              fontSize: AppFontSize.fontSize24
-            ),
+          icon: const Text(
+            'X',
+            style: TextStyle(
+                color: AppColors.kRed, fontSize: AppFontSize.fontSize24),
           ),
           onPressed: () {
             showModalBottomSheet(
@@ -54,11 +64,15 @@ class ManageAccountSection extends StatelessWidget {
                 borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
               ),
               builder: (BuildContext context) {
-                return CustomBottomSheet(title: 'Delete',onPressed: (){},);
+                return CustomBottomSheet(
+                  title: 'Delete',
+                  onPressed: () {},
+                );
               },
             );
           },
-          showArrow: false,)
+          showArrow: false,
+        )
       ],
     );
   }

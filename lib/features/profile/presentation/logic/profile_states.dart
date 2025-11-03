@@ -32,3 +32,6 @@ class LogoutFailureState extends ProfileState {
   final String message;
   LogoutFailureState({required this.message});
 }
+class LogoutLoadingState extends ProfileState {
+  LogoutLoadingState();
+}

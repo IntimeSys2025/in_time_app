@@ -87,6 +87,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   void logout() async {
+    emit(LogoutLoadingState());
     final result = await _logoutUseCase.call();
     result.fold(
       (failure) {

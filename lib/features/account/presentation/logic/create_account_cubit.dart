@@ -207,6 +207,9 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
       (success) {
         saveUserData(user: success);
         if (fromSignUp == false || fromSignUp == null) {
+          passwordController.clear();
+          // loginPhone = PhoneNumber( number: '', countryISOCode: 'EG', countryCode: '+20');
+          // loginPhone?.number = '';
           emit(SignInSuccessState());
         }
       },

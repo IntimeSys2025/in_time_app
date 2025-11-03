@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:in_time_app/core/helpers/extension.dart';
 import 'package:in_time_app/core/utils/app_colors.dart';
 import 'package:in_time_app/features/account/presentation/logic/create_account_cubit.dart';
 import 'package:in_time_app/features/account/presentation/screens/forget_password_screen.dart';
@@ -19,6 +20,11 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool isVisiblePassword = true;
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     final cubit = BlocProvider.of<CreateAccountCubit>(context);
@@ -173,7 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               },
                             )),
 
-                        const SizedBox(height: 15),
+                        15.heightSpace,
 
                         // Password Field
                         TextFormField(
