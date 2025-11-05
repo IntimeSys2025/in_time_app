@@ -38,6 +38,9 @@ void main() async {
   AppConstants.userToken = (await getStringValue(key: 'token')) ?? '';
   AppConstants.fullName = await getStringValue(key: 'user_name') ?? '';
   AppConstants.userMobile = await getStringValue(key: 'mobile') ?? '';
+  AppConstants.additionalMobile =
+      await getStringValue(key: 'additional_mobile') ?? '';
+  AppConstants.dateOfBirth = await getStringValue(key: 'date_of_birth') ?? '';
 
   runApp(EasyLocalization(
       supportedLocales: AppLocalization.locales,

@@ -14,7 +14,7 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       lastName: json['last_name'] as String,
       dateBirth: json['date_of_birth'] ?? '',
       gender: json['gender'] ?? '',
-      token: json['token'] as String,
+      token: json['token'] ?? '',
       rememberMe: json['remember_me'] ?? false,
     );
 

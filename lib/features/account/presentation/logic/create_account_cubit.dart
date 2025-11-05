@@ -224,6 +224,8 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
     saveStringValue(key: 'user_name', value: '${user.firstName} ${user.lastName}');
     saveStringValue(key: 'mobile', value: user.mobile);
     saveStringValue(key: 'token', value: user.token);
+    saveStringValue(key: 'additional_mobile', value: user.additionalMobile);
+    saveStringValue(key: 'date_of_birth', value: user.dateBirth);
     AppConstants.isLoggedIn = await getBoolValue(key: 'loggedIn');
     AppConstants.userToken = (await getStringValue(key: 'token')) ?? '';
     AppConstants.fullName = await getStringValue(key: 'user_name') ?? '';

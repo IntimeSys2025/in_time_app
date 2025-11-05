@@ -9,7 +9,7 @@ class ProfileInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  ListTile(
-      leading: CircleAvatar(
+      leading: const CircleAvatar(
         radius: 30,
         child: Icon(Icons.person,size: 40,),
 
@@ -26,10 +26,10 @@ class ProfileInfo extends StatelessWidget {
       ),
       title: Text(
         AppConstants.fullName,
-        style: TextStyle(
+        style: const TextStyle(
             fontSize: AppFontSize.fontSize20, fontWeight: FontWeight.w600),
       ),
-      subtitle: Text(AppConstants.userMobile),
+      subtitle: Text(AppConstants.userMobile ?? ''),
     );
   }
 }

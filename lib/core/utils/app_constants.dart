@@ -23,7 +23,9 @@ sealed class AppConstants {
  static bool isLoggedIn = false;
  static String userToken = '';
  static String fullName ='';
- static String userMobile = '';
+ static String? userMobile ;
+ static String additionalMobile = '';
+ static String dateOfBirth = '';
   static const ProductType productType = ProductType.oneDoctor;
   static const imageURL =
       'https://img.freepik.com/free-photo/lifestyle-people-emotions-casual-concept-confident-nice-smiling-asian-woman-cross-arms-chest-confident-ready-help-listening-coworkers-taking-part-conversation_1258-59335.jpg?semt=ais_hybrid&w=740';

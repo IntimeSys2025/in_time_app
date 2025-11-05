@@ -1,6 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:in_time_app/core/utils/type_def.dart';
+import 'package:in_time_app/features/account/data/models/user_model.dart';
 import 'package:in_time_app/features/profile/data/data_source/profile_remote_data_source.dart';
+import 'package:in_time_app/features/profile/data/models/arguments/update_profile_params.dart';
 import 'package:in_time_app/features/profile/data/models/help_center_model.dart';
 import 'package:in_time_app/features/profile/data/models/privacy_policy_model.dart';
 import 'package:in_time_app/features/profile/data/models/terms_conditions_model.dart';
@@ -46,6 +48,18 @@ class ProfileRepoImpl implements ProfileRepo{
           ServerFailure(message: error.message, statusCode: error.statusCode));
     }
   }
+
+  @override
+  FutureResult<UserModel> updateProfile({required UpdateProfileParams params}) async{
+    try {
+      final result = await _profileRemoteDataSource.updateProfile(params: params);
+      return Right(result);
+    } on Failure catch (error) {
+      return Left(
+          ServerFailure(message: error.message, statusCode: error.statusCode));
+    }
+  }
+
 
 
 }

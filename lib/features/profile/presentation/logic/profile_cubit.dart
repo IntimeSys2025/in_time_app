@@ -3,10 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_time_app/core/utils/app_constants.dart';
 import 'package:in_time_app/features/account/domain/use_cases/logout_use_case.dart';
+import 'package:in_time_app/features/profile/data/models/arguments/update_profile_params.dart';
 import 'package:in_time_app/features/profile/data/models/help_center_model.dart';
 import 'package:in_time_app/features/profile/domain/use_case/get_help_center_use_case.dart';
 import 'package:in_time_app/features/profile/domain/use_case/get_privacy_use_case.dart';
 import 'package:in_time_app/features/profile/domain/use_case/get_terms_use_case.dart';
+import 'package:in_time_app/features/profile/domain/use_case/update_profile_use_case.dart';
+import 'package:intl_phone_field/phone_number.dart';
 
 import '../../../../core/storage/secure_storage.dart';
 import '../../data/models/terms_conditions_model.dart';
@@ -17,8 +20,9 @@ class ProfileCubit extends Cubit<ProfileState> {
   final PrivacyPolicyUseCase _privacyPolicyUseCase;
   final HelpCenterUseCase _helpCenterUseCase;
   final LogoutUseCase _logoutUseCase;
+  final UpdateProfileUseCase _updateProfileUseCase;
   ProfileCubit(this._termsConditionsUseCase, this._privacyPolicyUseCase,
-      this._helpCenterUseCase, this._logoutUseCase)
+      this._helpCenterUseCase, this._logoutUseCase, this._updateProfileUseCase)
       : super(InitialProfileState());
 
   bool rememberPass = false;
@@ -95,7 +99,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         emit(LogoutFailureState(message: failure.message));
       },
       (success) {
-        AppConstants.userToken =='';
+        AppConstants.userToken == '';
         AppConstants.isLoggedIn = false;
         saveStringValue(key: 'user_id', value: '');
         saveStringValue(key: 'user_name', value: '');
@@ -106,6 +110,32 @@ class ProfileCubit extends Cubit<ProfileState> {
         // AppConstants.fullName = await getStringValue(key: 'user_name') ?? '';
 
         emit(LogoutSuccessState(message: success));
+      },
+    );
+  }
+
+  TextEditingController firstNameController =
+      TextEditingController(text: AppConstants.fullName.split(' ').first);
+  TextEditingController lastNameController =
+      TextEditingController(text: AppConstants.fullName.split(' ').last);
+  TextEditingController dateOfBirthController =
+      TextEditingController(text: AppConstants.dateOfBirth);
+  PhoneNumber? mobile;
+  PhoneNumber? additionalMobile;
+
+  void updateProfile() async {
+    emit(UpdateProfileLoadingState());
+    final result = await _updateProfileUseCase.call(UpdateProfileParams(
+      firstName: firstNameController.text,
+      lastName: lastNameController.text,
+    ));
+    result.fold(
+      (failure) {
+        emit(UpdateProfileFailureState(errorMessage: failure.message));
+      },
+      (success) {
+        debugPrint('Update profile:: ${success}');
+        emit(UpdateProfileSuccessState());
       },
     );
   }

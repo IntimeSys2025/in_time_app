@@ -11,14 +11,16 @@ sealed class EndPoints {
   static const String getSliders = 'api/frontend/sliders';
   static const String getServices = 'api/frontend/services';
   static const String getSubServices = 'api/frontend/sub-services';
-  static const String getAvailableAppointments = 'api/frontend/available-appointments';
-  static const String getAvailableTimeInDate = 'api/frontend/available-appointments';
+  static const String getAvailableAppointments =
+      'api/frontend/available-appointments';
+  static const String getAvailableTimeInDate =
+      'api/frontend/available-appointments';
   static const String getPartners = 'api/frontend/partners/list';
   static const String getPartnerDetails = 'api/frontend/partners/details/';
 
-  static const String getTermsCondition = 'api/frontend/content/terms-conditions';
+  static const String getTermsCondition =
+      'api/frontend/content/terms-conditions';
   static const String getPrivacyPolicy = 'api/frontend/content/privacy-policy';
   static const String getHelpCenter = 'api/frontend/content/help-center';
-
-
+  static const String updateProfile = 'api/user/updateProfile';
 }
