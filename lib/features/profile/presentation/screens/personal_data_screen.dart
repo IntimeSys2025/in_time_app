@@ -212,8 +212,16 @@ class PersonalDataScreen extends StatelessWidget {
       bottomNavigationBar: BlocConsumer<ProfileCubit, ProfileState>(
         listener: (context, state) {
           if (state is UpdateProfileSuccessState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-                 const SnackBar(content: Text('Data updated successfully.'),backgroundColor: AppColors.kGreenButton,));
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text('Data updated successfully.'),
+              backgroundColor: AppColors.kGreenButton,
+            ));
+            Navigator.pop(context);
+          }else if(state is UpdateProfileFailureState){
+            ScaffoldMessenger.of(context).showSnackBar( SnackBar(
+              content: Text(state.errorMessage),
+              backgroundColor: AppColors.kGreenButton,
+            ));
           }
         },
         builder: (context, state) {

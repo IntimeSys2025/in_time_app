@@ -5,7 +5,7 @@ import 'package:in_time_app/core/shared_widgets/app_text_field.dart';
 import 'package:in_time_app/core/utils/app_asset_path.dart';
 import 'package:in_time_app/core/utils/app_colors.dart';
 import 'package:in_time_app/features/home/presentation/screens/home_screen_one_doctor.dart';
-
+import 'package:in_time_app/features/profile/presentation/logic/profile_cubit.dart';
 import '../../../../core/shared_widgets/password_text_field_widget.dart';
 import '../../../home/presentation/screens/navigation_screen.dart';
 import '../logic/create_account_cubit.dart';
@@ -21,16 +21,16 @@ class ResetPasswordScreen extends StatefulWidget {
 
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
-  bool _obsecureOldPassword = true;
+  bool _obscureOldPassword = true;
   bool _obscureNewPassword = true;
   bool _obscureConfirmPassword = true;
 
-  final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  // final TextEditingController _oldPasswordController = TextEditingController();
+  // final TextEditingController _newPasswordController = TextEditingController();
+  // final TextEditingController _confirmPasswordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final cubit = BlocProvider.of<CreateAccountCubit>(context);
+    final cubit = BlocProvider.of<ProfileCubit>(context);
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -43,7 +43,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: SafeArea(
-          child: BlocConsumer<CreateAccountCubit, CreateAccountState>(
+          child: BlocConsumer<ProfileCubit, ProfileState>(
             listener: (context, state) {
               if (state is ResetPasswordFailureState) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -59,11 +59,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     backgroundColor: Colors.green,
                   ),
                 );
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const NavigationBarScreen(),
-                    ));
+                // Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //       builder: (context) => const NavigationBarScreen(),
+                //     ));
+                Navigator.pop(context);
               }
             },
             buildWhen: (previous, current) =>
@@ -124,8 +125,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           TextFormField(
-                            controller: cubit.resetPasswordController,
-                            obscureText: _obscureNewPassword,
+                            controller: cubit.oldPasswordController,
+                            obscureText: _obscureOldPassword,
                             validator: validatePassword,
                             decoration: InputDecoration(
                               labelText: 'Enter Old Password',
@@ -136,7 +137,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                     : Icons.visibility),
                                 onPressed: () {
                                   setState(() {
-                                    _obsecureOldPassword = !_obsecureOldPassword;
+                                    _obscureOldPassword = !_obscureOldPassword;
                                   });
                                 },
                               ),
@@ -146,7 +147,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           ),
                           16.heightSpace,
                           TextFormField(
-                            controller: cubit.resetPasswordController,
+                            controller: cubit.newPasswordController,
                             obscureText: _obscureNewPassword,
                             validator: validatePassword,
                             decoration: InputDecoration(
@@ -169,7 +170,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           16.heightSpace,
                           // Confirm Password Field
                           TextFormField(
-                            controller: cubit.resetConfirmPasswordController,
+                            controller: cubit.confirmPasswordController,
                             obscureText: _obscureConfirmPassword,
                             validator: validatePassword,
                             decoration: InputDecoration(
@@ -227,8 +228,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                             )
                         : ElevatedButton(
                             onPressed: () {
-                              if (cubit.resetPasswordFormKey.currentState!
-                                  .validate()) {
+                              if (cubit.resetPasswordFormKey.currentState!.validate()) {
                                 cubit.resetPassword();
                               }
                             },

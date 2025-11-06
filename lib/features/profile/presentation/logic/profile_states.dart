@@ -46,3 +46,15 @@ class UpdateProfileFailureState extends ProfileState {
   final String errorMessage;
   UpdateProfileFailureState({required this.errorMessage});
 }
+
+class ResetPasswordLoadingState extends ProfileState {}
+
+class ResetPasswordSuccessState extends ProfileState {
+  final String successMessage;
+  ResetPasswordSuccessState({required this.successMessage});
+}
+
+class ResetPasswordFailureState extends ProfileState {
+  final String errorMessage;
+  ResetPasswordFailureState({required this.errorMessage});
+}

@@ -285,27 +285,27 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
   TextEditingController resetPasswordController = TextEditingController();
   TextEditingController resetConfirmPasswordController =
       TextEditingController();
-  void resetPassword() async {
-    emit(ResetPasswordLoadingState());
-    emit(ResetPasswordSuccessState(successMessage: 'success'));
-    // if (resetPasswordController.text != resetConfirmPasswordController.text) {
-    //   emit(CreateAccountInitial());
-    //   emit(ResetPasswordFailureState(errorMessage: 'passwords do not match'));
-    //   return;
-    // }
-    // final result = await _resetPasswordUseCas.call(ResetPasswordParams(
-    //     password: resetPasswordController.text,
-    //     passwordConfirmation: resetConfirmPasswordController.text,
-    //     token: AppConstants.userToken));
-    // result.fold(
-    //   (failure) {
-    //     emit(ResetPasswordFailureState(errorMessage: failure.message));
-    //   },
-    //   (success) {
-    //     emit(ResetPasswordSuccessState(successMessage: success));
-    //   },
-    // );
-  }
+  // void resetPassword() async {
+  //   emit(ResetPasswordLoadingState());
+  //   emit(ResetPasswordSuccessState(successMessage: 'success'));
+  //   // if (resetPasswordController.text != resetConfirmPasswordController.text) {
+  //   //   emit(CreateAccountInitial());
+  //   //   emit(ResetPasswordFailureState(errorMessage: 'passwords do not match'));
+  //   //   return;
+  //   // }
+  //   // final result = await _resetPasswordUseCas.call(ResetPasswordParams(
+  //   //     password: resetPasswordController.text,
+  //   //     passwordConfirmation: resetConfirmPasswordController.text,
+  //   //     token: AppConstants.userToken));
+  //   // result.fold(
+  //   //   (failure) {
+  //   //     emit(ResetPasswordFailureState(errorMessage: failure.message));
+  //   //   },
+  //   //   (success) {
+  //   //     emit(ResetPasswordSuccessState(successMessage: success));
+  //   //   },
+  //   // );
+  // }
 }
 
 Future<Map<String, dynamic>> callRegisterApi(

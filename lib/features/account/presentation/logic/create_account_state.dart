@@ -71,14 +71,14 @@ class VerifyCodeFailureState extends CreateAccountState {
   VerifyCodeFailureState({required this.errorMessage});
 }
 
-class ResetPasswordLoadingState extends CreateAccountState {}
-
-class ResetPasswordSuccessState extends CreateAccountState {
-  final String successMessage;
-  ResetPasswordSuccessState({required this.successMessage});
-}
-
-class ResetPasswordFailureState extends CreateAccountState {
-  final String errorMessage;
-  ResetPasswordFailureState({required this.errorMessage});
-}
+// class ResetPasswordLoadingState extends CreateAccountState {}
+//
+// class ResetPasswordSuccessState extends CreateAccountState {
+//   final String successMessage;
+//   ResetPasswordSuccessState({required this.successMessage});
+// }
+//
+// class ResetPasswordFailureState extends CreateAccountState {
+//   final String errorMessage;
+//   ResetPasswordFailureState({required this.errorMessage});
+// }

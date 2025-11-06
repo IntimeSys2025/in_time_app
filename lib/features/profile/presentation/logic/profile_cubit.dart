@@ -114,7 +114,8 @@ class ProfileCubit extends Cubit<ProfileState> {
     );
   }
 
-  TextEditingController firstNameController = TextEditingController(text: AppConstants.fullName.split(' ').first);
+  TextEditingController firstNameController =
+      TextEditingController(text: AppConstants.fullName.split(' ').first);
   TextEditingController lastNameController =
       TextEditingController(text: AppConstants.fullName.split(' ').last);
   TextEditingController dateOfBirthController =
@@ -127,9 +128,9 @@ class ProfileCubit extends Cubit<ProfileState> {
     final result = await _updateProfileUseCase.call(UpdateProfileParams(
       firstName: firstNameController.text,
       lastName: lastNameController.text,
-      dateBirth: "1997-11-01",
+      dateBirth: dateOfBirthController.text,
+      // mobile: ,
       gender: "female",
-
     ));
     result.fold(
       (failure) {
@@ -138,6 +139,38 @@ class ProfileCubit extends Cubit<ProfileState> {
       (success) {
         debugPrint('Update profile:: ${success}');
         emit(UpdateProfileSuccessState());
+      },
+    );
+  }
+
+  final resetPasswordFormKey = GlobalKey<FormState>();
+  TextEditingController oldPasswordController = TextEditingController();
+  TextEditingController newPasswordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+  void resetPassword() async {
+    emit(ResetPasswordLoadingState());
+    // emit(ResetPasswordSuccessState());
+    if (newPasswordController.text != confirmPasswordController.text) {
+      // emit(CreateAccountInitial());
+      emit(ResetPasswordFailureState(errorMessage: 'passwords do not match'));
+      return;
+    }
+    final result = await _updateProfileUseCase.call(UpdateProfileParams(
+      oldPassword: oldPasswordController.text,
+      password: newPasswordController.text
+      // firstName: firstNameController.text,
+      // lastName: lastNameController.text,
+      // dateBirth: dateOfBirthController.text,
+      // // mobile: ,
+      // gender: "female",
+    ));
+    result.fold(
+      (failure) {
+        emit(ResetPasswordFailureState(errorMessage: "The given data was invalid."));
+      },
+      (success) {
+        debugPrint('Update profile:: ${success}');
+        emit(ResetPasswordSuccessState(successMessage: 'Password updated'));
       },
     );
   }
