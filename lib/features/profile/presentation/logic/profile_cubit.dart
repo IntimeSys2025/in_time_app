@@ -114,8 +114,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     );
   }
 
-  TextEditingController firstNameController =
-      TextEditingController(text: AppConstants.fullName.split(' ').first);
+  TextEditingController firstNameController = TextEditingController(text: AppConstants.fullName.split(' ').first);
   TextEditingController lastNameController =
       TextEditingController(text: AppConstants.fullName.split(' ').last);
   TextEditingController dateOfBirthController =
@@ -128,6 +127,9 @@ class ProfileCubit extends Cubit<ProfileState> {
     final result = await _updateProfileUseCase.call(UpdateProfileParams(
       firstName: firstNameController.text,
       lastName: lastNameController.text,
+      dateBirth: "1997-11-01",
+      gender: "female",
+
     ));
     result.fold(
       (failure) {

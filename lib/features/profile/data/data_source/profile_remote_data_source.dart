@@ -42,7 +42,8 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
 
   @override
   Future<UserModel> updateProfile({required UpdateProfileParams params}) async {
-    final response = await _apiConsumer.post(path: EndPoints.updateProfile);
+    final response = await _apiConsumer.post(path: EndPoints.updateProfile,
+    body: params.toJson());
     return UserModel.fromJson(response.data['data']['user']);
   }
 }

@@ -21,17 +21,32 @@ class UpdateProfileParams extends Equatable {
     this.firstName,
   });
   Map<String, dynamic> toJson() {
-    return {
-      "first_name": firstName,
-      "last_name": lastName,
-      "mobile": mobile,
-      "additional_mobile": additionalMobile,
-      "password": password,
-      "old_password": oldPassword,
-      "date_of_birth": dateBirth //"1993-07-28"
-      ,
-      "gender": gender
-    };
+    final data = <String, dynamic>{};
+
+    if (firstName != null && firstName!.isNotEmpty) {
+      data['first_name'] = firstName;
+    }
+    if (lastName != null && lastName!.isNotEmpty) {
+      data['last_name'] = lastName;
+    }
+    if (mobile != null && mobile!.isNotEmpty) {
+      data['mobile'] = mobile;
+    }
+    if (additionalMobile != null && additionalMobile!.isNotEmpty) {
+      data['additional_mobile'] = additionalMobile;
+    }
+    if (password != null && password!.isNotEmpty) {
+      data['password'] = password;
+    }
+    if (oldPassword != null && oldPassword!.isNotEmpty) {
+      data['old_password'] = oldPassword;
+    }
+    if (dateBirth != null && dateBirth!.isNotEmpty) {
+      data['date_of_birth'] = dateBirth;
+    }
+    if (gender != null && gender!.isNotEmpty) data['gender'] = gender;
+
+    return data;
   }
 
   @override

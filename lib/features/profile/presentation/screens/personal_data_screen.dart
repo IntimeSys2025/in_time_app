@@ -1,15 +1,14 @@
+import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_time_app/core/helpers/extension.dart';
 import 'package:in_time_app/core/shared_widgets/app_button_widget.dart';
-import 'package:in_time_app/core/shared_widgets/app_text_button.dart';
 import 'package:in_time_app/core/shared_widgets/app_text_field.dart';
 import 'package:in_time_app/core/utils/app_colors.dart';
-import 'package:in_time_app/core/utils/app_font_size.dart';
 import 'package:in_time_app/features/profile/presentation/logic/profile_cubit.dart';
-import 'package:in_time_app/features/profile/presentation/screens/change_password_screen.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:pinput/pinput.dart';
 
 import '../../../../core/utils/app_constants.dart';
 import '../../../account/presentation/screens/reset_password_screen.dart';
@@ -62,18 +61,26 @@ class PersonalDataScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: AppTextField(
-                        obscureText: false,
-                        labelText: 'First name',
-                        hintText: AppConstants.fullName.split(' ').first,
-                        controller: TextEditingController(text: AppConstants.fullName.split(' ').first)),
+                      obscureText: false,
+                      labelText: 'First name',
+                      hintText: AppConstants.fullName.split(' ').first,
+                      controller: profileCubit.firstNameController,
+                      onChanged: (value) {
+                        profileCubit.firstNameController.setText(value);
+                      },
+                    ),
                   ),
                   10.widthSpace,
                   Expanded(
                     child: AppTextField(
-                        obscureText: false,
-                        labelText: 'Last name',
-                        hintText: AppConstants.fullName.split(' ').last,
-                        controller: TextEditingController(text: AppConstants.fullName.split(' ').last)),
+                      obscureText: false,
+                      labelText: 'Last name',
+                      hintText: AppConstants.fullName.split(' ').last,
+                      controller: profileCubit.lastNameController,
+                      onChanged: (value) {
+                        profileCubit.lastNameController.text = value;
+                      },
+                    ),
                   )
                 ],
               ),
@@ -82,9 +89,10 @@ class PersonalDataScreen extends StatelessWidget {
                   textDirection: TextDirection.ltr,
                   child: IntlPhoneField(
                     invalidNumberMessage: 'Invalid phone Number',
-                    decoration:  InputDecoration(
-                      labelText: AppConstants.userMobile ?? 'Phone Number',
-                      border: const OutlineInputBorder(
+                    decoration: const InputDecoration(
+                      // hintText: AppConstants.userMobile ?? 'Phone Number',
+                      labelText: 'Phone Number',
+                      border: OutlineInputBorder(
                         borderSide: BorderSide(),
                       ),
                     ),
@@ -98,7 +106,7 @@ class PersonalDataScreen extends StatelessWidget {
                     keyboardType: TextInputType.phone,
                     // countries: ["SA"],
                     onChanged: (phone) {
-                      // cubit.loginPhone = phone;
+                      profileCubit.mobile = phone;
                     },
                   )),
               10.heightSpace,
@@ -125,48 +133,13 @@ class PersonalDataScreen extends StatelessWidget {
                     // countries: ["SA"],
                     onChanged: (phone) {
                       // cubit.loginPhone = phone;
+                      profileCubit.additionalMobile = phone;
                     },
                   )),
-              // Row(
-              //   children: [
-              //     Expanded(
-              //       child: AppTextField(
-              //           obscureText: true,
-              //           labelText: 'Password',
-              //           hintText: '',
-              //           controller: TextEditingController()),
-              //     ),
-              //     5.widthSpace,
-              //     GestureDetector(
-              //       onTap: () {
-              //         // Navigator.push(
-              //         //     context,
-              //         //     MaterialPageRoute(
-              //         //       builder: (context) => ChangePasswordScreen(),
-              //         //     ));
-              //         Navigator.push(
-              //             context,
-              //             MaterialPageRoute(
-              //               builder: (context) => const ResetPasswordScreen(),
-              //             ));
-              //       },
-              //       child: const Text(
-              //         'Change',
-              //         style: TextStyle(
-              //             color: AppColors.green,
-              //             fontSize: AppFontSize.fontSize16,
-              //             fontWeight: FontWeight.w600,
-              //             decoration: TextDecoration.underline,
-              //             decorationColor: AppColors.green),
-              //       ),
-              //     )
-              //   ],
-              // ),
-              // 20.heightSpace,
 
               /// Date of birth
               TextFormField(
-                // controller: controller,
+                controller: profileCubit.dateOfBirthController,
                 // inputFormatters: ,
                 onTap: () async {
                   // if (isDatePicker) {
@@ -176,6 +149,11 @@ class PersonalDataScreen extends StatelessWidget {
                     firstDate: DateTime(1950),
                     lastDate: DateTime.now(),
                   );
+                  // String formattedDate = DateFormat('yyyy-MM-dd','en').format(date)
+                  if (date != null) {
+                    profileCubit.dateOfBirthController.text =
+                        locale.DateFormat('yyyy-MM-dd', 'en').format(date!);
+                  }
                   // cubit.setDateOfBirth(date ?? DateTime.now());
 
                   // }
@@ -197,8 +175,8 @@ class PersonalDataScreen extends StatelessWidget {
                   labelText: 'Date of birth',
                   hintText: 'Enter your Date Of Birth',
                   suffixIcon: const Icon(Icons.calendar_today),
-                  border:
-                      OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10)),
                 ),
               ),
               20.heightSpace,
@@ -206,11 +184,11 @@ class PersonalDataScreen extends StatelessWidget {
                 alignment: Alignment.bottomRight,
                 child: TextButton(
                   onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ResetPasswordScreen(),
-                              ));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ResetPasswordScreen(),
+                        ));
                   },
                   child: const Text(
                     'Change password',
@@ -231,16 +209,31 @@ class PersonalDataScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          child: AppButtonWidget(
-              title: 'Save Changes',
-              backgroundColor: AppColors.green,
-              onPressed: () {
-                profileCubit.updateProfile();
-              }),
-        ),
+      bottomNavigationBar: BlocConsumer<ProfileCubit, ProfileState>(
+        listener: (context, state) {
+          if (state is UpdateProfileSuccessState) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                 const SnackBar(content: Text('Data updated successfully.'),backgroundColor: AppColors.kGreenButton,));
+          }
+        },
+        builder: (context, state) {
+          return (state is UpdateProfileLoadingState)
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 10),
+                    child: AppButtonWidget(
+                        title: 'Save Changes',
+                        backgroundColor: AppColors.green,
+                        onPressed: () {
+                          profileCubit.updateProfile();
+                        }),
+                  ),
+                );
+        },
       ),
     );
   }

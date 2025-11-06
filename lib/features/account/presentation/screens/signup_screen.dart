@@ -131,7 +131,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   20.heightSpace,
                   Row(
                     children: [
-                      Text('Do you have an account?',style: TextStyle(
+                      const Text('Do you have an account?',style: TextStyle(
                           fontSize: AppFontSize.fontSize16
                       ),),
                       5.widthSpace,
@@ -143,7 +143,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 builder: (context) => LoginScreen(),
                               ));
                         },
-                          child: Text(
+                          child: const Text(
                         'Login',
                         style: TextStyle(color: AppColors.green,fontSize: AppFontSize.fontSize16),
                       )),
