@@ -51,7 +51,7 @@ class CheckoutScreen extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const PaymentResultScreen(paymentSuccess: false),
+                        builder: (context) => const PaymentResultScreen(paymentSuccess: true),
                       ));
                 }),
           )),
