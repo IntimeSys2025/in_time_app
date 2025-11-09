@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:in_time_app/features/account/presentation/screens/loginScreen.dart';
 
 import '../../../../core/utils/app_constants.dart';
+import '../../../profile/presentation/screens/notification_screen.dart';
 
 class WelcomeHeader extends StatelessWidget {
   final bool showNotificationIcon;
@@ -57,13 +58,22 @@ class WelcomeHeader extends StatelessWidget {
         ),
         // Notification bell icon
         if(showNotificationIcon)
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.grey.shade300),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const NotificationsScreen(),
+                ));
+          },
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.grey.shade300),
+            ),
+            child: const Icon(Icons.notifications_none),
           ),
-          child: const Icon(Icons.notifications_none),
         ),
       ],
     );
