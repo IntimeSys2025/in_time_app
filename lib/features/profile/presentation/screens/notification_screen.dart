@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:in_time_app/core/helpers/extension.dart';
-import 'package:in_time_app/core/utils/app_colors.dart';
 import 'package:in_time_app/core/utils/app_font_size.dart';
 
 import '../widget/notification_item.dart';
@@ -12,9 +11,10 @@ class NotificationsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notifications'),
+        title: const Text('Notifications'),
+        centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -36,6 +36,7 @@ class NotificationsScreen extends StatelessWidget {
                 const NotificationItem(
                     title: 'Reminder! Get ready for your appointment at 9am',
                     time: 'Just Now',
+
                     icon: Icons.calendar_today),
                 10.heightSpace,
                 const Padding(
@@ -49,7 +50,8 @@ class NotificationsScreen extends StatelessWidget {
                 ),
                 const NotificationItem(
                     title: 'Payment at Famous Barber was successful!',
-                    time: '12/2/2024  08:23 AM',
+                    time: '08:23 AM',
+                    date: '12/2/2024',
                     icon: Icons.wallet),
                 10.heightSpace,
                 const NotificationItem(

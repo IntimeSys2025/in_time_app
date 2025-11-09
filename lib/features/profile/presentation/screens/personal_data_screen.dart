@@ -217,8 +217,8 @@ class PersonalDataScreen extends StatelessWidget {
               backgroundColor: AppColors.kGreenButton,
             ));
             Navigator.pop(context);
-          }else if(state is UpdateProfileFailureState){
-            ScaffoldMessenger.of(context).showSnackBar( SnackBar(
+          } else if (state is UpdateProfileFailureState) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(state.errorMessage),
               backgroundColor: AppColors.kGreenButton,
             ));
