@@ -13,21 +13,38 @@ class AboutSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final profileCubit = BlocProvider.of<ProfileCubit>(context);
-    return BlocListener<ProfileCubit,ProfileState>(
+    return BlocListener<ProfileCubit, ProfileState>(
       listener: (context, state) {
         if (state is GetContentPagesSuccess) {
+          Navigator.of(context, rootNavigator: true).pop(); // close dialog if open
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => ContentPageScreen(title: state.title,htmlContent: state.content.content,),
+                builder: (context) => ContentPageScreen(
+                  title: state.title,
+                  htmlContent: state.content.content,
+                ),
               ));
-        } else if(state is GetHelpCenterSuccess){
+        } else if (state is GetHelpCenterSuccess) {
+          Navigator.of(context, rootNavigator: true).pop(); // close dialog if open
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) =>  HelpCenterScreen(helpCenterData: state.data,),
+                builder: (context) => HelpCenterScreen(
+                  helpCenterData: state.data,
+                ),
               ));
-
+        } else if (state is GetContentPagesLoading) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return const Center(
+                  child: SizedBox(
+                    height: 50,
+                      width: 50,
+                      child: CircularProgressIndicator()));
+            },
+          );
         }
       },
       child: Column(
