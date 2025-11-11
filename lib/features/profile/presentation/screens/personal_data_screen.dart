@@ -35,16 +35,16 @@ class PersonalDataScreen extends StatelessWidget {
                 child: Stack(
                   alignment: Alignment.bottomRight,
                   children: [
-                    const CircleAvatar(
+                     const CircleAvatar(
+                      backgroundColor: AppColors.kLightGray,
                       radius: 50,
-                      backgroundImage: NetworkImage(
-                          'https://c8.alamy.com/comp/TC2FPE/young-man-avatar-cartoon-character-profile-picture-TC2FPE.jpg'), // Replace with your image asset
+                      child: Icon(Icons.person,size: 65,), // Replace with your image asset
                     ),
                     Container(
                       padding: const EdgeInsets.all(5),
                       // margin: EdgeInsets.all(2),
                       decoration: const BoxDecoration(
-                        color: AppColors.green,
+                        color: AppColors.kGreenButton,
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
