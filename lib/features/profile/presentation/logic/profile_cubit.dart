@@ -150,6 +150,11 @@ class ProfileCubit extends Cubit<ProfileState> {
   void resetPassword() async {
     emit(ResetPasswordLoadingState());
     // emit(ResetPasswordSuccessState());
+    if(oldPasswordController.text == newPasswordController.text){
+      // emit(CreateAccountInitial());
+      emit(ResetPasswordFailureState(errorMessage: 'Old and new passwords cannot be the same'));
+      return;
+    }
     if (newPasswordController.text != confirmPasswordController.text) {
       // emit(CreateAccountInitial());
       emit(ResetPasswordFailureState(errorMessage: 'passwords do not match'));
