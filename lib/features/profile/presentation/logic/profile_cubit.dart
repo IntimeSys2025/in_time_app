@@ -174,9 +174,14 @@ class ProfileCubit extends Cubit<ProfileState> {
         emit(ResetPasswordFailureState(errorMessage: "The given data was invalid."));
       },
       (success) {
-        debugPrint('Update profile:: ${success}');
+        debugPrint('Update profile:: $success');
         emit(ResetPasswordSuccessState(successMessage: 'Password updated'));
       },
     );
+  }
+
+  final TextEditingController searchQController = TextEditingController();
+  void searchHelpCenter(){
+
   }
 }

@@ -18,7 +18,10 @@ import '../widgets/service_card.dart';
 
 class PartnerDetailsScreen extends StatelessWidget {
   final PartnerDetailsModel partnerDetails;
-   const PartnerDetailsScreen({super.key, required this.partnerDetails, });
+  const PartnerDetailsScreen({
+    super.key,
+    required this.partnerDetails,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -67,13 +70,18 @@ class PartnerDetailsScreen extends StatelessWidget {
                   children: [
                     const WelcomeHeader(),
                     const SizedBox(height: 20),
-                    const CustomSearchBar(),
+                    CustomSearchBar(
+                      controller: homeCubit.searchController,
+                      onPressed: (value) {
+                        homeCubit.filterServices();
+                      },
+                      hintText: 'Find a service',
+                    ),
                     const SizedBox(height: 20),
                     // if(slider != null)
-                      DoctorDescCard(sliderModel: partnerDetails.sliderModel),
+                    DoctorDescCard(sliderModel: partnerDetails.sliderModel),
                     const SizedBox(height: 20),
-                    if (AppConstants.userToken != '' &&
-                        AppConstants.isLoggedIn)
+                    if (AppConstants.userToken != '' && AppConstants.isLoggedIn)
                       const Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -118,8 +126,7 @@ class PartnerDetailsScreen extends StatelessWidget {
                               ? homeCubit.filteredServices.length
                               : 1,
                           itemBuilder: (context, index) {
-                            final service =
-                            homeCubit.filteredServices[index];
+                            final service = homeCubit.filteredServices[index];
                             return ServiceCard(service: service);
                           },
                         ),
@@ -128,8 +135,7 @@ class PartnerDetailsScreen extends StatelessWidget {
                       const Center(
                         child: Text(
                           'No Services Available',
-                          style:
-                          TextStyle(fontSize: AppFontSize.fontSize16),
+                          style: TextStyle(fontSize: AppFontSize.fontSize16),
                         ),
                       ),
                     // const ServiceCard(),
@@ -145,5 +151,3 @@ class PartnerDetailsScreen extends StatelessWidget {
     );
   }
 }
-
-

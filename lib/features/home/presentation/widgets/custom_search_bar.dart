@@ -4,7 +4,16 @@ import 'package:in_time_app/core/utils/app_colors.dart';
 import 'package:in_time_app/features/home/presentation/logic/home_cubit.dart';
 
 class CustomSearchBar extends StatelessWidget {
-  const CustomSearchBar({super.key});
+  final TextEditingController controller;
+  final Icon? suffixIcon;
+  final String hintText;
+  final Function(String value) onPressed;
+  const CustomSearchBar(
+      {super.key,
+      required this.controller,
+       this.suffixIcon,
+      required this.hintText,
+      required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -15,14 +24,13 @@ class CustomSearchBar extends StatelessWidget {
         color: AppColors.moreLightGrey.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
       ),
-      child:  TextField(
-        controller: cubit.searchController,
-        onChanged: (value) {
-          cubit.filterServices();
-        },
-        decoration: InputDecoration(
-          icon: Icon(Icons.search),
-          hintText: 'Find a service',
+      child: TextField(
+        controller: controller,
+        onChanged: onPressed,
+        decoration:  InputDecoration(
+          suffixIcon: suffixIcon,
+          icon: const Icon(Icons.search),
+          hintText: hintText,
           border: InputBorder.none,
         ),
       ),

@@ -75,7 +75,14 @@ class HomeScreenOneDoctor extends StatelessWidget {
                         children: [
                           const WelcomeHeader(),
                           20.heightSpace,
-                          const CustomSearchBar(),
+                           CustomSearchBar(
+                            controller: homeCubit.searchController,
+                             onPressed: (value) {
+                               homeCubit.filterServices();
+                             },
+                             hintText: 'Find a service',
+
+                          ),
                           50.heightSpace,
                           if(homeCubit.sliders.isNotEmpty)
                           DoctorDescCard(sliderModel: homeCubit.sliders[0]),
