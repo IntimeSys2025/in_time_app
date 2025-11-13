@@ -200,11 +200,12 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                           if (widget.isFromForgetPassword) {
                             cubit.verifyCode();
                           } else {
-                            Navigator.push(
+                            Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => const NavigationBarScreen(),
-                                ));
+                                ),
+                            (route) => false,);
                           }
                         },
                         child: const Text("Verify",

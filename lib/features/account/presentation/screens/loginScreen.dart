@@ -25,6 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void dispose() {
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     final cubit = BlocProvider.of<CreateAccountCubit>(context);
@@ -44,11 +45,19 @@ class _LoginScreenState extends State<LoginScreen> {
               //
               // }else
               if (state is SignInSuccessState) {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const NavigationBarScreen(),
-                    ));
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NavigationBarScreen(),
+                  ),
+                  (route) => false,
+                );
+
+                // Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //       builder: (context) => const NavigationBarScreen(),
+                //     ));
               } else if (state is SignInFailureState) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -184,15 +193,19 @@ class _LoginScreenState extends State<LoginScreen> {
                         // Password Field
                         TextFormField(
                           controller: cubit.passwordController,
-                          obscureText: isVisiblePassword?true:false,
+                          obscureText: isVisiblePassword ? true : false,
                           validator: validatePassword,
                           decoration: InputDecoration(
                             labelText: "Password *",
-                            suffixIcon:  IconButton(onPressed: (){
-                              setState(() {
-                                isVisiblePassword = ! isVisiblePassword;
-                              });
-                            }, icon: Icon(isVisiblePassword ?Icons.visibility_off:Icons.visibility)),
+                            suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    isVisiblePassword = !isVisiblePassword;
+                                  });
+                                },
+                                icon: Icon(isVisiblePassword
+                                    ? Icons.visibility_off
+                                    : Icons.visibility)),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
@@ -211,18 +224,24 @@ class _LoginScreenState extends State<LoginScreen> {
                       Row(
                         children: [
                           Checkbox(
-                            activeColor: AppColors.green,
-                              value: cubit.rememberMe, onChanged: (value) {
-                            cubit.changeRememberMeVal();
-                            cubit.rememberMe = value!;
-                          }),
+                              activeColor: AppColors.green,
+                              value: cubit.rememberMe,
+                              onChanged: (value) {
+                                cubit.changeRememberMeVal();
+                                cubit.rememberMe = value!;
+                              }),
                           const Text("Remember Me"),
                         ],
                       ),
                       GestureDetector(
                         onTap: () {
                           // Handle forgot password navigation
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const ForgetPasswordScreen(),));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const ForgetPasswordScreen(),
+                              ));
                         },
                         child: const Text(
                           "Forgot Password?",
@@ -243,63 +262,66 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 50,
                     child: (state is SignInLoadingState)
                         ? ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        onPressed: () {
-                          // Handle login
-                          // cubit.logIn();
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //       builder: (context) => SignUpScreen(),
-                          //     ));
-                        },
-                        child:  const Center(
-                          child: CircularProgressIndicator(color: AppColors.white,),
-                        )
-
-                      // Text(
-                      //   "Login",
-                      //   style: TextStyle(fontSize: 18, color: Colors.white),
-                      // ),
-                    )
-                        : ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      onPressed: () {
-                        // Handle login
-                        if(cubit.loginForm.currentState!.validate()) {
-                          // If the form is valid, proceed with login
-                          cubit.logIn();
-                        } else {
-                          // If the form is invalid, show an error message
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Please fill in all fields'),
-                              backgroundColor: Colors.red,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                             ),
-                          );
-                        }
-                        // cubit.logIn();
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //       builder: (context) => SignUpScreen(),
-                        //     ));
-                      },
-                      child: const Text(
-                        "Login",
-                        style: TextStyle(fontSize: 18, color: Colors.white),
-                      ),
-                    ),
+                            onPressed: () {
+                              // Handle login
+                              // cubit.logIn();
+                              // Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //       builder: (context) => SignUpScreen(),
+                              //     ));
+                            },
+                            child: const Center(
+                              child: CircularProgressIndicator(
+                                color: AppColors.white,
+                              ),
+                            )
+
+                            // Text(
+                            //   "Login",
+                            //   style: TextStyle(fontSize: 18, color: Colors.white),
+                            // ),
+                            )
+                        : ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            onPressed: () {
+                              // Handle login
+                              if (cubit.loginForm.currentState!.validate()) {
+                                // If the form is valid, proceed with login
+                                cubit.logIn();
+                              } else {
+                                // If the form is invalid, show an error message
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Please fill in all fields'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
+                              // cubit.logIn();
+                              // Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //       builder: (context) => SignUpScreen(),
+                              //     ));
+                            },
+                            child: const Text(
+                              "Login",
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.white),
+                            ),
+                          ),
                   ),
 
                   const SizedBox(height: 15),

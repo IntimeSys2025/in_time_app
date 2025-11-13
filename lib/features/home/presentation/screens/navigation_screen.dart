@@ -124,8 +124,64 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
                   ],
                 ),
               ),
-        const MyCartScreen(),
-        const ProfileScreen(),
+        (AppConstants.userToken != '')
+            ? const MyCartScreen()
+            : Center(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Do you have an account?",
+                      style: TextStyle(fontSize: AppFontSize.fontSize16),
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LoginScreen(),
+                              ));
+                        },
+                        child: const Text(
+                          'Login',
+                          style: TextStyle(
+                            decoration: TextDecoration.underline,
+                            fontSize: AppFontSize.fontSize16,
+                          ),
+                        ))
+                  ],
+                ),
+              ),
+        (AppConstants.userToken != '')
+            ? const ProfileScreen()
+            : Center(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Do you have an account?",
+                      style: TextStyle(fontSize: AppFontSize.fontSize16),
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LoginScreen(),
+                              ));
+                        },
+                        child: const Text(
+                          'Login',
+                          style: TextStyle(
+                            decoration: TextDecoration.underline,
+                            fontSize: AppFontSize.fontSize16,
+                          ),
+                        ))
+                  ],
+                ),
+              ),
       ][selectedIndex],
     );
   }

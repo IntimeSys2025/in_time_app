@@ -44,7 +44,8 @@ class _RatingPopupState extends State<RatingPopup> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                 decoration: const BoxDecoration(
                   color: AppColors.kLightGreen,
                   borderRadius: BorderRadius.only(
@@ -56,7 +57,8 @@ class _RatingPopupState extends State<RatingPopup> {
                   children: [
                     const Text(
                       'Your Review',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     IconButton(
                       icon: const Icon(Icons.close),
@@ -83,8 +85,9 @@ class _RatingPopupState extends State<RatingPopup> {
                         return IconButton(
                           icon: Icon(
                             index < _rating ? Icons.star : Icons.star_border,
-                            color:
-                                index < _rating ? Colors.amber : AppColors.kGray,
+                            color: index < _rating
+                                ? Colors.amber
+                                : AppColors.kGray,
                             size: 30,
                           ),
                           onPressed: () {
@@ -147,9 +150,10 @@ class _RatingPopupState extends State<RatingPopup> {
                       children: [
                         AppButtonWidget(
                           width: 100,
-                          title: 'Cancel', onPressed: () {},
+                          title: 'Cancel',
+                          onPressed: () {},
                           textColor: AppColors.tagGreen,
-                        backgroundColor: AppColors.white,
+                          backgroundColor: AppColors.white,
                         ),
                         // TextButton(
                         //   onPressed: () => Navigator.pop(context),
@@ -178,14 +182,21 @@ class _RatingPopupState extends State<RatingPopup> {
                                           const Text(
                                             'Thanks For Rating',
                                             style: TextStyle(
-                                                fontSize: AppFontSize.fontSize24,
+                                                fontSize:
+                                                    AppFontSize.fontSize24,
                                                 fontWeight: FontWeight.w700),
                                           ),
                                           30.heightSpace,
                                           AppButtonWidget(
                                               title: 'Go to home',
                                               onPressed: () {
-                                                Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationBarScreen(),));
+                                                Navigator.pushAndRemoveUntil(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          NavigationBarScreen(),
+                                                    ),
+                                                (route) => false,);
                                               })
                                         ],
                                       ),
