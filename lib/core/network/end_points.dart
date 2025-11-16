@@ -23,4 +23,6 @@ sealed class EndPoints {
   static const String getPrivacyPolicy = 'api/frontend/content/privacy-policy';
   static const String getHelpCenter = 'api/frontend/content/help-center';
   static const String updateProfile = 'api/user/updateProfile';
+  static const String uploadProfilePic = 'api/user/uploadProfileImage';
+
 }

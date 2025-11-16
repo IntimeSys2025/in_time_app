@@ -6,12 +6,14 @@ import 'package:in_time_app/features/profile/data/models/privacy_policy_model.da
 import 'package:in_time_app/features/profile/data/models/terms_conditions_model.dart';
 
 import '../../../../core/network/end_points.dart';
+import '../models/arguments/upload_profile_pic_params.dart';
 
 abstract class ProfileRemoteDataSource {
   Future<ContentPagesModel> getTermsCondition();
   Future<ContentPagesModel> getPrivacyPolicy();
   Future<List<HelpCenterModel>> getHelpCenter();
   Future<UserModel> updateProfile({required UpdateProfileParams params});
+  Future<UserModel> uploadProfilePic({required UploadProfilePicParams params});
 }
 
 class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
@@ -45,5 +47,12 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
     final response = await _apiConsumer.post(path: EndPoints.updateProfile,
     body: params.toJson());
     return UserModel.fromJson(response.data['data']['user']);
+  }
+
+  @override
+  Future<UserModel> uploadProfilePic({required UploadProfilePicParams params}) async{
+    final response = await _apiConsumer.post(path: EndPoints.uploadProfilePic,
+        body: params.profilePicture);
+    return UserModel.fromJson(response.data['data']);
   }
 }

@@ -58,3 +58,13 @@ class ResetPasswordFailureState extends ProfileState {
   final String errorMessage;
   ResetPasswordFailureState({required this.errorMessage});
 }
+class SelectedProfilePicState extends ProfileState{
+  final File image;
+   SelectedProfilePicState({required this.image});
+}
+class UploadProfilePicLoadingState extends ProfileState{}
+class UploadProfilePicSuccessState extends ProfileState{}
+class UploadProfilePicFailureState extends ProfileState{
+  final String errorMessage;
+  UploadProfilePicFailureState({required this.errorMessage});
+}

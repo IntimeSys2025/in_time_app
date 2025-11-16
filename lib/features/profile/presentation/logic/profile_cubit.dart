@@ -1,16 +1,20 @@
+import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:in_time_app/core/utils/app_constants.dart';
 import 'package:in_time_app/features/account/domain/use_cases/logout_use_case.dart';
 import 'package:in_time_app/features/profile/data/models/arguments/update_profile_params.dart';
+import 'package:in_time_app/features/profile/data/models/arguments/upload_profile_pic_params.dart';
 import 'package:in_time_app/features/profile/data/models/help_center_model.dart';
 import 'package:in_time_app/features/profile/domain/use_case/get_help_center_use_case.dart';
 import 'package:in_time_app/features/profile/domain/use_case/get_privacy_use_case.dart';
 import 'package:in_time_app/features/profile/domain/use_case/get_terms_use_case.dart';
 import 'package:in_time_app/features/profile/domain/use_case/update_profile_use_case.dart';
+import 'package:in_time_app/features/profile/domain/use_case/upload_profile_pic_use_case.dart';
 import 'package:intl_phone_field/phone_number.dart';
-
 import '../../../../core/storage/secure_storage.dart';
 import '../../data/models/terms_conditions_model.dart';
 part 'profile_states.dart';
@@ -21,8 +25,14 @@ class ProfileCubit extends Cubit<ProfileState> {
   final HelpCenterUseCase _helpCenterUseCase;
   final LogoutUseCase _logoutUseCase;
   final UpdateProfileUseCase _updateProfileUseCase;
-  ProfileCubit(this._termsConditionsUseCase, this._privacyPolicyUseCase,
-      this._helpCenterUseCase, this._logoutUseCase, this._updateProfileUseCase)
+  final UploadProfilePicUseCase _uploadProfilePicUseCase;
+  ProfileCubit(
+      this._termsConditionsUseCase,
+      this._privacyPolicyUseCase,
+      this._helpCenterUseCase,
+      this._logoutUseCase,
+      this._updateProfileUseCase,
+      this._uploadProfilePicUseCase)
       : super(InitialProfileState());
 
   bool rememberPass = false;
@@ -150,9 +160,10 @@ class ProfileCubit extends Cubit<ProfileState> {
   void resetPassword() async {
     emit(ResetPasswordLoadingState());
     // emit(ResetPasswordSuccessState());
-    if(oldPasswordController.text == newPasswordController.text){
+    if (oldPasswordController.text == newPasswordController.text) {
       // emit(CreateAccountInitial());
-      emit(ResetPasswordFailureState(errorMessage: 'Old and new passwords cannot be the same'));
+      emit(ResetPasswordFailureState(
+          errorMessage: 'Old and new passwords cannot be the same'));
       return;
     }
     if (newPasswordController.text != confirmPasswordController.text) {
@@ -161,17 +172,18 @@ class ProfileCubit extends Cubit<ProfileState> {
       return;
     }
     final result = await _updateProfileUseCase.call(UpdateProfileParams(
-      oldPassword: oldPasswordController.text,
-      password: newPasswordController.text
-      // firstName: firstNameController.text,
-      // lastName: lastNameController.text,
-      // dateBirth: dateOfBirthController.text,
-      // // mobile: ,
-      // gender: "female",
-    ));
+        oldPassword: oldPasswordController.text,
+        password: newPasswordController.text
+        // firstName: firstNameController.text,
+        // lastName: lastNameController.text,
+        // dateBirth: dateOfBirthController.text,
+        // // mobile: ,
+        // gender: "female",
+        ));
     result.fold(
       (failure) {
-        emit(ResetPasswordFailureState(errorMessage: "The given data was invalid."));
+        emit(ResetPasswordFailureState(
+            errorMessage: "The given data was invalid."));
       },
       (success) {
         debugPrint('Update profile:: $success');
@@ -181,7 +193,48 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   final TextEditingController searchQController = TextEditingController();
-  void searchHelpCenter(){
+  void searchHelpCenter() {}
 
+  /// select profile pic from gallery
+  File? imageFile;
+  final picker = ImagePicker();
+  Future<void> pickImage() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      imageFile = File(pickedFile.path);
+      emit(InitialProfileState());
+      emit(SelectedProfilePicState(image: imageFile!));
+    }
+
+    // emit(PickedImageState());
+  }
+
+  void updateProfilePic() async {
+
+    emit(UploadProfilePicLoadingState());
+    if (imageFile == null) {
+      debugPrint('No image selected.');
+      return;
+    }
+
+    String fileName = imageFile!.path.split('/').last;
+    FormData formData = FormData.fromMap({
+      // 'id': int.parse(userId!),
+      'image': await MultipartFile.fromFile(imageFile!.path, filename: fileName),
+    });
+
+    final result = await _uploadProfilePicUseCase(
+      UploadProfilePicParams(profilePicture: formData),
+    );
+    result.fold(
+      (failure) {
+        emit(UploadProfilePicFailureState(errorMessage: failure.message));
+
+      },
+      (user) {
+        emit(UploadProfilePicSuccessState());
+
+      },
+    );
   }
 }

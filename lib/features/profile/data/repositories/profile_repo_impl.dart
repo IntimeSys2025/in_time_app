@@ -9,6 +9,7 @@ import 'package:in_time_app/features/profile/data/models/terms_conditions_model.
 import 'package:in_time_app/features/profile/domain/repositories/profile_repo.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../core/network/network_status.dart';
+import '../models/arguments/upload_profile_pic_params.dart';
 
 class ProfileRepoImpl implements ProfileRepo{
   final ProfileRemoteDataSource _profileRemoteDataSource;
@@ -53,6 +54,17 @@ class ProfileRepoImpl implements ProfileRepo{
   FutureResult<UserModel> updateProfile({required UpdateProfileParams params}) async{
     try {
       final result = await _profileRemoteDataSource.updateProfile(params: params);
+      return Right(result);
+    } on Failure catch (error) {
+      return Left(
+          ServerFailure(message: error.message, statusCode: error.statusCode));
+    }
+  }
+
+  @override
+  FutureResult<UserModel> uploadProfilePic({required UploadProfilePicParams params}) async{
+    try {
+      final result = await _profileRemoteDataSource.uploadProfilePic(params: params);
       return Right(result);
     } on Failure catch (error) {
       return Left(

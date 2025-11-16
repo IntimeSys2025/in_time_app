@@ -27,6 +27,7 @@ import 'package:in_time_app/features/profile/domain/use_case/get_help_center_use
 import 'package:in_time_app/features/profile/domain/use_case/get_privacy_use_case.dart';
 import 'package:in_time_app/features/profile/domain/use_case/get_terms_use_case.dart';
 import 'package:in_time_app/features/profile/domain/use_case/update_profile_use_case.dart';
+import 'package:in_time_app/features/profile/domain/use_case/upload_profile_pic_use_case.dart';
 import 'package:in_time_app/features/profile/presentation/logic/profile_cubit.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import '../../features/account/domain/use_cases/register_use_case.dart';
@@ -63,7 +64,8 @@ sealed class ServiceLocator {
     );
     sl.registerLazySingleton(() => ProfileCubit(sl<TermsConditionsUseCase>(),
         sl<PrivacyPolicyUseCase>(), sl<HelpCenterUseCase>(),
-    sl<LogoutUseCase>(),sl<UpdateProfileUseCase>()));
+    sl<LogoutUseCase>(),sl<UpdateProfileUseCase>(),
+    sl<UploadProfilePicUseCase>()));
 
     /// register use cases
     sl.registerLazySingleton<RegisterUseCase>(
@@ -103,6 +105,7 @@ sealed class ServiceLocator {
     );
     sl.registerLazySingleton(
             () => UpdateProfileUseCase(sl<ProfileRepo>()) );
+    sl.registerLazySingleton(() => UploadProfilePicUseCase(sl<ProfileRepo>()));
 
     /// register Repositories
     sl.registerLazySingleton<CreateAccountRepo>(

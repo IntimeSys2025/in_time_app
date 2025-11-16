@@ -7,9 +7,9 @@ import 'package:in_time_app/core/shared_widgets/app_button_widget.dart';
 import 'package:in_time_app/core/shared_widgets/app_text_field.dart';
 import 'package:in_time_app/core/utils/app_colors.dart';
 import 'package:in_time_app/features/profile/presentation/logic/profile_cubit.dart';
+import 'package:in_time_app/features/profile/presentation/screens/update_profile_pic_screen.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:pinput/pinput.dart';
-
 import '../../../../core/utils/app_constants.dart';
 import '../../../account/presentation/screens/reset_password_screen.dart';
 
@@ -35,22 +35,43 @@ class PersonalDataScreen extends StatelessWidget {
                 child: Stack(
                   alignment: Alignment.bottomRight,
                   children: [
-                     const CircleAvatar(
+                    const CircleAvatar(
                       backgroundColor: AppColors.kLightGray,
                       radius: 50,
-                      child: Icon(Icons.person,size: 65,), // Replace with your image asset
+                      child: Icon(
+                        Icons.person,
+                        size: 65,
+                      ), // Replace with your image asset
                     ),
-                    Container(
-                      padding: const EdgeInsets.all(5),
-                      // margin: EdgeInsets.all(2),
-                      decoration: const BoxDecoration(
-                        color: AppColors.kGreenButton,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.edit,
-                        color: AppColors.white,
-                        size: 16,
+                    BlocListener<ProfileCubit, ProfileState>(
+                      listener: (context, state) {
+                        if (state is SelectedProfilePicState) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => UpdateProfilePicScreen(
+                                  image: state.image,
+                                ),
+                              ));
+                        }
+                      },
+                      child: GestureDetector(
+                        onTap: () {
+                          profileCubit.pickImage();
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(5),
+                          // margin: EdgeInsets.all(2),
+                          decoration: const BoxDecoration(
+                            color: AppColors.kGreenButton,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.edit,
+                            color: AppColors.white,
+                            size: 16,
+                          ),
+                        ),
                       ),
                     ),
                   ],
@@ -152,7 +173,7 @@ class PersonalDataScreen extends StatelessWidget {
                   // String formattedDate = DateFormat('yyyy-MM-dd','en').format(date)
                   if (date != null) {
                     profileCubit.dateOfBirthController.text =
-                        locale.DateFormat('yyyy-MM-dd', 'en').format(date!);
+                        locale.DateFormat('yyyy-MM-dd', 'en').format(date);
                   }
                   // cubit.setDateOfBirth(date ?? DateTime.now());
 

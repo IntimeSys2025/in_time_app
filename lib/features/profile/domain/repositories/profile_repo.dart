@@ -5,10 +5,12 @@ import 'package:in_time_app/features/profile/data/models/privacy_policy_model.da
 import 'package:in_time_app/features/profile/data/models/terms_conditions_model.dart';
 
 import '../../data/models/arguments/update_profile_params.dart';
+import '../../data/models/arguments/upload_profile_pic_params.dart';
 
 abstract class ProfileRepo{
   FutureResult<ContentPagesModel> getTermsConditions();
   FutureResult<ContentPagesModel> getPrivacyPolicy();
   FutureResult<List<HelpCenterModel>> getHelpCenter();
   FutureResult<UserModel> updateProfile({required UpdateProfileParams params});
+  FutureResult<UserModel> uploadProfilePic({required UploadProfilePicParams params});
 }

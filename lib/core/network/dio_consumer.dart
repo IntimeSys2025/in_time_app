@@ -20,8 +20,9 @@ class DioConsumer implements ApiConsumer {
     dio.options
       ..baseUrl = baseUrl
       ..headers = {
-        'accept': 'application/json',
-        'content-type': 'application/json',
+        // 'accept': 'application/json',
+        'accept': 'multipart/form-data',
+        // 'content-type': 'application/json',
         'Access-control-Allow-Origin': '*'
       }
       ..sendTimeout = const Duration(seconds: 200)
