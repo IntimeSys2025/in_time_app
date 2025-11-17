@@ -23,6 +23,8 @@ class UserEntity extends Equatable {
   final String token;
   @JsonKey(name: 'remember_me')
   final bool rememberMe;
+  @JsonKey(name: 'image')
+  final String? image;
 
   const UserEntity(
       {required this.id,
@@ -33,7 +35,8 @@ class UserEntity extends Equatable {
       required this.dateBirth,
       required this.gender,
       required this.token,
-      required this.rememberMe});
+      required this.rememberMe,
+      required this.image});
 
   @override
   List<Object?> get props => [
@@ -45,6 +48,7 @@ class UserEntity extends Equatable {
         dateBirth,
         gender,
         token,
-        rememberMe
+        rememberMe,
+        image
       ];
 }

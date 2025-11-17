@@ -16,6 +16,7 @@ UserEntity _$UserEntityFromJson(Map<String, dynamic> json) => UserEntity(
       gender: json['gender'] as String,
       token: json['token'] as String,
       rememberMe: json['remember_me'] as bool,
+      image: json['image'] as String
     );
 
 Map<String, dynamic> _$UserEntityToJson(UserEntity instance) =>
@@ -29,4 +30,5 @@ Map<String, dynamic> _$UserEntityToJson(UserEntity instance) =>
       'gender': instance.gender,
       'token': instance.token,
       'remember_me': instance.rememberMe,
+      'image' : instance.image
     };

@@ -53,6 +53,6 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   Future<UserModel> uploadProfilePic({required UploadProfilePicParams params}) async{
     final response = await _apiConsumer.post(path: EndPoints.uploadProfilePic,
         body: params.profilePicture);
-    return UserModel.fromJson(response.data['data']);
+    return UserModel.fromJson(response.data['data']['user']);
   }
 }

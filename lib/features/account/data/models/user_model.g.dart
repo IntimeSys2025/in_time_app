@@ -16,6 +16,7 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       gender: json['gender'] ?? '',
       token: json['token'] ?? '',
       rememberMe: json['remember_me'] ?? false,
+      image: json['image']
     );
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
