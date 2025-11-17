@@ -210,6 +210,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   void updateProfilePic() async {
+    emit(UploadProfilePicLoadingState());
 
     emit(UploadProfilePicLoadingState());
     if (imageFile == null) {
@@ -228,7 +229,8 @@ class ProfileCubit extends Cubit<ProfileState> {
     );
     result.fold(
       (failure) {
-        emit(UploadProfilePicFailureState(errorMessage: failure.message));
+        // emit(UploadProfilePicFailureState(errorMessage: failure.message));
+        emit(UploadProfilePicFailureState(errorMessage: 'Failed to upload profile image, Choose another one'));
 
       },
       (user) {
