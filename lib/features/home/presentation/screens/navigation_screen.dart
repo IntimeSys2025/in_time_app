@@ -34,6 +34,14 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
         selectedIndex: selectedIndex,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
         onDestinationSelected: (value) {
+          if (value != 0 && AppConstants.userToken == '') {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LoginScreen(),
+                ));
+            return;
+          }
           setState(() {
             selectedIndex = value;
           });
@@ -95,93 +103,9 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
             : (AppConstants.productType == ProductType.moreThanOneDoctor)
                 ? const HomeScreenMoreThanDoctor()
                 : const HomeScreenMoreThanCategory(),
-        (AppConstants.userToken != '')
-            ? const MyBookingScreen()
-            : Center(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Do you have an account?",
-                      style: TextStyle(fontSize: AppFontSize.fontSize16),
-                    ),
-                    TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const LoginScreen(),
-                              ));
-                        },
-                        child: const Text(
-                          'Login',
-                          style: TextStyle(
-                            decoration: TextDecoration.underline,
-                            fontSize: AppFontSize.fontSize16,
-                          ),
-                        ))
-                  ],
-                ),
-              ),
-        (AppConstants.userToken != '')
-            ? const MyCartScreen()
-            : Center(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Do you have an account?",
-                      style: TextStyle(fontSize: AppFontSize.fontSize16),
-                    ),
-                    TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const LoginScreen(),
-                              ));
-                        },
-                        child: const Text(
-                          'Login',
-                          style: TextStyle(
-                            decoration: TextDecoration.underline,
-                            fontSize: AppFontSize.fontSize16,
-                          ),
-                        ))
-                  ],
-                ),
-              ),
-        (AppConstants.userToken != '')
-            ? const ProfileScreen()
-            : Center(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Do you have an account?",
-                      style: TextStyle(fontSize: AppFontSize.fontSize16),
-                    ),
-                    TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const LoginScreen(),
-                              ));
-                        },
-                        child: const Text(
-                          'Login',
-                          style: TextStyle(
-                            decoration: TextDecoration.underline,
-                            fontSize: AppFontSize.fontSize16,
-                          ),
-                        ))
-                  ],
-                ),
-              ),
+        const MyBookingScreen(),
+        const MyCartScreen(),
+        const ProfileScreen(),
       ][selectedIndex],
     );
   }

@@ -60,6 +60,10 @@ class WelcomeHeader extends StatelessWidget {
         if(showNotificationIcon)
         GestureDetector(
           onTap: () {
+            if(AppConstants.userToken == ''){
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen(),));
+              return;
+            }
             Navigator.push(
                 context,
                 MaterialPageRoute(

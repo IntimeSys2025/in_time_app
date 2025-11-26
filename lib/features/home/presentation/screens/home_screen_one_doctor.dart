@@ -115,6 +115,7 @@ class HomeScreenOneDoctor extends StatelessWidget {
                                 TextButton(
                                     onPressed: () {
                                       homeCubit.toggleViewAllServices();
+                                      homeCubit.scrollToEnd(offset: homeCubit.scrollController.position.maxScrollExtent);
                                     },
                                     child: const Text('View All',style: TextStyle(
                                       decoration: TextDecoration.underline
@@ -122,13 +123,15 @@ class HomeScreenOneDoctor extends StatelessWidget {
                               ],
                             ),
                           if (homeCubit.filteredServices.isNotEmpty)
-                            const SizedBox(height: 10),
+                            10.heightSpace,
                           if (homeCubit.filteredServices.isNotEmpty)
                             Flexible(
                               // flex: 1,
                               child: ListView.builder(
+                                controller: homeCubit.scrollController,
+
                                 shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
+                                // physics: const NeverScrollableScrollPhysics(),
                                 scrollDirection: Axis.vertical,
                                 itemCount: homeCubit.isViewAllServices
                                     ? homeCubit.filteredServices.length

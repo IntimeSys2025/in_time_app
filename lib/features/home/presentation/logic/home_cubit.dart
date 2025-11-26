@@ -141,8 +141,26 @@ class HomeCubit extends Cubit<HomeState> {
   //   );
   // }
   bool isViewAllServices = false;
+  final ScrollController scrollController = ScrollController();
+  void scrollToEnd({required double offset}) {
+    debugPrint('Scroll to End');
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (scrollController.hasClients) {
+      scrollController.jumpTo(scrollController.position.maxScrollExtent);
+        scrollController.animateTo(
+          offset,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+      else {
+        print('ScrollController is not attached to any scroll views.');
+      }
+    });
+  }
   void toggleViewAllServices() {
     isViewAllServices = true;
+    // scrollToEnd(offset: scrollController.position.maxScrollExtent);
     // emit(HomeInitial());
     emit(ToggleViewAllServices());
   }
