@@ -62,10 +62,10 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => sl<HomeCubit>()
-              ..getCategories()
+              // ..getCategories()
               ..getPartners()
-              ..getSliders()
-              ..getServices(),
+              // ..getSliders()
+              // ..getServices(),
           ),
           BlocProvider(
             create: (context) =>

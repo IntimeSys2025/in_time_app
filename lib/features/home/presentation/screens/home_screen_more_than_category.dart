@@ -41,14 +41,14 @@ class HomeScreenMoreThanCategory extends StatelessWidget {
             child: BlocConsumer<HomeCubit, HomeState>(
               listener: (context, state) {
                 if (state is GetPartnerDetailsSuccessState) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PartnerDetailsScreen(
-                          partnerDetails: state.partnerDetails,
-                          // partner: partner,
-                        ),
-                      ));
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: (context) => PartnerDetailsScreen(
+                  //         partnerDetails: state.partnerDetails,
+                  //         // partner: partner,
+                  //       ),
+                  //     ));
                 }
               },
               buildWhen: (previous, current) =>

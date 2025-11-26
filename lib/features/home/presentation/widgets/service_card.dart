@@ -43,6 +43,12 @@ class ServiceCard extends StatelessWidget {
                   child: Icon(Icons.error),
                 );
               },
+              frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                return Image.asset(AppAsset.inTimeApp,
+                  fit: BoxFit.fitWidth,
+                  height: 150,
+                  width: 70,);
+              },
             ),
           ),
 

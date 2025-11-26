@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:in_time_app/core/helpers/extension.dart';
 
 class HospitalCard extends StatelessWidget {
   const HospitalCard({super.key});
@@ -62,7 +63,7 @@ class HospitalCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                8.heightSpace,
 
                 // Description
                 const Text(

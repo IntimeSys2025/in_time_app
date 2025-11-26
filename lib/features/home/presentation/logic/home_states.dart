@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:in_time_app/features/home/data/models/partner_details_model.dart';
+import 'package:in_time_app/features/home/data/models/partner_model.dart';
 
 import '../../data/models/sub_service_model.dart';
 
@@ -41,6 +42,19 @@ final class FilterServices extends HomeState {
 
 final class ToggleViewAllServices extends HomeState {
   ToggleViewAllServices();
+}
+
+final class GetPartnerLoadingState extends HomeState{
+
+}
+final class GetPartnerSuccessState extends HomeState {
+  final List<PartnerModel> partners;
+  GetPartnerSuccessState({required this.partners});
+}
+
+final class GetPartnerFailureState extends HomeState {
+  final String errorMessage;
+  GetPartnerFailureState({required this.errorMessage});
 }
 
 final class GetPartnerDetailsLoadingState extends HomeState {

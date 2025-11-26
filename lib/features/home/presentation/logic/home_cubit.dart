@@ -167,14 +167,17 @@ class HomeCubit extends Cubit<HomeState> {
 
   List<PartnerModel> partners = [];
   void getPartners() async {
+    emit(GetPartnerLoadingState());
     final result = await _partnersUseCase.call(null);
 
     result.fold(
       (failure) {
+        emit(GetPartnerFailureState(errorMessage: failure.message));
         debugPrint('Failure: ${failure.message}');
       },
       (success) {
         partners = success;
+        emit(GetPartnerSuccessState(partners: partners));
         debugPrint('Success:: ${partners.length}');
       },
     );
