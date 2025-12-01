@@ -10,6 +10,8 @@ import 'package:in_time_app/features/home/presentation/logic/home_states.dart';
 import 'package:in_time_app/features/home/presentation/screens/home_screen_one_doctor.dart';
 import 'package:in_time_app/features/home/presentation/screens/partner_details_screen.dart';
 import '../../../../core/utils/app_asset_path.dart';
+import '../../../../core/utils/app_constants.dart';
+import '../../../account/presentation/screens/loginScreen.dart';
 import '../screens/navigation_screen.dart';
 
 class DoctorCard extends StatelessWidget {
@@ -26,8 +28,7 @@ class DoctorCard extends StatelessWidget {
         homeCubit.getPartnerDetails(partnerId: partner.id.toString());
       },
       child: Card(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 3,
         margin: const EdgeInsets.symmetric(vertical: 8),
         child: Padding(
@@ -85,13 +86,12 @@ class DoctorCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
 
-                    if(partner.experience != '')
-                    Text(
-                      partner.experience,
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                    if(partner.experience != '')
-                    const SizedBox(height: 4),
+                    if (partner.experience != '')
+                      Text(
+                        partner.experience,
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    if (partner.experience != '') const SizedBox(height: 4),
                     if (screenSize.width > 447 && partner.address != '')
                       Row(
                         children: [
@@ -155,6 +155,15 @@ class DoctorCard extends StatelessWidget {
                             width: screenSize.width * 0.3,
                             title: 'Book Now',
                             onPressed: () {
+                              if (AppConstants.userToken == '') {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const LoginScreen(),
+                                    ));
+                                return;
+                              }
+
                               homeCubit.getPartnerDetails(
                                   partnerId: partner.id.toString());
                               // Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreenOneDoctor(),));
@@ -180,6 +189,14 @@ class DoctorCard extends StatelessWidget {
                           AppButtonWidget(
                             title: 'Book Now',
                             onPressed: () {
+                              if (AppConstants.userToken == '') {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const LoginScreen(),
+                                    ));
+                                return;
+                              }
                               homeCubit.getPartnerDetails(
                                   partnerId: partner.id.toString());
                               // Navigator.push(context, MaterialPageRoute(builder: (context) =>  HomeScreenOneDoctor(partner: partner,),));
