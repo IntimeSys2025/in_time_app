@@ -78,9 +78,18 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    widget.subServiceModel.service.title,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    child: Text(
+                      widget.subServiceModel.service.title,
+                      // softWrap: true,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
                   ),
                   Row(
                     children: List.generate(
@@ -164,7 +173,8 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                                 ),
                                 // ...[
                                 20.widthSpace,
-                                if (subService.stateLabel != 'none' && subService.stateLabel != '' )
+                                if (subService.stateLabel != 'none' &&
+                                    subService.stateLabel != '')
                                   Container(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 20, vertical: 4),
@@ -178,7 +188,7 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Text(
-                                        '${subService.stateLabel[0].toUpperCase()}${subService.stateLabel.substring(1)}',
+                                      '${subService.stateLabel[0].toUpperCase()}${subService.stateLabel.substring(1)}',
                                       // subService.stateLabel,
                                       style: const TextStyle(
                                         color: Colors.white,
