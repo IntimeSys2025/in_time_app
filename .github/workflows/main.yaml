@@ -87,10 +87,12 @@
                 uses: wzieba/Firebase-Distribution-Github-Action@v1
                 with:
                   appId: ${{ secrets.FIREBASE_APP_ID }}
-                  tokenJson: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-                  groups: testers
+                  serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+                  testers: ${{ secrets.FIREBASE_TESTERS }}
                   file: build/app/outputs/flutter-apk/app-release.apk
                   releaseNotes: "First CI build 🚀"
+
+
 #               #9) Upload to Firebase App Distribution
 #
 #              - name: Upload to Firebase App Distribution
