@@ -82,17 +82,25 @@
               - name: Set GOOGLE_APPLICATION_CREDENTIALS
                 run: echo "GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/serviceAccount.json" >> $GITHUB_ENV
 
-
-               #9) Upload to Firebase App Distribution
-
-              - name: Upload to Firebase App Distribution
-                env:
-                  FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
-                  FIREBASE_TESTERS: ${{ secrets.FIREBASE_TESTERS }}
-                run: |
-                  firebase appdistribution:distribute \
-                  build/app/outputs/flutter-apk/app-release.apk \
-                  --app $FIREBASE_APP_ID \
-                  --testers "$FIREBASE_TESTERS" \
-                  --release-notes "First CI build 🚀"
+        # 🔹 Upload to Firebase App Distribution using official GitHub Action
+              - name: Distribute to Firebase
+                uses: wzieba/Firebase-Distribution-Github-Action@v1
+                with:
+                  appId: ${{ secrets.FIREBASE_APP_ID }}
+                  tokenJson: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+                  groups: testers
+                  file: build/app/outputs/flutter-apk/app-release.apk
+                  releaseNotes: "First CI build 🚀"
+#               #9) Upload to Firebase App Distribution
+#
+#              - name: Upload to Firebase App Distribution
+#                env:
+#                  FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+#                  FIREBASE_TESTERS: ${{ secrets.FIREBASE_TESTERS }}
+#                run: |
+#                  firebase appdistribution:distribute \
+#                  build/app/outputs/flutter-apk/app-release.apk \
+#                  --app $FIREBASE_APP_ID \
+#                  --testers "$FIREBASE_TESTERS" \
+#                  --release-notes "First CI build 🚀"
 
