@@ -57,4 +57,31 @@
                 with:
                  name: app-release
                  path: build/app/outputs/flutter-apk/app-release.apk
+                   
+                   
+                #7) Install Firebase CLI
+              - name: Install Firebase CLI
+                run: |
+                   curl -sL https://firebase.tools | bash
+
+                #8) Upload to Firebase App Distribution
+              - name: Firebase Login
+                env:
+                  FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+                run: |
+                  echo "$FIREBASE_SERVICE_ACCOUNT" > serviceAccount.json
+                  firebase auth:login:ci --token="$(firebase functions:config:set firebase.json --json "$(cat serviceAccount.json)" 2>/dev/null)"
+
+               #9) Upload to Firebase App Distribution
+
+              - name: Upload to Firebase App Distribution
+                env:
+                  FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+                  FIREBASE_TESTERS: ${{ secrets.FIREBASE_TESTERS }}
+                run: |
+                  firebase appdistribution:distribute \
+                  build/app/outputs/flutter-apk/app-release.apk \
+                  --app $FIREBASE_APP_ID \
+                  --testers "$FIREBASE_TESTERS" \
+                  --release-notes "First CI build 🚀"
 
