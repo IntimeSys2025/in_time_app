@@ -64,13 +64,24 @@
                 run: |
                    curl -sL https://firebase.tools | bash
 
-                #8) Upload to Firebase App Distribution
-              - name: Firebase Login
-                env:
-                  FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-                run: |
-                  echo "$FIREBASE_SERVICE_ACCOUNT" > serviceAccount.json
-                  firebase auth:login:ci --token="$(firebase functions:config:set firebase.json --json "$(cat serviceAccount.json)" 2>/dev/null)"
+
+
+#                #8) Upload to Firebase App Distribution
+#              - name: Firebase Login
+#                env:
+#                  FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+#                run: |
+#                  echo "$FIREBASE_SERVICE_ACCOUNT" > serviceAccount.json
+#                  firebase auth:login:ci --token="$(firebase functions:config:set firebase.json --json "$(cat serviceAccount.json)" 2>/dev/null)"
+
+              # Save service account file
+              - name: Create serviceAccount.json
+                run: echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" > serviceAccount.json
+
+              # Authenticate using service account
+              - name: Set GOOGLE_APPLICATION_CREDENTIALS
+                run: echo "GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/serviceAccount.json" >> $GITHUB_ENV
+
 
                #9) Upload to Firebase App Distribution
 
