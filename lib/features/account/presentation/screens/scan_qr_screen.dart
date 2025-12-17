@@ -5,8 +5,10 @@ import 'package:in_time_app/core/helpers/extension.dart';
 import 'package:in_time_app/core/shared_widgets/app_button_widget.dart';
 import 'package:in_time_app/features/account/presentation/widgets/qr_fail_popup.dart';
 import 'package:in_time_app/features/home/presentation/screens/navigation_screen.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 // import 'package:mobile_scanner/mobile_scanner.dart';
 // import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
+/// create qr code
 // import 'package:qr_flutter/qr_flutter.dart';
 
 class ScanQRScreen extends StatefulWidget {
@@ -19,11 +21,12 @@ class ScanQRScreen extends StatefulWidget {
 class _ScanQRScreenState extends State<ScanQRScreen> {
   final TextEditingController _providerIdController =
       TextEditingController(text: "4567dd778");
-  // MobileScannerController controller = MobileScannerController(
-  //   detectionSpeed: DetectionSpeed.normal,
-  //   facing: CameraFacing.back,
-  //   torchEnabled: false,
-  // );
+  MobileScannerController controller = MobileScannerController(
+    detectionSpeed: DetectionSpeed.normal,
+    facing: CameraFacing.back,
+    torchEnabled: false,
+  );
+  bool _isScanning = false;
 
   // Barcode? result;
   // QRViewController? controller;
@@ -116,7 +119,79 @@ class _ScanQRScreenState extends State<ScanQRScreen> {
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(color: Colors.grey[300]!),
                       ),
-                      child: SizedBox()
+                      child: SizedBox(
+                        width: 300,
+                        height: 300,
+                        child: Stack(
+                          children: [
+                            // Full-screen scanner
+                            MobileScanner(
+                              controller: controller,
+                              scanWindow: Rect.fromCenter(
+                                center: MediaQuery.of(context).size.center(Offset.zero),
+                                width: 200,
+                                height: 200,
+                              ),
+                              // formats: const [BarcodeFormat.qrCode],
+                              onDetect: (BarcodeCapture capture) {
+                                if (_isScanning) return;
+
+                                final barcode = capture.barcodes.first;
+                                final String? code = barcode.rawValue;
+
+                                if (code != null && code.isNotEmpty) {
+                                  _isScanning = true;
+
+                                  // Optional haptic
+                                  // HapticFeedback.mediumImpact();
+
+                                  Navigator.pop(context, code);
+                                }
+                              },
+                            ),
+
+                            // Overlay frame
+                            Center(
+                              child: Container(
+                                width: 200,
+                                height: 200,
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.green, width: 4),
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                              ),
+                            ),
+
+                            // Instruction text
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                margin: const EdgeInsets.only(bottom: 50),
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                                decoration: BoxDecoration(
+                                  color: Colors.black54,
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                child: const Text(
+                                  "Position the QR code inside the frame",
+                                  style: TextStyle(color: Colors.white, fontSize: 16),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+
+
+
+
+
+
+
+
+
+                    // SizedBox()
                       // Stack(
                       //   children: [
                       //     // Full-screen scanner
@@ -160,7 +235,7 @@ class _ScanQRScreenState extends State<ScanQRScreen> {
                       //           color: Colors.black54,
                       //           borderRadius: BorderRadius.circular(30),
                       //         ),
-                      //         child: Text(
+                      //         child: const Text(
                       //           "Position the QR code inside the frame",
                       //           style: TextStyle(color: Colors.white, fontSize: 16),
                       //           textAlign: TextAlign.center,
@@ -180,6 +255,7 @@ class _ScanQRScreenState extends State<ScanQRScreen> {
 
 
                       // _buildQrView(context)
+                    /// create my own qr code
                       // QrImageView(
                       //   data: _providerIdController.text.isEmpty
                       //       ? "4567dd778" // Fallback if empty
