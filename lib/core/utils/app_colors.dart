@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 
 sealed class AppColors {
-  static const LinearGradient linearGradientGreen =
-      const LinearGradient(colors: [
-    Color(0xFF8AC54F),
-    Color(0xFF89C44E),
-    Color(0xFFAAD178),
-  ],
-        begin: Alignment.topCenter,
-        // tileMode: TileMode.clamp
-        // end: Alignment.bottomLeft,
-
-      );
+  static const LinearGradient linearGradientGreen = LinearGradient(
+    colors: [
+      Color(0xFF8AC54F),
+      Color(0xFF89C44E),
+      Color(0xFFAAD178),
+    ],
+    begin: Alignment.topCenter,
+    // tileMode: TileMode.clamp
+    // end: Alignment.bottomLeft,
+  );
 
   static const Color kYellow = Color(0xffFFCC00);
   static const Color kDarkWhite = Color(0xffEEEEEE);
   static const Color kGray = Color(0xff7F8683);
-  static const Color kLightGray  = Color(0xffD9D9D9);
+  static const Color kLightGray = Color(0xffD9D9D9);
   static const Color kVeryLightGray = Color(0xffEBEBEB);
   static const Color kRed = Color(0xffD63033);
   static const Color kOrange = Color(0xffF7A538);
@@ -28,14 +27,10 @@ sealed class AppColors {
   static const Color tagYellow = Color(0xffFBBC04);
   static const Color tagGreen = Color(0xff52B963);
 
-
-
-
   static const Color kMintGreen = Color(0xff0E7178);
   static const Color kLightBlack = Color(0xff3C3C3C);
   static const Color kGrayBackground = Color(0xff818181);
   static const Color kBackgroundCard = Color(0xffF4F4F4);
-
 
   static const Color kGreenButton = Color(0xff66C87B);
   static const Color kLightGreen = Color(0xFFE5F5E8);
@@ -63,15 +58,8 @@ sealed class AppColors {
   /// shimmer colors
   // baseColor: Colors.grey[300]!,
   // highlightColor: Colors.grey[100]!,
-static Color baseColorShimmer = Colors.grey[300]!;
-static Color highlightColorShimmer = Colors.grey[100]!;
-
-
-
-
-
-
-
+  static Color baseColorShimmer = Colors.grey[300]!;
+  static Color highlightColorShimmer = Colors.grey[100]!;
 
   static const Color cardBgColor = Color(0xff363636);
   static const Color cardBgLightColor = Color(0xff999999);

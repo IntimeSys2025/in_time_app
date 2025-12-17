@@ -9,6 +9,7 @@ import 'package:in_time_app/core/utils/app_asset_path.dart';
 import 'package:in_time_app/core/utils/app_colors.dart';
 import 'package:in_time_app/core/utils/app_constants.dart';
 import 'package:in_time_app/features/account/presentation/logic/create_account_cubit.dart';
+import 'package:in_time_app/features/account/presentation/screens/scan_qr_screen.dart';
 import 'package:in_time_app/features/home/presentation/logic/home_cubit.dart';
 import 'package:in_time_app/features/home/presentation/screens/home_screen_one_doctor.dart';
 import 'package:in_time_app/features/home/presentation/screens/navigation_screen.dart';
@@ -91,7 +92,8 @@ class MyApp extends StatelessWidget {
             future: Future.delayed(const Duration(seconds: 2)),
             builder: (context, snapshot) =>
                 snapshot.connectionState == ConnectionState.done
-                    ? const NavigationBarScreen()
+                    // ? const NavigationBarScreen()
+                    ? const ScanQRScreen()
                     : Container(
                         color: AppColors.white,
                         child: Center(
