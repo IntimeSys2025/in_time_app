@@ -1,13 +1,10 @@
-import 'dart:developer';
-import 'dart:io';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:in_time_app/core/helpers/extension.dart';
 import 'package:in_time_app/core/shared_widgets/app_button_widget.dart';
 import 'package:in_time_app/features/account/presentation/widgets/qr_fail_popup.dart';
 import 'package:in_time_app/features/home/presentation/screens/navigation_screen.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-// import 'package:mobile_scanner/mobile_scanner.dart';
-// import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 /// create qr code
 // import 'package:qr_flutter/qr_flutter.dart';
 
@@ -25,8 +22,32 @@ class _ScanQRScreenState extends State<ScanQRScreen> {
     detectionSpeed: DetectionSpeed.normal,
     facing: CameraFacing.back,
     torchEnabled: false,
+    autoStart: false
   );
+  // StreamSubscription<BarcodeCapture>? _barcodeSubscription;
   bool _isScanning = false;
+  @override
+  void initState() {
+    super.initState();
+    // WidgetsBinding.instance.addObserver(controller);
+    // WidgetsBinding.instance.addObserver(this);
+    // Subscribe to barcode stream
+    // _barcodeSubscription = controller.barcodes.listen((capture) {
+    //   for (final barcode in capture.barcodes) {
+    //     debugPrint('Detected: ${barcode.rawValue}');
+    //     // Handle your scan logic here (e.g., navigate/pop with result)
+    //   }
+    // });
+
+    // Start camera after frame is rendered (avoids timing issues)
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (mounted) {
+        await controller.start();
+      }
+    });
+    // controller.start();
+  }
+
 
   // Barcode? result;
   // QRViewController? controller;
@@ -127,19 +148,32 @@ class _ScanQRScreenState extends State<ScanQRScreen> {
                             // Full-screen scanner
                             MobileScanner(
                               controller: controller,
+                              // controller: MobileScannerController(
+                              //   detectionSpeed: DetectionSpeed.normal,
+                              //   // formats: [BarcodeFormat.all],
+                              //   facing: CameraFacing.back,
+                              //   torchEnabled: false,
+                              //   autoStart: true
+                              // ),
                               scanWindow: Rect.fromCenter(
                                 center: MediaQuery.of(context).size.center(Offset.zero),
                                 width: 200,
                                 height: 200,
                               ),
                               // formats: const [BarcodeFormat.qrCode],
+                              // tapToFocus: true,
                               onDetect: (BarcodeCapture capture) {
+                                final List<Barcode> barcodes = capture.barcodes;
+                                for (final barcode in barcodes) {
+                                  debugPrint('Barcode found: ${barcode.rawValue}');
+                                }
                                 if (_isScanning) return;
 
                                 final barcode = capture.barcodes.first;
                                 final String? code = barcode.rawValue;
 
                                 if (code != null && code.isNotEmpty) {
+                                  debugPrint('code::: $code ,, isScanning:: $_isScanning');
                                   _isScanning = true;
 
                                   // Optional haptic
@@ -147,6 +181,10 @@ class _ScanQRScreenState extends State<ScanQRScreen> {
 
                                   Navigator.pop(context, code);
                                 }
+                              },
+                              errorBuilder: (p0, p1) {
+                                debugPrint('ERROR:: $p0 ,, $p1');
+                                return Text('data');
                               },
                             ),
 
@@ -331,6 +369,7 @@ class _ScanQRScreenState extends State<ScanQRScreen> {
   @override
   void dispose() {
     _providerIdController.dispose();
+    controller.dispose();
     super.dispose();
   }
   // Widget _buildQrView(BuildContext context) {

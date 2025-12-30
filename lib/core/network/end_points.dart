@@ -1,6 +1,7 @@
 sealed class EndPoints {
   static const String baseUrl = 'https://intime.todobest.online/';
 
+
   static const String login = '/api/user/login';
   static const String register = 'api/user/register';
   static const String forgetPassword = 'api/user/forgetPassword';
@@ -24,5 +25,11 @@ sealed class EndPoints {
   static const String getHelpCenter = 'api/frontend/content/help-center';
   static const String updateProfile = 'api/user/updateProfile';
   static const String uploadProfilePic = 'api/user/uploadProfileImage';
+
+  /// tenant
+  static const String tenantBaseUrl = 'https://srv1136069.hstgr.cloud/';
+  static const String getTermsConditionTenant = 'api/public/content/terms-conditions';
+  static const String getPrivacyPolicyTenant = 'api/public/content/privacy-policy';
+  static const String getHelpCenterTenant = 'api/public/content/help-center';
 
 }
