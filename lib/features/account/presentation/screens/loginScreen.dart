@@ -343,21 +343,21 @@ class _LoginScreenState extends State<LoginScreen> {
                                   //   ),
                                   // ),
                                   ),
-                              10.widthSpace,
-                              Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
-                                      border: Border.all(
-                                          width: 1,
-                                          color: AppColors.kGreenButton)),
-                                  child: IconButton(
-                                      onPressed: () {
-                                        cubit.loginUsingBiometric();
-                                      },
-                                      icon: const Icon(
-                                        Icons.fingerprint,
-                                        size: 40,
-                                      )))
+                              // 10.widthSpace,
+                              // Container(
+                              //     decoration: BoxDecoration(
+                              //         borderRadius: BorderRadius.circular(15),
+                              //         border: Border.all(
+                              //             width: 1,
+                              //             color: AppColors.kGreenButton)),
+                              //     child: IconButton(
+                              //         onPressed: () {
+                              //           cubit.loginUsingBiometric();
+                              //         },
+                              //         icon: const Icon(
+                              //           Icons.fingerprint,
+                              //           size: 40,
+                              //         )))
                             ],
                           ),
                   ),

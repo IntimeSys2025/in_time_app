@@ -12,6 +12,9 @@ abstract class ProfileRemoteDataSource {
   Future<ContentPagesModel> getTermsCondition();
   Future<ContentPagesModel> getPrivacyPolicy();
   Future<List<HelpCenterModel>> getHelpCenter();
+  // Future<ContentPagesModel> getTermsCondition();
+  // Future<ContentPagesModel> getPrivacyPolicy();
+  // Future<List<HelpCenterModel>> getHelpCenter();
   Future<UserModel> updateProfile({required UpdateProfileParams params});
   Future<UserModel> uploadProfilePic({required UploadProfilePicParams params});
 }

@@ -25,3 +25,22 @@ class BiometricService {
     }
   }
 }
+// void loginUsingBiometric() async {
+//   /// biometric
+//   final biometricService = BiometricService();
+//   try {
+//     if (await biometricService.canAuthenticate()) {
+//       final success = await biometricService.authenticate();
+//
+//       if (success) {
+//         debugPrint('Biometric succeed');
+//         // emit(SignInSuccessState());
+//       } else {
+//         debugPrint('Biometric failed');
+//         // emit(SignInFailureState(errorMessage: 'Try again'));
+//       }
+//     }
+//   } catch (e) {
+//     debugPrint('Biometric: $e');
+//   }
+// }

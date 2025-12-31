@@ -10,6 +10,7 @@ import 'package:in_time_app/core/utils/app_colors.dart';
 import 'package:in_time_app/core/utils/app_constants.dart';
 import 'package:in_time_app/features/account/presentation/logic/create_account_cubit.dart';
 import 'package:in_time_app/features/account/presentation/screens/scan_qr_screen.dart';
+import 'package:in_time_app/features/app_lock_screen.dart';
 import 'package:in_time_app/features/home/presentation/logic/home_cubit.dart';
 import 'package:in_time_app/features/home/presentation/screens/home_screen_one_doctor.dart';
 import 'package:in_time_app/features/home/presentation/screens/navigation_screen.dart';
@@ -50,6 +51,9 @@ void main() async {
       fallbackLocale: AppLocalization.locales[1],
       child: const MyApp()));
 
+  // if(AppConstants.userToken != '' ){
+  //
+  // }
 
 }
 
@@ -65,12 +69,12 @@ class MyApp extends StatelessWidget {
             create: (context) => sl<CreateAccountCubit>(),
           ),
           BlocProvider(
-            create: (context) => sl<HomeCubit>()
-              // ..getCategories()
-              ..getPartners()
+              create: (context) => sl<HomeCubit>()
+                // ..getCategories()
+                ..getPartners()
               // ..getSliders()
               // ..getServices(),
-          ),
+              ),
           BlocProvider(
             create: (context) =>
                 sl<AppointmentCubit>()..getAvailableAppointments(1),
@@ -95,7 +99,9 @@ class MyApp extends StatelessWidget {
             future: Future.delayed(const Duration(seconds: 2)),
             builder: (context, snapshot) =>
                 snapshot.connectionState == ConnectionState.done
-                    ? const NavigationBarScreen()
+                    ? AppConstants.userToken != ''?
+                    const AppLockScreen()
+                    :const NavigationBarScreen()
                     // ? const ScanQRScreen()
                     : Container(
                         color: AppColors.white,
