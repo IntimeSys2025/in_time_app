@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_time_app/core/helpers/extension.dart';
+import 'package:in_time_app/core/shared_widgets/app_button_widget.dart';
 import 'package:in_time_app/core/utils/app_colors.dart';
 import 'package:in_time_app/features/account/presentation/logic/create_account_cubit.dart';
 import 'package:in_time_app/features/account/presentation/screens/forget_password_screen.dart';
@@ -268,15 +269,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                             ),
-                            onPressed: () {
-                              // Handle login
-                              // cubit.logIn();
-                              // Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //       builder: (context) => SignUpScreen(),
-                              //     ));
-                            },
+                            onPressed: () {},
                             child: const Center(
                               child: CircularProgressIndicator(
                                 color: AppColors.white,
@@ -288,43 +281,88 @@ class _LoginScreenState extends State<LoginScreen> {
                             //   style: TextStyle(fontSize: 18, color: Colors.white),
                             // ),
                             )
-                        : ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            onPressed: () {
-                              // Handle login
-                              if (cubit.loginForm.currentState!.validate()) {
-                                // If the form is valid, proceed with login
-                                cubit.logIn();
-                              } else {
-                                // If the form is invalid, show an error message
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Please fill in all fields'),
-                                    backgroundColor: Colors.red,
+                        : Row(
+                            children: [
+                              Expanded(
+                                  child: AppButtonWidget(
+                                      title: 'Login',
+                                      onPressed: () {
+                                        // Handle login
+                                        if (cubit.loginForm.currentState!
+                                            .validate()) {
+                                          // If the form is valid, proceed with login
+                                          cubit.logIn();
+                                        } else {
+                                          // If the form is invalid, show an error message
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                  'Please fill in all fields'),
+                                              backgroundColor: Colors.red,
+                                            ),
+                                          );
+                                        }
+                                      })
+
+                                  // ElevatedButton(
+                                  //   style: ElevatedButton.styleFrom(
+                                  //     backgroundColor: Colors.green,
+                                  //     shape: RoundedRectangleBorder(
+                                  //       borderRadius: BorderRadius.circular(10),
+                                  //     ),
+                                  //   ),
+                                  //   onPressed: () {
+                                  //     // Handle login
+                                  //     if (cubit.loginForm.currentState!
+                                  //         .validate()) {
+                                  //       // If the form is valid, proceed with login
+                                  //       cubit.logIn();
+                                  //     } else {
+                                  //       // If the form is invalid, show an error message
+                                  //       ScaffoldMessenger.of(context)
+                                  //           .showSnackBar(
+                                  //         const SnackBar(
+                                  //           content:
+                                  //               Text('Please fill in all fields'),
+                                  //           backgroundColor: Colors.red,
+                                  //         ),
+                                  //       );
+                                  //     }
+                                  //     // cubit.logIn();
+                                  //     // Navigator.push(
+                                  //     //     context,
+                                  //     //     MaterialPageRoute(
+                                  //     //       builder: (context) => SignUpScreen(),
+                                  //     //     ));
+                                  //   },
+                                  //   child: const Text(
+                                  //     "Login",
+                                  //     style: TextStyle(
+                                  //         fontSize: 18, color: Colors.white),
+                                  //   ),
+                                  // ),
                                   ),
-                                );
-                              }
-                              // cubit.logIn();
-                              // Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //       builder: (context) => SignUpScreen(),
-                              //     ));
-                            },
-                            child: const Text(
-                              "Login",
-                              style:
-                                  TextStyle(fontSize: 18, color: Colors.white),
-                            ),
+                              10.widthSpace,
+                              Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                      border: Border.all(
+                                          width: 1,
+                                          color: AppColors.kGreenButton)),
+                                  child: IconButton(
+                                      onPressed: () {
+                                        cubit.loginUsingBiometric();
+                                      },
+                                      icon: const Icon(
+                                        Icons.fingerprint,
+                                        size: 40,
+                                      )))
+                            ],
                           ),
                   ),
 
-                  const SizedBox(height: 15),
+                  // const SizedBox(height: 15),
 
                   // Fingerprint Icon
                   // Center(

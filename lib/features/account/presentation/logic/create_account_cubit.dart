@@ -16,6 +16,7 @@ import 'package:in_time_app/features/account/domain/use_cases/verify_code_use_ca
 import 'package:intl_phone_field/phone_number.dart';
 import '../../../../core/network/end_points.dart';
 import '../../../../core/service_locator/service_locator.dart';
+import '../../../../core/services/biometric_service.dart';
 import '../../../../core/storage/secure_storage.dart';
 import '../../data/models/arguments/register_params.dart';
 import '../../data/models/arguments/reset_passwprd_params.dart';
@@ -57,7 +58,7 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
   setDateOfBirth(DateTime date) {
     debugPrint('Date time:: $date');
     dateOfBirth = date;
-    String formattedDate = DateFormat('yyyy-MM-dd','en').format(date);
+    String formattedDate = DateFormat('yyyy-MM-dd', 'en').format(date);
     // String formattedDate = DateFormat.yMMMMd().format(date);
     dateOfBirthController.text = formattedDate;
   }
@@ -87,12 +88,11 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
             errorMessage: 'Please enter a valid phone number'));
         return;
       }
-      if(gender == null){
+      if (gender == null) {
         emit(CreateAccountInitial());
         emit(RegisterAccountFailureState(
             errorMessage: 'please choose your gender'));
         return;
-
       }
       if (!availableDate()) {
         debugPrint('age::: ${availableDate()}');
@@ -128,15 +128,17 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
         (failure) {
           final FailureRegisterModel message = failure.message;
           emit(CreateAccountInitial());
-          emit(RegisterAccountFailureState(errorMessage: message.message ?? 'The given data was invalid.',
-          failure: message));
+          emit(RegisterAccountFailureState(
+              errorMessage: message.message ?? 'The given data was invalid.',
+              failure: message));
         },
-        (user) {
+        (user) async {
           loginPhone = signUpPhone;
           passwordController = passwordSignUpController;
           rememberMe = false;
 
           logIn(fromSignUp: true);
+
           emit(RegisterAccountSuccessState());
         },
       );
@@ -216,12 +218,33 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
     );
   }
 
+  void loginUsingBiometric() async {
+    /// biometric
+    final biometricService = BiometricService();
+    try {
+      if (await biometricService.canAuthenticate()) {
+        final success = await biometricService.authenticate();
+
+        if (success) {
+          debugPrint('Biometric succeed');
+          emit(SignInSuccessState());
+        } else {
+          debugPrint('Biometric failed');
+          emit(SignInFailureState(errorMessage: 'Try again'));
+        }
+      }
+    } catch (e) {
+      debugPrint('Biometric: $e');
+    }
+  }
+
   saveUserData({required UserModel user}) async {
     if (rememberMe) {
       saveBoolValue(key: 'loggedIn', value: user.rememberMe);
     }
     saveStringValue(key: 'user_id', value: user.id.toString());
-    saveStringValue(key: 'user_name', value: '${user.firstName} ${user.lastName}');
+    saveStringValue(
+        key: 'user_name', value: '${user.firstName} ${user.lastName}');
     saveStringValue(key: 'mobile', value: user.mobile);
     saveStringValue(key: 'token', value: user.token);
     saveStringValue(key: 'additional_mobile', value: user.additionalMobile);
@@ -311,7 +334,8 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
 Future<Map<String, dynamic>> callRegisterApi(
     {required RegisterParams params}) async {
   final Dio dio = Dio();
-  Response response = await dio.post('${EndPoints.baseUrl}${EndPoints.register}',data: params.toJson());
+  Response response = await dio
+      .post('${EndPoints.baseUrl}${EndPoints.register}', data: params.toJson());
   debugPrint("FFFFFFFFF: ${response.statusCode} ,, ${response.data}");
   return {"status_code": response.statusCode, "data": response.data};
   // try {
@@ -322,8 +346,6 @@ Future<Map<String, dynamic>> callRegisterApi(
   //   print('Error: $e');
   //   return {"status_code": 400, "data": "Server Error"};
   // }
-
-
 
   // final response = await sl<ApiConsumer>()
   //     .post(path: EndPoints.register, body: params.toJson());

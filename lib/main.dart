@@ -15,6 +15,7 @@ import 'package:in_time_app/features/home/presentation/screens/home_screen_one_d
 import 'package:in_time_app/features/home/presentation/screens/navigation_screen.dart';
 import 'package:in_time_app/features/profile/presentation/logic/profile_cubit.dart';
 import 'core/observers/cubit_observer.dart';
+import 'core/services/biometric_service.dart';
 import 'features/account/presentation/screens/loginScreen.dart';
 import 'features/appointment/presentation/logic/appointment_cubit.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -48,6 +49,8 @@ void main() async {
       path: AppAsset.translations,
       fallbackLocale: AppLocalization.locales[1],
       child: const MyApp()));
+
+
 }
 
 class MyApp extends StatelessWidget {
@@ -92,8 +95,8 @@ class MyApp extends StatelessWidget {
             future: Future.delayed(const Duration(seconds: 2)),
             builder: (context, snapshot) =>
                 snapshot.connectionState == ConnectionState.done
-                    // ? const NavigationBarScreen()
-                    ? const ScanQRScreen()
+                    ? const NavigationBarScreen()
+                    // ? const ScanQRScreen()
                     : Container(
                         color: AppColors.white,
                         child: Center(
