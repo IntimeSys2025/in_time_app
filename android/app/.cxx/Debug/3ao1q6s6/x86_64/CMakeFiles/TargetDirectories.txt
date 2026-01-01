@@ -1,0 +1,2 @@
+/home/asmaa/flutter_apps/in_time_app/android/app/.cxx/Debug/3ao1q6s6/x86_64/CMakeFiles/edit_cache.dir
+/home/asmaa/flutter_apps/in_time_app/android/app/.cxx/Debug/3ao1q6s6/x86_64/CMakeFiles/rebuild_cache.dir

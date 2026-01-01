@@ -1,0 +1,2 @@
+/home/asmaa/flutter_apps/in_time_app/android/app/.cxx/RelWithDebInfo/4p3q643t/armeabi-v7a/CMakeFiles/edit_cache.dir
+/home/asmaa/flutter_apps/in_time_app/android/app/.cxx/RelWithDebInfo/4p3q643t/armeabi-v7a/CMakeFiles/rebuild_cache.dir

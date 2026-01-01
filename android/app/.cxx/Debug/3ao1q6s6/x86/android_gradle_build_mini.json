@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/home/asmaa/snap/flutter/common/flutter/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/home/asmaa/Android/Sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/home/asmaa/flutter_apps/in_time_app/android/app/.cxx/Debug/3ao1q6s6/x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/home/asmaa/Android/Sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/home/asmaa/flutter_apps/in_time_app/android/app/.cxx/Debug/3ao1q6s6/x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}
