@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:in_time_app/core/network/tenant_dio_consumer.dart';
 import 'package:in_time_app/features/account/data/data_source/create_account_data_source.dart';
 import 'package:in_time_app/features/account/data/repositories/create_account_repo_impl.dart';
 import 'package:in_time_app/features/account/domain/repositories/create_account_repo.dart';
@@ -34,7 +35,7 @@ import '../../features/account/domain/use_cases/register_use_case.dart';
 import '../../features/home/domain/use_cases/get_appointment_in_date.dart';
 import '../../features/home/presentation/logic/home_cubit.dart';
 import '../network/api_consumer.dart';
-import '../network/dio_consumer.dart';
+import '../network/default_dio_consumer.dart';
 import '../network/end_points.dart';
 import '../network/network_status.dart';
 
@@ -62,10 +63,13 @@ sealed class ServiceLocator {
       () => AppointmentCubit(
           sl<AppointmentsUseCas>(), sl<GetAvailableTimesInDateUseCase>()),
     );
-    sl.registerLazySingleton(() => ProfileCubit(sl<TermsConditionsUseCase>(),
-        sl<PrivacyPolicyUseCase>(), sl<HelpCenterUseCase>(),
-    sl<LogoutUseCase>(),sl<UpdateProfileUseCase>(),
-    sl<UploadProfilePicUseCase>()));
+    sl.registerLazySingleton(() => ProfileCubit(
+        sl<TermsConditionsUseCase>(),
+        sl<PrivacyPolicyUseCase>(),
+        sl<HelpCenterUseCase>(),
+        sl<LogoutUseCase>(),
+        sl<UpdateProfileUseCase>(),
+        sl<UploadProfilePicUseCase>()));
 
     /// register use cases
     sl.registerLazySingleton<RegisterUseCase>(
@@ -103,8 +107,7 @@ sealed class ServiceLocator {
     sl.registerLazySingleton(
       () => LogoutUseCase(sl<CreateAccountRepo>()),
     );
-    sl.registerLazySingleton(
-            () => UpdateProfileUseCase(sl<ProfileRepo>()) );
+    sl.registerLazySingleton(() => UpdateProfileUseCase(sl<ProfileRepo>()));
     sl.registerLazySingleton(() => UploadProfilePicUseCase(sl<ProfileRepo>()));
 
     /// register Repositories
@@ -129,13 +132,46 @@ sealed class ServiceLocator {
 
     /// Core
     sl.registerLazySingleton<NetworkStatus>(() => NetworkStatusImpl(sl()));
-    sl.registerLazySingleton<ApiConsumer>(() => DioConsumer(EndPoints.baseUrl));
+
+    // sl.registerLazySingleton<ApiConsumer>(() => DioConsumer(EndPoints.baseUrl));
+
+    /// create 2 dio with 2 base url
+    sl.registerLazySingleton<Dio>(() {
+      return Dio(
+        BaseOptions(
+          baseUrl: EndPoints.baseUrl,
+        ),
+      );
+    }, instanceName: 'provider');
+
+    sl.registerLazySingleton<Dio>(() {
+      return Dio(
+        BaseOptions(
+          baseUrl: EndPoints.tenantBaseUrl,
+        ),
+      );
+    }, instanceName: 'tenant');
+
+    sl.registerLazySingleton<ApiConsumer>(() {
+      return DioConsumer(
+        // EndPoints.baseUrl,
+        providerDio: sl<Dio>(instanceName: 'provider'),
+        tenantDio: sl<Dio>(instanceName: 'tenant'),
+      );
+    });
+
+    // sl.registerLazySingleton<ApiConsumer>(
+    //     () => TenantDioConsumer(EndPoints.tenantBaseUrl));
 
     /// External
-    sl.registerLazySingleton<Dio>(() => Dio());
+    // sl.registerLazySingleton<Dio>(() => Dio());
     sl.registerLazySingleton<InternetConnection>(() =>
         InternetConnection.createInstance(customCheckOptions: [
           InternetCheckOption(uri: Uri.parse(EndPoints.baseUrl))
         ], useDefaultOptions: false));
+    // sl.registerLazySingleton<InternetConnection>(() =>
+    //     InternetConnection.createInstance(customCheckOptions: [
+    //       InternetCheckOption(uri: Uri.parse(EndPoints.tenantBaseUrl))
+    //     ], useDefaultOptions: false));
   }
 }

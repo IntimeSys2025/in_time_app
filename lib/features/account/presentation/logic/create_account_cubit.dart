@@ -331,23 +331,22 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
   // }
 }
 
-Future<Map<String, dynamic>> callRegisterApi(
-    {required RegisterParams params}) async {
-  final Dio dio = Dio();
-  Response response = await dio
-      .post('${EndPoints.baseUrl}${EndPoints.register}', data: params.toJson());
-  debugPrint("FFFFFFFFF: ${response.statusCode} ,, ${response.data}");
-  return {"status_code": response.statusCode, "data": response.data};
-  // try {
-  //   return {"status_code": response.statusCode, "data": response.data};
-  //
-  //   print(response.data);
-  // } catch (e) {
-  //   print('Error: $e');
-  //   return {"status_code": 400, "data": "Server Error"};
-  // }
-
-  // final response = await sl<ApiConsumer>()
-  //     .post(path: EndPoints.register, body: params.toJson());
-  // return {"status_code": response.statusCode, "data": response.data};
-}
+// Future<Map<String, dynamic>> callRegisterApi(
+//     {required RegisterParams params}) async {
+//   final Dio dio = Dio();
+//   Response response = await dio
+//       .post('${EndPoints.baseUrl}${EndPoints.register}', data: params.toJson());
+//   return {"status_code": response.statusCode, "data": response.data};
+//   // try {
+//   //   return {"status_code": response.statusCode, "data": response.data};
+//   //
+//   //   print(response.data);
+//   // } catch (e) {
+//   //   print('Error: $e');
+//   //   return {"status_code": 400, "data": "Server Error"};
+//   // }
+//
+//   // final response = await sl<ApiConsumer>()
+//   //     .post(path: EndPoints.register, body: params.toJson());
+//   // return {"status_code": response.statusCode, "data": response.data};
+// }

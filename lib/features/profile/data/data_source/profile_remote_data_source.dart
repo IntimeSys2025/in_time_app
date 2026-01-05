@@ -1,4 +1,5 @@
 import 'package:in_time_app/core/network/api_consumer.dart';
+import 'package:in_time_app/core/utils/api_type.dart';
 import 'package:in_time_app/features/account/data/models/user_model.dart';
 import 'package:in_time_app/features/profile/data/models/arguments/update_profile_params.dart';
 import 'package:in_time_app/features/profile/data/models/help_center_model.dart';
@@ -12,9 +13,9 @@ abstract class ProfileRemoteDataSource {
   Future<ContentPagesModel> getTermsCondition();
   Future<ContentPagesModel> getPrivacyPolicy();
   Future<List<HelpCenterModel>> getHelpCenter();
-  // Future<ContentPagesModel> getTermsCondition();
-  // Future<ContentPagesModel> getPrivacyPolicy();
-  // Future<List<HelpCenterModel>> getHelpCenter();
+  Future<ContentPagesModel> getTermsConditionInTime();
+  Future<ContentPagesModel> getPrivacyPolicyInTime();
+  Future<List<HelpCenterModel>> getHelpCenterInTime();
   Future<UserModel> updateProfile({required UpdateProfileParams params});
   Future<UserModel> uploadProfilePic({required UploadProfilePicParams params});
 }
@@ -57,5 +58,23 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
     final response = await _apiConsumer.post(path: EndPoints.uploadProfilePic,
         body: params.profilePicture);
     return UserModel.fromJson(response.data['data']['user']);
+  }
+
+  @override
+  Future<List<HelpCenterModel>> getHelpCenterInTime() {
+    // TODO: implement getHelpCenterInTime
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<ContentPagesModel> getPrivacyPolicyInTime() {
+    // TODO: implement getPrivacyPolicyInTime
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<ContentPagesModel> getTermsConditionInTime() async{
+    final response = await _apiConsumer.get(path: EndPoints.getTermsConditionTenant,apiType: ApiType.tenant);
+    return ContentPagesModel.fromJson(response.data['data']);
   }
 }
