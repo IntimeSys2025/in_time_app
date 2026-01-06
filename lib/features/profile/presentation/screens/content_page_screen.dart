@@ -3,21 +3,23 @@ import 'package:webview_flutter/webview_flutter.dart';
 // For iOS webview
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../widget/content_page_bottom_sheet.dart';
 
 class ContentPageScreen extends StatefulWidget {
   final String title;
   final String htmlContent;
+  final String inTimeHtmlContent;
 
   const ContentPageScreen(
-      {super.key, required this.htmlContent, required this.title});
+      {super.key, required this.htmlContent, required this.title, required this.inTimeHtmlContent});
 
   @override
   State<ContentPageScreen> createState() => _contentPageScreenState();
 }
 
 class _contentPageScreenState extends State<ContentPageScreen> {
-  late final WebViewController _controller;
+  late final WebViewController _tenantController;
+  late final WebViewController _inTimeController;
+
 
   @override
   void initState() {
@@ -33,9 +35,11 @@ class _contentPageScreenState extends State<ContentPageScreen> {
     }
     final WebViewController controller =
         WebViewController.fromPlatformCreationParams(params);
+    final WebViewController controller2 =
+    WebViewController.fromPlatformCreationParams(params);
 
     // setup controller
-    _controller = controller
+    _tenantController = controller
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(AppColors.transparent)
       ..setNavigationDelegate(NavigationDelegate(
@@ -43,10 +47,20 @@ class _contentPageScreenState extends State<ContentPageScreen> {
         onPageStarted: (url) {},
         onWebResourceError: (error) {},
       ))
-      ..loadHtmlString(_getFormattedHtml());
+      ..loadHtmlString(_getFormattedHtml(htmlContent: widget.htmlContent));
+    // setup controller
+    _inTimeController = controller2
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(AppColors.transparent)
+      ..setNavigationDelegate(NavigationDelegate(
+        onProgress: (progress) {},
+        onPageStarted: (url) {},
+        onWebResourceError: (error) {},
+      ))
+      ..loadHtmlString(_getFormattedHtml(htmlContent: widget.inTimeHtmlContent));
   }
 
-  String _getFormattedHtml() {
+  String _getFormattedHtml({required String htmlContent}) {
     return '''
       <!DOCTYPE html>
       <html>
@@ -66,7 +80,7 @@ class _contentPageScreenState extends State<ContentPageScreen> {
         </style>
       </head>
       <body>
-        ${widget.htmlContent}
+        $htmlContent
       </body>
       </html>
     ''';
@@ -84,32 +98,30 @@ class _contentPageScreenState extends State<ContentPageScreen> {
         child: Column(
           children: [
             ExpansionTile(
-              onExpansionChanged: (value) {
-
-              },
-              title: const Text('Tenant Terms & Conditions'),
+              onExpansionChanged: (value) {},
+              title:  Text('Tenant ${widget.title}'),
               trailing: const RotationTransition(
                 turns: AlwaysStoppedAnimation(0.5),
                 child: Icon(Icons.keyboard_arrow_up, size: 24),
               ),
-              children: [SizedBox(
-                height: MediaQuery.of(context).size.height * 0.7,
-                  child: WebViewWidget(controller: _controller))],
+              children: [
+                SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.7,
+                    child: WebViewWidget(controller: _tenantController))
+              ],
             ),
             ExpansionTile(
-              onExpansionChanged: (value) {
-
-              },
-              title: const Text('InTime Terms & Conditions'),
+              onExpansionChanged: (value) {},
+              title:  Text('InTime ${widget.title}'),
               trailing: const RotationTransition(
                 turns: AlwaysStoppedAnimation(0.5),
                 child: Icon(Icons.keyboard_arrow_up, size: 24),
               ),
-              children: [SizedBox(
-                  height: 500,
-                  child: WebViewWidget(controller: _controller))],
+              children: [
+                SizedBox(
+                    height: 500, child: WebViewWidget(controller: _inTimeController))
+              ],
             ),
-
 
             // ListTile(
             //   title: const Text('Tenant Terms & Conditions'),

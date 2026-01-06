@@ -11,14 +11,14 @@ import '../../../../core/error/failure.dart';
 import '../../../../core/network/network_status.dart';
 import '../models/arguments/upload_profile_pic_params.dart';
 
-class ProfileRepoImpl implements ProfileRepo{
+class ProfileRepoImpl implements ProfileRepo {
   final ProfileRemoteDataSource _profileRemoteDataSource;
   final NetworkStatus _networkStatus;
 
   const ProfileRepoImpl(this._profileRemoteDataSource, this._networkStatus);
 
   @override
-  FutureResult<List<HelpCenterModel>> getHelpCenter()async {
+  FutureResult<List<HelpCenterModel>> getHelpCenter() async {
     try {
       final result = await _profileRemoteDataSource.getHelpCenter();
       return Right(result);
@@ -29,7 +29,7 @@ class ProfileRepoImpl implements ProfileRepo{
   }
 
   @override
-  FutureResult<ContentPagesModel> getPrivacyPolicy() async{
+  FutureResult<ContentPagesModel> getPrivacyPolicy() async {
     try {
       final result = await _profileRemoteDataSource.getPrivacyPolicy();
       return Right(result);
@@ -40,7 +40,7 @@ class ProfileRepoImpl implements ProfileRepo{
   }
 
   @override
-  FutureResult<ContentPagesModel> getTermsConditions() async{
+  FutureResult<ContentPagesModel> getTermsConditions() async {
     try {
       final result = await _profileRemoteDataSource.getTermsCondition();
       return Right(result);
@@ -51,9 +51,11 @@ class ProfileRepoImpl implements ProfileRepo{
   }
 
   @override
-  FutureResult<UserModel> updateProfile({required UpdateProfileParams params}) async{
+  FutureResult<UserModel> updateProfile(
+      {required UpdateProfileParams params}) async {
     try {
-      final result = await _profileRemoteDataSource.updateProfile(params: params);
+      final result =
+          await _profileRemoteDataSource.updateProfile(params: params);
       return Right(result);
     } on Failure catch (error) {
       return Left(
@@ -62,9 +64,11 @@ class ProfileRepoImpl implements ProfileRepo{
   }
 
   @override
-  FutureResult<UserModel> uploadProfilePic({required UploadProfilePicParams params}) async{
+  FutureResult<UserModel> uploadProfilePic(
+      {required UploadProfilePicParams params}) async {
     try {
-      final result = await _profileRemoteDataSource.uploadProfilePic(params: params);
+      final result =
+          await _profileRemoteDataSource.uploadProfilePic(params: params);
       return Right(result);
     } on Failure catch (error) {
       return Left(
@@ -72,6 +76,36 @@ class ProfileRepoImpl implements ProfileRepo{
     }
   }
 
+  @override
+  FutureResult<List<HelpCenterModel>> getHelpCenterInTime() async{
+    try {
+      final result = await _profileRemoteDataSource.getHelpCenterInTime();
+      return Right(result);
+    } on Failure catch (error) {
+      return Left(
+          ServerFailure(message: error.message, statusCode: error.statusCode));
+    }
+  }
 
+  @override
+  FutureResult<ContentPagesModel> getPrivacyPolicyInTime() async{
+    try {
+      final result = await _profileRemoteDataSource.getPrivacyPolicyInTime();
+      return Right(result);
+    } on Failure catch (error) {
+      return Left(
+          ServerFailure(message: error.message, statusCode: error.statusCode));
+    }
+  }
 
+  @override
+  FutureResult<ContentPagesModel> getTermsConditionsInTime() async{
+    try {
+      final result = await _profileRemoteDataSource.getTermsConditionInTime();
+      return Right(result);
+    } on Failure catch (error) {
+      return Left(
+          ServerFailure(message: error.message, statusCode: error.statusCode));
+    }
+  }
 }

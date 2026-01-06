@@ -22,7 +22,8 @@ class AboutSection extends StatelessWidget {
               MaterialPageRoute(
                 builder: (context) => ContentPageScreen(
                   title: state.title,
-                  htmlContent: state.content.content,
+                  htmlContent: state.contents.first.content,
+                  inTimeHtmlContent: state.contents.last.content ,
                 ),
               ));
         } else if (state is GetHelpCenterSuccess) {
@@ -31,7 +32,8 @@ class AboutSection extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => HelpCenterScreen(
-                  helpCenterData: state.data,
+                  helpCenterData: state.tenantData,
+                  helpCenterDataInTime: state.inTimeData,
                 ),
               ));
         } else if (state is GetContentPagesLoading) {

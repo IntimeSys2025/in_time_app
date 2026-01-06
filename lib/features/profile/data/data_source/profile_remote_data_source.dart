@@ -28,6 +28,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   Future<ContentPagesModel> getTermsCondition() async {
     final response = await _apiConsumer.get(path: EndPoints.getTermsCondition);
     return ContentPagesModel.fromJson(response.data['data']);
+
   }
 
   @override
@@ -61,15 +62,19 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   }
 
   @override
-  Future<List<HelpCenterModel>> getHelpCenterInTime() {
-    // TODO: implement getHelpCenterInTime
-    throw UnimplementedError();
+  Future<List<HelpCenterModel>> getHelpCenterInTime()async {
+    final response = await _apiConsumer.get(path: EndPoints.getHelpCenterTenant,apiType: ApiType.tenant);
+    final List<HelpCenterModel> helpCenterData = [];
+    for (var element in response.data['data']) {
+      helpCenterData.add(HelpCenterModel.fromJson(element));
+    }
+    return helpCenterData;
   }
 
   @override
-  Future<ContentPagesModel> getPrivacyPolicyInTime() {
-    // TODO: implement getPrivacyPolicyInTime
-    throw UnimplementedError();
+  Future<ContentPagesModel> getPrivacyPolicyInTime() async{
+    final response = await _apiConsumer.get(path: EndPoints.getPrivacyPolicyTenant,apiType: ApiType.tenant);
+    return ContentPagesModel.fromJson(response.data['data']);
   }
 
   @override

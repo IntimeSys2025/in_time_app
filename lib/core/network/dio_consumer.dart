@@ -68,7 +68,8 @@ class DioConsumer implements ApiConsumer {
         // 'accept': 'application/json',
         'accept': 'multipart/form-data',
         // 'content-type': 'application/json',
-        'Access-control-Allow-Origin': '*'
+        'Access-control-Allow-Origin': '*',
+        'audience' : 'user'
       }
       ..sendTimeout = const Duration(seconds: 200)
       ..receiveTimeout = const Duration(seconds: 200);

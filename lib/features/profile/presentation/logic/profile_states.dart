@@ -13,15 +13,17 @@ class GetContentPagesLoading extends ProfileState {}
 
 class GetContentPagesSuccess extends ProfileState {
   final String title;
-  final ContentPagesModel content;
-  GetContentPagesSuccess({required this.title, required this.content});
+  // final ContentPagesModel content;
+  List<ContentPagesModel> contents;
+  GetContentPagesSuccess({required this.title, required this.contents});
 }
 
 class GetContentPagesFailure extends ProfileState {}
 
 class GetHelpCenterSuccess extends ProfileState {
-  final List<HelpCenterModel> data;
-  GetHelpCenterSuccess({required this.data});
+  final List<HelpCenterModel> tenantData;
+  final List<HelpCenterModel> inTimeData;
+  GetHelpCenterSuccess( {required this.tenantData,required this.inTimeData});
 }
 
 class LogoutSuccessState extends ProfileState {

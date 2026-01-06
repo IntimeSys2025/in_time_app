@@ -11,6 +11,9 @@ abstract class ProfileRepo{
   FutureResult<ContentPagesModel> getTermsConditions();
   FutureResult<ContentPagesModel> getPrivacyPolicy();
   FutureResult<List<HelpCenterModel>> getHelpCenter();
+  FutureResult<ContentPagesModel> getTermsConditionsInTime();
+  FutureResult<ContentPagesModel> getPrivacyPolicyInTime();
+  FutureResult<List<HelpCenterModel>> getHelpCenterInTime();
   FutureResult<UserModel> updateProfile({required UpdateProfileParams params});
   FutureResult<UserModel> uploadProfilePic({required UploadProfilePicParams params});
 }

@@ -24,8 +24,11 @@ import 'package:in_time_app/features/home/domain/use_cases/sub_service_use_case.
 import 'package:in_time_app/features/profile/data/data_source/profile_remote_data_source.dart';
 import 'package:in_time_app/features/profile/data/repositories/profile_repo_impl.dart';
 import 'package:in_time_app/features/profile/domain/repositories/profile_repo.dart';
+import 'package:in_time_app/features/profile/domain/use_case/get_help_center_intime_use_case.dart';
 import 'package:in_time_app/features/profile/domain/use_case/get_help_center_use_case.dart';
+import 'package:in_time_app/features/profile/domain/use_case/get_privacy_intime_use_case.dart';
 import 'package:in_time_app/features/profile/domain/use_case/get_privacy_use_case.dart';
+import 'package:in_time_app/features/profile/domain/use_case/get_terms_intime_use_case.dart';
 import 'package:in_time_app/features/profile/domain/use_case/get_terms_use_case.dart';
 import 'package:in_time_app/features/profile/domain/use_case/update_profile_use_case.dart';
 import 'package:in_time_app/features/profile/domain/use_case/upload_profile_pic_use_case.dart';
@@ -35,7 +38,7 @@ import '../../features/account/domain/use_cases/register_use_case.dart';
 import '../../features/home/domain/use_cases/get_appointment_in_date.dart';
 import '../../features/home/presentation/logic/home_cubit.dart';
 import '../network/api_consumer.dart';
-import '../network/default_dio_consumer.dart';
+import '../network/dio_consumer.dart';
 import '../network/end_points.dart';
 import '../network/network_status.dart';
 
@@ -69,7 +72,10 @@ sealed class ServiceLocator {
         sl<HelpCenterUseCase>(),
         sl<LogoutUseCase>(),
         sl<UpdateProfileUseCase>(),
-        sl<UploadProfilePicUseCase>()));
+        sl<UploadProfilePicUseCase>(),
+        sl<TermsConditionInTimesUseCase>(),
+        sl<PrivacyPolicyInTimeUseCase>(),
+        sl<HelpCenterInTimeUseCase>()));
 
     /// register use cases
     sl.registerLazySingleton<RegisterUseCase>(
@@ -103,6 +109,15 @@ sealed class ServiceLocator {
     );
     sl.registerLazySingleton(
       () => HelpCenterUseCase(sl<ProfileRepo>()),
+    );
+    sl.registerLazySingleton(
+      () => TermsConditionInTimesUseCase(sl<ProfileRepo>()),
+    );
+    sl.registerLazySingleton(
+      () => PrivacyPolicyInTimeUseCase(sl<ProfileRepo>()),
+    );
+    sl.registerLazySingleton(
+      () => HelpCenterInTimeUseCase(sl<ProfileRepo>()),
     );
     sl.registerLazySingleton(
       () => LogoutUseCase(sl<CreateAccountRepo>()),

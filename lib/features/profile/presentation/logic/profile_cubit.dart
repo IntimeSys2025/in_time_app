@@ -9,8 +9,11 @@ import 'package:in_time_app/features/account/domain/use_cases/logout_use_case.da
 import 'package:in_time_app/features/profile/data/models/arguments/update_profile_params.dart';
 import 'package:in_time_app/features/profile/data/models/arguments/upload_profile_pic_params.dart';
 import 'package:in_time_app/features/profile/data/models/help_center_model.dart';
+import 'package:in_time_app/features/profile/domain/use_case/get_help_center_intime_use_case.dart';
 import 'package:in_time_app/features/profile/domain/use_case/get_help_center_use_case.dart';
+import 'package:in_time_app/features/profile/domain/use_case/get_privacy_intime_use_case.dart';
 import 'package:in_time_app/features/profile/domain/use_case/get_privacy_use_case.dart';
+import 'package:in_time_app/features/profile/domain/use_case/get_terms_intime_use_case.dart';
 import 'package:in_time_app/features/profile/domain/use_case/get_terms_use_case.dart';
 import 'package:in_time_app/features/profile/domain/use_case/update_profile_use_case.dart';
 import 'package:in_time_app/features/profile/domain/use_case/upload_profile_pic_use_case.dart';
@@ -23,6 +26,9 @@ class ProfileCubit extends Cubit<ProfileState> {
   final TermsConditionsUseCase _termsConditionsUseCase;
   final PrivacyPolicyUseCase _privacyPolicyUseCase;
   final HelpCenterUseCase _helpCenterUseCase;
+  final TermsConditionInTimesUseCase _termsConditionInTimesUseCase;
+  final PrivacyPolicyInTimeUseCase _privacyPolicyInTimeUseCase;
+  final HelpCenterInTimeUseCase _helpCenterInTimeUseCase;
   final LogoutUseCase _logoutUseCase;
   final UpdateProfileUseCase _updateProfileUseCase;
   final UploadProfilePicUseCase _uploadProfilePicUseCase;
@@ -32,7 +38,10 @@ class ProfileCubit extends Cubit<ProfileState> {
       this._helpCenterUseCase,
       this._logoutUseCase,
       this._updateProfileUseCase,
-      this._uploadProfilePicUseCase)
+      this._uploadProfilePicUseCase,
+      this._termsConditionInTimesUseCase,
+      this._privacyPolicyInTimeUseCase,
+      this._helpCenterInTimeUseCase)
       : super(InitialProfileState());
 
   bool rememberPass = false;
@@ -56,48 +65,86 @@ class ProfileCubit extends Cubit<ProfileState> {
     emit(UpdateSecurityKey());
   }
 
+  // ContentPagesModel? termsConditions;
+  // ContentPagesModel? termsConditionsInTime;
+
+  /// store T&C for provider, tenant
+  List<ContentPagesModel> contentPageList = [];
+
   void getTermsConditions() async {
     emit(GetContentPagesLoading());
-    final result = await _termsConditionsUseCase.call();
-    result.fold(
-      (failure) {
-        emit(GetContentPagesFailure());
-      },
-      (success) {
-        emit(GetContentPagesSuccess(
-            title: 'Terms & Conditions', content: success));
-      },
-    );
+    contentPageList = [];
+    final result = await Future.wait(
+        [_termsConditionsUseCase.call(), _termsConditionInTimesUseCase.call()]);
+    for (var element in result) {
+      element.fold(
+        (l) {
+          emit(GetContentPagesFailure());
+        },
+        (success) {
+          contentPageList.add(success);
+        },
+      );
+    }
+    emit(GetContentPagesSuccess(
+        title: 'Terms & Conditions', contents: contentPageList));
   }
 
   void getPrivacyPolicy() async {
     emit(GetContentPagesLoading());
-    final result = await _privacyPolicyUseCase.call();
-    result.fold(
-      (failure) {
-        emit(GetContentPagesFailure());
-      },
-      (success) {
-        emit(GetContentPagesSuccess(
-            title: 'Privacy & Policy', content: success));
-      },
-    );
+    contentPageList = [];
+    final result = await Future.wait(
+        [_privacyPolicyUseCase.call(), _privacyPolicyInTimeUseCase.call()]);
+    for (var element in result) {
+      element.fold(
+        (l) {
+          emit(GetContentPagesFailure());
+        },
+        (success) {
+          contentPageList.add(success);
+        },
+      );
+    }
+    emit(GetContentPagesSuccess(
+        title: 'Privacy & Policy', contents: contentPageList));
   }
   // List<HelpCenterModel> helpCenterData = [];
 
   void getHelpCenter() async {
     emit(GetContentPagesLoading());
-    final result = await _helpCenterUseCase.call();
-    result.fold(
+    List<HelpCenterModel> tenantData = [];
+    List<HelpCenterModel> inTimeData = [];
+    final result = await Future.wait(
+        [_helpCenterUseCase.call(), _helpCenterInTimeUseCase.call()]);
+    result.first.fold(
       (failure) {
         emit(GetContentPagesFailure());
       },
       (success) {
-        // helpCenterData = success;
-        emit(GetHelpCenterSuccess(data: success));
-        // emit(GetContentPagesSuccess(title: 'Privacy & Policy',content: success));
+        tenantData = success;
       },
     );
+    result.last.fold(
+          (failure) {
+        emit(GetContentPagesFailure());
+      },
+          (success) {
+        inTimeData = success;
+      },
+    );
+
+    // final result = await _helpCenterUseCase.call();
+    // result.fold(
+    //   (failure) {
+    //     emit(GetContentPagesFailure());
+    //   },
+    //   (success) {
+    //     emit(GetHelpCenterSuccess(tenantData: success));
+    //     // emit(GetContentPagesSuccess(title: 'Privacy & Policy',content: success));
+    //   },
+    // );
+
+    emit(GetHelpCenterSuccess(tenantData: tenantData, inTimeData: inTimeData));
   }
 
   void logout() async {
@@ -221,7 +268,8 @@ class ProfileCubit extends Cubit<ProfileState> {
     String fileName = imageFile!.path.split('/').last;
     FormData formData = FormData.fromMap({
       // 'id': int.parse(userId!),
-      'image': await MultipartFile.fromFile(imageFile!.path, filename: fileName),
+      'image':
+          await MultipartFile.fromFile(imageFile!.path, filename: fileName),
     });
 
     final result = await _uploadProfilePicUseCase(
@@ -230,13 +278,25 @@ class ProfileCubit extends Cubit<ProfileState> {
     result.fold(
       (failure) {
         // emit(UploadProfilePicFailureState(errorMessage: failure.message));
-        emit(UploadProfilePicFailureState(errorMessage: 'Failed to upload profile image, Choose another one'));
-
+        emit(UploadProfilePicFailureState(
+            errorMessage:
+                'Failed to upload profile image, Choose another one'));
       },
       (user) {
         emit(UploadProfilePicSuccessState());
-
       },
     );
+  }
+
+  @override
+  Future<void> close() {
+    contentPageList = [];
+    oldPasswordController.dispose();
+    newPasswordController.dispose();
+    confirmPasswordController.dispose();
+    dateOfBirthController.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
+    return super.close();
   }
 }
