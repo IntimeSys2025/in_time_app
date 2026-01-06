@@ -90,7 +90,7 @@
                   serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
                   testers: ${{ secrets.FIREBASE_TESTERS }}
                   file: build/app/outputs/flutter-apk/app-release.apk
-                  releaseNotes: "Biometric Build 🚀"
+                  releaseNotes: "Content Page (Help center, Privacy & Policy, T & C) 🚀"
 
 
 #               #9) Upload to Firebase App Distribution
