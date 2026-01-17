@@ -124,6 +124,10 @@ class HomeScreenMoreThanDoctor extends StatelessWidget {
                             },
                           ),
                         ),
+                      if (homeCubit.partners.isEmpty)
+                        const Center(
+                          child: Text('There are no partners!'),
+                        )
                     ],
                   ),
                 );

@@ -377,7 +377,7 @@ class _ScanQRScreenState extends State<ScanQRScreen>
           child: AppButtonWidget(
               title: 'Submit',
               onPressed: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const NavigationBarScreen(),
