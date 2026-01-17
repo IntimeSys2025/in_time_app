@@ -8,13 +8,13 @@ abstract class ApiConsumer {
       {required String path,
       Object? data,
       Map<String, dynamic>? queryParameters,
-        ApiType apiType = ApiType.provider,});
+        ApiType apiType = ApiType.tenant,});
 
   Future<Response> post(
       {required String path,
       Object? body,
       Map<String, dynamic>? queryParameters,
-        ApiType apiType = ApiType.provider,});
+        ApiType apiType = ApiType.tenant,});
 
   // Future<Response> put(
   //     {required String path,

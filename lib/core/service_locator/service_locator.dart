@@ -162,7 +162,7 @@ sealed class ServiceLocator {
     sl.registerLazySingleton<Dio>(() {
       return Dio(
         BaseOptions(
-          baseUrl: EndPoints.tenantBaseUrl,
+          baseUrl: EndPoints.baseUrl,
         ),
       );
     }, instanceName: 'tenant');

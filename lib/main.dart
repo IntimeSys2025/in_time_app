@@ -101,8 +101,8 @@ class MyApp extends StatelessWidget {
                 snapshot.connectionState == ConnectionState.done
                     ? AppConstants.userToken != ''?
                     const AppLockScreen()
-                    :const NavigationBarScreen()
-                    // ? const ScanQRScreen()
+                    // :const NavigationBarScreen()
+                    :const ScanQRScreen()
                     : Container(
                         color: AppColors.white,
                         child: Center(

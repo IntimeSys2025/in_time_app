@@ -39,7 +39,8 @@ class QrFailPopup extends StatelessWidget {
 
             // Title
             const Text(
-              "Invalid QR Code!",
+              // "Invalid QR Code!",
+              "Invalid Provider ID!",
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -51,7 +52,7 @@ class QrFailPopup extends StatelessWidget {
 
             // Subtitle
             Text(
-              "QR Code is invalid, please try again",
+              "Provider ID is invalid, please try again",
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey[600],

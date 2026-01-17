@@ -15,45 +15,47 @@ class DioConsumer implements ApiConsumer {
   final Dio providerDio;
   final Dio tenantDio;
   DioConsumer({required this.providerDio, required this.tenantDio}) {
-    /// init provider url
-    (providerDio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
-      final client = HttpClient();
-      client.badCertificateCallback = (cert, host, port) => true;
-      return client;
-    };
-
-    providerDio.options
-      ..baseUrl = EndPoints.baseUrl
-      ..headers = {
-        // 'accept': 'application/json',
-        'accept': 'multipart/form-data',
-        // 'content-type': 'application/json',
-        'Access-control-Allow-Origin': '*'
-      }
-      ..sendTimeout = const Duration(seconds: 200)
-      ..receiveTimeout = const Duration(seconds: 200);
-
-    ///add authorization token
-    providerDio.interceptors.add(InterceptorsWrapper(
-      onRequest: (options, handler) async {
-        if (AppConstants.userToken != '') {
-          options.headers['Authorization'] = 'Bearer ${AppConstants.userToken}';
-
-        }
-        return handler.next(options);
-      },
-    ));
-
-
-    /// Add pretty DioLogger to log all the requests and responses
-    if (!kReleaseMode) {
-      providerDio.interceptors.addAll([
-        PrettyDioLogger(
-          requestHeader: true,
-          requestBody: true,
-        )
-      ]);
-    }
+    // /// init provider url
+    // (providerDio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
+    //   final client = HttpClient();
+    //   client.badCertificateCallback = (cert, host, port) => true;
+    //   return client;
+    // };
+    //
+    // providerDio.options
+    //   ..baseUrl = EndPoints.baseUrl
+    //   ..headers = {
+    //     // 'accept': 'application/json',
+    //     'accept': 'multipart/form-data',
+    //     // 'content-type': 'application/json',
+    //     'Access-control-Allow-Origin': '*',
+    //     'X-Tenant-Id':AppConstants.providerId
+    //
+    //   }
+    //   ..sendTimeout = const Duration(seconds: 200)
+    //   ..receiveTimeout = const Duration(seconds: 200);
+    //
+    // ///add authorization token
+    // providerDio.interceptors.add(InterceptorsWrapper(
+    //   onRequest: (options, handler) async {
+    //     if (AppConstants.userToken != '') {
+    //       options.headers['Authorization'] = 'Bearer ${AppConstants.userToken}';
+    //
+    //     }
+    //     return handler.next(options);
+    //   },
+    // ));
+    //
+    //
+    // /// Add pretty DioLogger to log all the requests and responses
+    // if (!kReleaseMode) {
+    //   providerDio.interceptors.addAll([
+    //     PrettyDioLogger(
+    //       requestHeader: true,
+    //       requestBody: true,
+    //     )
+    //   ]);
+    // }
 
     /// init tenant url
     (tenantDio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
@@ -63,13 +65,14 @@ class DioConsumer implements ApiConsumer {
     };
 
     tenantDio.options
-      ..baseUrl = EndPoints.tenantBaseUrl
+      ..baseUrl = EndPoints.baseUrl
       ..headers = {
         // 'accept': 'application/json',
         'accept': 'multipart/form-data',
         // 'content-type': 'application/json',
         'Access-control-Allow-Origin': '*',
-        'audience' : 'user'
+        'audience' : 'user',
+        'X-Tenant-Id':AppConstants.providerId
       }
       ..sendTimeout = const Duration(seconds: 200)
       ..receiveTimeout = const Duration(seconds: 200);
@@ -111,7 +114,7 @@ class DioConsumer implements ApiConsumer {
       {required String path,
       Object? data,
       Map<String, dynamic>? queryParameters,
-        ApiType apiType = ApiType.provider}) async {
+        ApiType apiType = ApiType.tenant}) async {
     try {
       // final response =
       //     await dio.get(path, data: data, queryParameters: queryParameters);
@@ -176,7 +179,7 @@ class DioConsumer implements ApiConsumer {
       {required String path,
       Object? body,
       Map<String, dynamic>? queryParameters,
-        ApiType apiType = ApiType.provider}) async {
+        ApiType apiType = ApiType.tenant}) async {
     try {
 
       // final response =

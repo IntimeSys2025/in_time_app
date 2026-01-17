@@ -2,9 +2,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:in_time_app/core/helpers/extension.dart';
 import 'package:in_time_app/core/shared_widgets/app_button_widget.dart';
+import 'package:in_time_app/core/utils/app_constants.dart';
 import 'package:in_time_app/features/account/presentation/widgets/qr_fail_popup.dart';
 import 'package:in_time_app/features/home/presentation/screens/navigation_screen.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+
 /// create qr code
 // import 'package:qr_flutter/qr_flutter.dart';
 
@@ -15,39 +17,66 @@ class ScanQRScreen extends StatefulWidget {
   _ScanQRScreenState createState() => _ScanQRScreenState();
 }
 
-class _ScanQRScreenState extends State<ScanQRScreen> {
+class _ScanQRScreenState extends State<ScanQRScreen>
+    with WidgetsBindingObserver {
   final TextEditingController _providerIdController =
-      TextEditingController(text: "4567dd778");
+      TextEditingController(text: "sandbox2");
   MobileScannerController controller = MobileScannerController(
-    detectionSpeed: DetectionSpeed.normal,
-    facing: CameraFacing.back,
-    torchEnabled: false,
-    autoStart: false
-  );
-  // StreamSubscription<BarcodeCapture>? _barcodeSubscription;
+      detectionSpeed: DetectionSpeed.normal,
+      formats: [BarcodeFormat.qrCode],
+      // facing: CameraFacing.back,
+      // torchEnabled: false,
+      autoStart: false);
+  StreamSubscription<BarcodeCapture>? _subscription;
   bool _isScanning = false;
   @override
   void initState() {
     super.initState();
-    // WidgetsBinding.instance.addObserver(controller);
-    // WidgetsBinding.instance.addObserver(this);
-    // Subscribe to barcode stream
-    // _barcodeSubscription = controller.barcodes.listen((capture) {
-    //   for (final barcode in capture.barcodes) {
-    //     debugPrint('Detected: ${barcode.rawValue}');
-    //     // Handle your scan logic here (e.g., navigate/pop with result)
-    //   }
-    // });
+    WidgetsBinding.instance.addObserver(this);
 
-    // Start camera after frame is rendered (avoids timing issues)
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (mounted) {
-        await controller.start();
+    _subscription = controller.barcodes.listen((capture) {
+      for (final barcode in capture.barcodes) {
+        if (barcode.rawValue != null) {
+          debugPrint('Scanned: ${barcode.rawValue} (Format: ${barcode.format})');
+          // Your handling logic, e.g., vibrate, navigate, etc.
+        } else {
+          debugPrint('Detected but empty value');
+        }
       }
     });
-    // controller.start();
+
+    // Start after first frame to avoid timing issues
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (mounted) await controller.start();
+    });
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (!controller.value.isInitialized) return;
+
+    switch (state) {
+      case AppLifecycleState.resumed:
+        _subscription ??= controller.barcodes.listen((capture) {/* handle */});
+        unawaited(controller.start());
+      case AppLifecycleState.paused:
+      case AppLifecycleState.inactive:
+        unawaited(_subscription?.cancel());
+        _subscription = null;
+        unawaited(controller.stop());
+      default:
+        break;
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    unawaited(_subscription?.cancel());
+    controller.dispose();
+    _providerIdController.dispose();
+    super.dispose();
+  }
 
   // Barcode? result;
   // QRViewController? controller;
@@ -93,6 +122,7 @@ class _ScanQRScreenState extends State<ScanQRScreen> {
 
                 // Provider ID TextField
                 TextField(
+                  readOnly: true,
                   controller: _providerIdController,
                   decoration: InputDecoration(
                     hintText: "Enter Provider ID",
@@ -114,12 +144,15 @@ class _ScanQRScreenState extends State<ScanQRScreen> {
                         horizontal: 16, vertical: 16),
                   ),
                   onChanged: (value) => setState(() {
-                    if(value.contains('123')){
-                      showDialog(context: context, builder: (context) {
-                        return const QrFailPopup();
-                      },);
+                    AppConstants.providerId = value;
+                    if (value.contains('123')) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return const QrFailPopup();
+                        },
+                      );
                     }
-
                   }), // Update QR live
                 ),
                 32.heightSpace,
@@ -162,26 +195,29 @@ class _ScanQRScreenState extends State<ScanQRScreen> {
                               ),
                               // formats: const [BarcodeFormat.qrCode],
                               // tapToFocus: true,
-                              onDetect: (BarcodeCapture capture) {
-                                final List<Barcode> barcodes = capture.barcodes;
-                                for (final barcode in barcodes) {
-                                  debugPrint('Barcode found: ${barcode.rawValue}');
-                                }
-                                if (_isScanning) return;
 
-                                final barcode = capture.barcodes.first;
-                                final String? code = barcode.rawValue;
-
-                                if (code != null && code.isNotEmpty) {
-                                  debugPrint('code::: $code ,, isScanning:: $_isScanning');
-                                  _isScanning = true;
-
-                                  // Optional haptic
-                                  // HapticFeedback.mediumImpact();
-
-                                  Navigator.pop(context, code);
-                                }
-                              },
+                              // onDetect: (BarcodeCapture capture) {
+                              //   final List<Barcode> barcodes = capture.barcodes;
+                              //   for (final barcode in barcodes) {
+                              //     debugPrint(
+                              //         'Barcode found: ${barcode.rawValue}');
+                              //   }
+                              //   if (_isScanning) return;
+                              //
+                              //   final barcode = capture.barcodes.first;
+                              //   final String? code = barcode.rawValue;
+                              //
+                              //   if (code != null && code.isNotEmpty) {
+                              //     debugPrint(
+                              //         'code::: $code ,, isScanning:: $_isScanning');
+                              //     _isScanning = true;
+                              //
+                              //     // Optional haptic
+                              //     // HapticFeedback.mediumImpact();
+                              //
+                              //     Navigator.pop(context, code);
+                              //   }
+                              // },
                               errorBuilder: (p0, p1) {
                                 debugPrint('ERROR:: $p0 ,, $p1');
                                 return Text('data');
@@ -194,7 +230,8 @@ class _ScanQRScreenState extends State<ScanQRScreen> {
                                 width: 200,
                                 height: 200,
                                 decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.green, width: 4),
+                                  border:
+                                      Border.all(color: Colors.green, width: 4),
                                   borderRadius: BorderRadius.circular(16),
                                 ),
                               ),
@@ -205,14 +242,16 @@ class _ScanQRScreenState extends State<ScanQRScreen> {
                               alignment: Alignment.bottomCenter,
                               child: Container(
                                 margin: const EdgeInsets.only(bottom: 50),
-                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 12),
                                 decoration: BoxDecoration(
                                   color: Colors.black54,
                                   borderRadius: BorderRadius.circular(30),
                                 ),
                                 child: const Text(
                                   "Position the QR code inside the frame",
-                                  style: TextStyle(color: Colors.white, fontSize: 16),
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 16),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -221,15 +260,7 @@ class _ScanQRScreenState extends State<ScanQRScreen> {
                         ),
                       )
 
-
-
-
-
-
-
-
-
-                    // SizedBox()
+                      // SizedBox()
                       // Stack(
                       //   children: [
                       //     // Full-screen scanner
@@ -283,17 +314,8 @@ class _ScanQRScreenState extends State<ScanQRScreen> {
                       //   ],
                       // )
 
-
-
-
-
-
-
-
-
-
                       // _buildQrView(context)
-                    /// create my own qr code
+                      /// create my own qr code
                       // QrImageView(
                       //   data: _providerIdController.text.isEmpty
                       //       ? "4567dd778" // Fallback if empty
@@ -366,12 +388,6 @@ class _ScanQRScreenState extends State<ScanQRScreen> {
     );
   }
 
-  @override
-  void dispose() {
-    _providerIdController.dispose();
-    controller.dispose();
-    super.dispose();
-  }
   // Widget _buildQrView(BuildContext context) {
   //   // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
   //   var scanArea =
