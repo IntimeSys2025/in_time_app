@@ -6,6 +6,7 @@ import 'package:in_time_app/features/home/presentation/screens/partner_details_s
 import 'package:in_time_app/features/home/presentation/widgets/appointmant_card.dart';
 import 'package:in_time_app/features/home/presentation/widgets/custom_search_bar.dart';
 import 'package:in_time_app/features/home/presentation/widgets/doctor_card.dart';
+import 'package:in_time_app/features/home/presentation/widgets/event_card.dart';
 import 'package:in_time_app/features/home/presentation/widgets/hospital_card.dart';
 import 'package:in_time_app/features/home/presentation/widgets/welcome_header.dart';
 import '../../../../core/utils/app_colors.dart';
@@ -66,20 +67,23 @@ class HomeScreenMoreThanDoctor extends StatelessWidget {
                       const HospitalCard(),
                       20.heightSpace,
                       if (AppConstants.userToken != '' && AppConstants.isLoggedIn)
-                        const Column(
+                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
+                            const Text(
                               'Upcoming Appointments',
                               style: TextStyle(
                                   fontSize: AppFontSize.fontSize20,
                                   fontWeight: FontWeight.w500),
                             ),
-                            SizedBox(height: 10),
+                            10.heightSpace,
                             AppointmentCard(),
-                            SizedBox(height: 20),
+                            20.heightSpace,
+
                           ],
                         ),
+                      EventBookingCard(),
+                      10.heightSpace,
                       if(homeCubit.partners.isNotEmpty && homeCubit.partners.length >1)
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
