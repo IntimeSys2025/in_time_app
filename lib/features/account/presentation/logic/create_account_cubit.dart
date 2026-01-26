@@ -8,6 +8,7 @@ import 'package:in_time_app/core/utils/app_constants.dart';
 import 'package:in_time_app/features/account/data/models/arguments/login_params.dart';
 import 'package:in_time_app/features/account/data/models/arguments/verify_code_params.dart';
 import 'package:in_time_app/features/account/data/models/failure_register_model.dart';
+import 'package:in_time_app/features/account/domain/use_cases/check_tenant_use_case.dart';
 import 'package:in_time_app/features/account/domain/use_cases/forget_password_use_case.dart';
 import 'package:in_time_app/features/account/domain/use_cases/login_use_case.dart';
 import 'package:in_time_app/features/account/domain/use_cases/register_use_case.dart';
@@ -30,12 +31,14 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
   final ForgetPasswordUseCas _forgetPasswordUseCase;
   final VerifyCodeUseCas _verifyCodeUseCas;
   final ResetPasswordUseCas _resetPasswordUseCas;
+  final CheckTenantUseCas _checkTenantUseCas;
   CreateAccountCubit(
       this._registerUseCase,
       this._loginUseCase,
       this._forgetPasswordUseCase,
       this._verifyCodeUseCas,
-      this._resetPasswordUseCas)
+      this._resetPasswordUseCas,
+      this._checkTenantUseCas)
       : super(CreateAccountInitial());
   final phoneNumberFormKey = GlobalKey<FormState>();
   final loginForm = GlobalKey<FormState>();
@@ -329,6 +332,21 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
   //   //   },
   //   // );
   // }
+
+  /// check tenant Id
+  Future<void> checkTenantId({required String tenantId}) async {
+    // await ServiceLocator.init();
+    emit(CheckTenantIdLoadingState());
+    final result = await _checkTenantUseCas.call(tenantId);
+    result.fold(
+      (failure) {
+        emit(CheckTenantIdFailureState(errorMessage: failure.message));
+      },
+      (success) {
+        emit(CheckTenantIdSuccessState());
+      },
+    );
+  }
 }
 
 // Future<Map<String, dynamic>> callRegisterApi(

@@ -122,4 +122,14 @@ class CreateAccountRepoImpl implements CreateAccountRepo {
           ServerFailure(message: error.message, statusCode: error.statusCode));
     }
   }
+  @override
+  FutureResult<String> getCheckTenant({required String tenantId}) async{
+    try {
+      final result = await _remoteDataSource.checkTenant(tenantId: tenantId);
+      return Right(result);
+    } on Failure catch (error) {
+      return Left(
+          ServerFailure(message: error.message, statusCode: error.statusCode));
+    }
+  }
 }

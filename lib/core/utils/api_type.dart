@@ -1,4 +1,4 @@
-enum ApiType{
-  provider,
-  tenant
-}
+// enum ApiType{
+//   provider,
+//   tenant
+// }

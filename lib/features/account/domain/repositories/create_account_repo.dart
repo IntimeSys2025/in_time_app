@@ -13,4 +13,6 @@ abstract class CreateAccountRepo {
   FutureResult<String> verifyCode({required VerifyCodeParams params});
   FutureResult<String> resetPassword({required ResetPasswordParams params});
   FutureResult<String> logout();
+  FutureResult<String> getCheckTenant({required String tenantId});
+
 }

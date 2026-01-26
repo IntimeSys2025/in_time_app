@@ -1,6 +1,4 @@
-import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
-import 'package:in_time_app/core/network/tenant_dio_consumer.dart';
 import 'package:in_time_app/features/account/data/data_source/create_account_data_source.dart';
 import 'package:in_time_app/features/account/data/repositories/create_account_repo_impl.dart';
 import 'package:in_time_app/features/account/domain/repositories/create_account_repo.dart';
@@ -24,6 +22,7 @@ import 'package:in_time_app/features/home/domain/use_cases/sub_service_use_case.
 import 'package:in_time_app/features/profile/data/data_source/profile_remote_data_source.dart';
 import 'package:in_time_app/features/profile/data/repositories/profile_repo_impl.dart';
 import 'package:in_time_app/features/profile/domain/repositories/profile_repo.dart';
+import 'package:in_time_app/features/account/domain/use_cases/check_tenant_use_case.dart';
 import 'package:in_time_app/features/profile/domain/use_case/get_help_center_intime_use_case.dart';
 import 'package:in_time_app/features/profile/domain/use_case/get_help_center_use_case.dart';
 import 'package:in_time_app/features/profile/domain/use_case/get_privacy_intime_use_case.dart';
@@ -52,7 +51,8 @@ sealed class ServiceLocator {
         sl<LoginUseCase>(),
         sl<ForgetPasswordUseCas>(),
         sl<VerifyCodeUseCas>(),
-        sl<ResetPasswordUseCas>()));
+        sl<ResetPasswordUseCas>(),
+        sl<CheckTenantUseCas>()));
 
     sl.registerLazySingleton(() => HomeCubit(
         sl<GetCategoriesUseCase>(),
@@ -124,6 +124,9 @@ sealed class ServiceLocator {
     );
     sl.registerLazySingleton(() => UpdateProfileUseCase(sl<ProfileRepo>()));
     sl.registerLazySingleton(() => UploadProfilePicUseCase(sl<ProfileRepo>()));
+    sl.registerLazySingleton(
+      () => CheckTenantUseCas(sl<CreateAccountRepo>()),
+    );
 
     /// register Repositories
     sl.registerLazySingleton<CreateAccountRepo>(
@@ -148,32 +151,32 @@ sealed class ServiceLocator {
     /// Core
     sl.registerLazySingleton<NetworkStatus>(() => NetworkStatusImpl(sl()));
 
-    // sl.registerLazySingleton<ApiConsumer>(() => DioConsumer(EndPoints.baseUrl));
+    sl.registerLazySingleton<ApiConsumer>(() => DioConsumer(EndPoints.baseUrl));
 
-    /// create 2 dio with 2 base url
-    sl.registerLazySingleton<Dio>(() {
-      return Dio(
-        BaseOptions(
-          baseUrl: EndPoints.baseUrl,
-        ),
-      );
-    }, instanceName: 'provider');
-
-    sl.registerLazySingleton<Dio>(() {
-      return Dio(
-        BaseOptions(
-          baseUrl: EndPoints.baseUrl,
-        ),
-      );
-    }, instanceName: 'tenant');
-
-    sl.registerLazySingleton<ApiConsumer>(() {
-      return DioConsumer(
-        // EndPoints.baseUrl,
-        providerDio: sl<Dio>(instanceName: 'provider'),
-        tenantDio: sl<Dio>(instanceName: 'tenant'),
-      );
-    });
+    // /// create 2 dio with 2 base url
+    // sl.registerLazySingleton<Dio>(() {
+    //   return Dio(
+    //     BaseOptions(
+    //       baseUrl: EndPoints.baseUrl,
+    //     ),
+    //   );
+    // }, instanceName: 'provider');
+    //
+    // sl.registerLazySingleton<Dio>(() {
+    //   return Dio(
+    //     BaseOptions(
+    //       baseUrl: EndPoints.baseUrl,
+    //     ),
+    //   );
+    // }, instanceName: 'tenant');
+    //
+    // sl.registerLazySingleton<ApiConsumer>(() {
+    //   return DioConsumer(
+    //     // EndPoints.baseUrl,
+    //     providerDio: sl<Dio>(instanceName: 'provider'),
+    //     tenantDio: sl<Dio>(instanceName: 'tenant'),
+    //   );
+    // });
 
     // sl.registerLazySingleton<ApiConsumer>(
     //     () => TenantDioConsumer(EndPoints.tenantBaseUrl));

@@ -24,8 +24,8 @@ class RegisterAccountSuccessState extends CreateAccountState {}
 
 class RegisterAccountFailureState extends CreateAccountState {
   final String errorMessage;
-   FailureRegisterModel? failure;
-  RegisterAccountFailureState( {required this.errorMessage, this.failure});
+  FailureRegisterModel? failure;
+  RegisterAccountFailureState({required this.errorMessage, this.failure});
 }
 
 class SignInLoadingState extends CreateAccountState {}
@@ -69,6 +69,15 @@ class VerifyCodeSuccessState extends CreateAccountState {
 class VerifyCodeFailureState extends CreateAccountState {
   final String errorMessage;
   VerifyCodeFailureState({required this.errorMessage});
+}
+
+class CheckTenantIdLoadingState extends CreateAccountState {}
+
+class CheckTenantIdSuccessState extends CreateAccountState {}
+
+class CheckTenantIdFailureState extends CreateAccountState {
+  final String errorMessage;
+  CheckTenantIdFailureState({required this.errorMessage});
 }
 
 // class ResetPasswordLoadingState extends CreateAccountState {}

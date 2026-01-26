@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_time_app/core/helpers/extension.dart';
 import 'package:in_time_app/core/shared_widgets/app_button_widget.dart';
+import 'package:in_time_app/core/utils/app_colors.dart';
 import 'package:in_time_app/core/utils/app_constants.dart';
+import 'package:in_time_app/features/account/presentation/logic/create_account_cubit.dart';
 import 'package:in_time_app/features/account/presentation/widgets/qr_fail_popup.dart';
 import 'package:in_time_app/features/home/presentation/screens/navigation_screen.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -19,8 +22,7 @@ class ScanQRScreen extends StatefulWidget {
 
 class _ScanQRScreenState extends State<ScanQRScreen>
     with WidgetsBindingObserver {
-  final TextEditingController _providerIdController =
-      TextEditingController(text: "sandbox2");
+  final TextEditingController _providerIdController = TextEditingController();
   MobileScannerController controller = MobileScannerController(
       detectionSpeed: DetectionSpeed.normal,
       formats: [BarcodeFormat.qrCode],
@@ -37,7 +39,8 @@ class _ScanQRScreenState extends State<ScanQRScreen>
     _subscription = controller.barcodes.listen((capture) {
       for (final barcode in capture.barcodes) {
         if (barcode.rawValue != null) {
-          debugPrint('Scanned: ${barcode.rawValue} (Format: ${barcode.format})');
+          debugPrint(
+              'Scanned: ${barcode.rawValue} (Format: ${barcode.format})');
           // Your handling logic, e.g., vibrate, navigate, etc.
         } else {
           debugPrint('Detected but empty value');
@@ -92,6 +95,7 @@ class _ScanQRScreenState extends State<ScanQRScreen>
   // }
   @override
   Widget build(BuildContext context) {
+    final cubit = BlocProvider.of<CreateAccountCubit>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -122,37 +126,43 @@ class _ScanQRScreenState extends State<ScanQRScreen>
 
                 // Provider ID TextField
                 TextField(
-                  readOnly: true,
+                  // readOnly: true,
                   controller: _providerIdController,
+
                   decoration: InputDecoration(
                     hintText: "Enter Provider ID",
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.green, width: 2),
+                      borderSide:
+                          const BorderSide(color: Colors.green, width: 2),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.green, width: 2),
+                      borderSide:
+                          const BorderSide(color: Colors.green, width: 2),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.green, width: 2),
+                      borderSide:
+                          const BorderSide(color: Colors.green, width: 2),
                     ),
                     contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 16),
                   ),
                   onChanged: (value) => setState(() {
                     AppConstants.providerId = value;
-                    if (value.contains('123')) {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return const QrFailPopup();
-                        },
-                      );
-                    }
+                    debugPrint('ProviderId:: ${AppConstants.providerId}');
+                    _providerIdController.text = value;
+                    // if (value.contains('123')) {
+                    //   showDialog(
+                    //     context: context,
+                    //     builder: (context) {
+                    //       return const QrFailPopup();
+                    //     },
+                    //   );
+                    // }
                   }), // Update QR live
                 ),
                 32.heightSpace,
@@ -181,47 +191,29 @@ class _ScanQRScreenState extends State<ScanQRScreen>
                             // Full-screen scanner
                             MobileScanner(
                               controller: controller,
-                              // controller: MobileScannerController(
-                              //   detectionSpeed: DetectionSpeed.normal,
-                              //   // formats: [BarcodeFormat.all],
-                              //   facing: CameraFacing.back,
-                              //   torchEnabled: false,
-                              //   autoStart: true
-                              // ),
                               scanWindow: Rect.fromCenter(
-                                center: MediaQuery.of(context).size.center(Offset.zero),
-                                width: 200,
-                                height: 200,
+                                center: MediaQuery.of(context)
+                                    .size
+                                    .center(Offset.zero),
+                                width: 250,
+                                height: 250,
                               ),
-                              // formats: const [BarcodeFormat.qrCode],
-                              // tapToFocus: true,
-
-                              // onDetect: (BarcodeCapture capture) {
-                              //   final List<Barcode> barcodes = capture.barcodes;
-                              //   for (final barcode in barcodes) {
-                              //     debugPrint(
-                              //         'Barcode found: ${barcode.rawValue}');
-                              //   }
-                              //   if (_isScanning) return;
-                              //
-                              //   final barcode = capture.barcodes.first;
-                              //   final String? code = barcode.rawValue;
-                              //
-                              //   if (code != null && code.isNotEmpty) {
-                              //     debugPrint(
-                              //         'code::: $code ,, isScanning:: $_isScanning');
-                              //     _isScanning = true;
-                              //
-                              //     // Optional haptic
-                              //     // HapticFeedback.mediumImpact();
-                              //
-                              //     Navigator.pop(context, code);
-                              //   }
-                              // },
-                              errorBuilder: (p0, p1) {
-                                debugPrint('ERROR:: $p0 ,, $p1');
-                                return Text('data');
+                              onDetect: (barcodes) {
+                                debugPrint(
+                                    'QR Detected: ${barcodes.barcodes.length}');
+                                final String? code =
+                                    barcodes.barcodes.first.rawValue;
+                                if (code == null) {
+                                  debugPrint('QR Code: $code');
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(code ?? '')));
+                                  return;
+                                }
                               },
+                              // errorBuilder: (p0, p1) {
+                              //   debugPrint('ERROR:: $p0 ,, $p1');
+                              //   return const Text('data');
+                              // },
                             ),
 
                             // Overlay frame
@@ -374,15 +366,40 @@ class _ScanQRScreenState extends State<ScanQRScreen>
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
-          child: AppButtonWidget(
-              title: 'Submit',
-              onPressed: () {
+          child: BlocConsumer<CreateAccountCubit, CreateAccountState>(
+            listener: (context, state) {
+              if (state is CheckTenantIdSuccessState) {
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const NavigationBarScreen(),
                     ));
-              }),
+              }
+            },
+            builder: (context, state) {
+              if (state is CheckTenantIdLoadingState) {
+                return ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.all( 10),
+                      backgroundColor: AppColors.kGreenButton,
+                      elevation: 20,
+                      shape: const RoundedRectangleBorder(
+                        side: BorderSide(color:  AppColors.kGreenButton, width: 2),
+                        // borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                    ),
+                    onPressed: () {}, child:  const CircularProgressIndicator(
+                  color: AppColors.white,
+                ));
+              }
+              return AppButtonWidget(
+                  title: 'Submit',
+                  onPressed: () {
+                    cubit.checkTenantId(tenantId: _providerIdController.text);
+                  });
+            },
+          ),
         ),
       ),
     );
@@ -422,3 +439,57 @@ class _ScanQRScreenState extends State<ScanQRScreen>
   //   }
   // }
 }
+
+// import 'package:flutter/material.dart';
+// import 'package:qr_code_scanner/qr_code_scanner.dart';
+//
+// class QrScanScreen extends StatefulWidget {
+//   const QrScanScreen({super.key});
+//
+//   @override
+//   State<QrScanScreen> createState() => _QrScanScreenState();
+// }
+//
+// class _QrScanScreenState extends State<QrScanScreen> {
+//   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+//   QRViewController? controller;
+//   bool scanned = false;
+//
+//   @override
+//   void dispose() {
+//     controller?.dispose();
+//     super.dispose();
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: const Text('Scan QR')),
+//       body: QRView(
+//         key: qrKey,
+//         onQRViewCreated: _onQRViewCreated,
+//         overlay: QrScannerOverlayShape(
+//           borderColor: Colors.green,
+//           borderRadius: 12,
+//           borderLength: 30,
+//           borderWidth: 8,
+//           cutOutSize: 250,
+//         ),
+//       ),
+//     );
+//   }
+//
+//   void _onQRViewCreated(QRViewController controller) {
+//     this.controller = controller;
+//
+//     controller.scannedDataStream.listen((scanData) {
+//       if (scanned) return;
+//       scanned = true;
+//
+//       final code = scanData.code;
+//       print('QR FOUND 🔥: $code');
+//
+//       Navigator.pop(context, code);
+//     });
+//   }
+// }

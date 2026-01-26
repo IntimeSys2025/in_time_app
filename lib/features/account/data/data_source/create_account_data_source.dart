@@ -6,6 +6,7 @@ import 'package:in_time_app/features/account/data/models/arguments/register_para
 import 'package:in_time_app/features/account/data/models/arguments/verify_code_params.dart';
 import 'package:in_time_app/features/account/data/models/user_model.dart';
 
+import '../../../../core/utils/api_type.dart';
 import '../models/arguments/reset_passwprd_params.dart';
 
 abstract class CreateAccountDataSource {
@@ -15,6 +16,8 @@ abstract class CreateAccountDataSource {
   Future<String> verifyCode({required VerifyCodeParams params});
   Future<String> resetPassword({required ResetPasswordParams params});
   Future<String> logout();
+  Future<String> checkTenant({required String tenantId});
+
 }
 
 class CreateAccountDataSourceImpl implements CreateAccountDataSource {
@@ -65,6 +68,11 @@ class CreateAccountDataSourceImpl implements CreateAccountDataSource {
   Future<String> logout() async{
     final response = await _apiConsumer.get(
         path: EndPoints.logout,);
+    return response.data['message'];
+  }
+  @override
+  Future<String> checkTenant({required String tenantId}) async{
+    final response = await _apiConsumer.get(path: EndPoints.getCheckTenant);
     return response.data['message'];
   }
 }

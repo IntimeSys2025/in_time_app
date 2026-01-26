@@ -32,5 +32,6 @@ sealed class EndPoints {
   static const String getTermsConditionTenant = 'api/public/content/terms-conditions';
   static const String getPrivacyPolicyTenant = 'api/public/content/privacy-policy';
   static const String getHelpCenterTenant = 'api/public/content/help-center';
+  static const String getCheckTenant = 'api/check-tenant';
 
 }
