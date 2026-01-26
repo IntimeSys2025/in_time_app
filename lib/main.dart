@@ -44,6 +44,7 @@ void main() async {
   AppConstants.additionalMobile =
       await getStringValue(key: 'additional_mobile') ?? '';
   AppConstants.dateOfBirth = await getStringValue(key: 'date_of_birth') ?? '';
+  AppConstants.providerId = await getStringValue(key: 'tenant_id') ?? '';
 
   runApp(EasyLocalization(
       supportedLocales: AppLocalization.locales,
@@ -54,7 +55,6 @@ void main() async {
   // if(AppConstants.userToken != '' ){
   //
   // }
-
 }
 
 class MyApp extends StatelessWidget {
@@ -99,10 +99,11 @@ class MyApp extends StatelessWidget {
             future: Future.delayed(const Duration(seconds: 2)),
             builder: (context, snapshot) =>
                 snapshot.connectionState == ConnectionState.done
-                    ? AppConstants.userToken != ''?
-                    const AppLockScreen()
-                    // :const NavigationBarScreen()
-                    :const ScanQRScreen()
+                    ? AppConstants.userToken != ''
+                        ? const AppLockScreen()
+                        // :const NavigationBarScreen()
+                        : AppConstants.providerId == '' ? const ScanQRScreen()
+                :  const NavigationBarScreen()
                     : Container(
                         color: AppColors.white,
                         child: Center(

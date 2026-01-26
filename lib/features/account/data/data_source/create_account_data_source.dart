@@ -73,6 +73,6 @@ class CreateAccountDataSourceImpl implements CreateAccountDataSource {
   @override
   Future<String> checkTenant({required String tenantId}) async{
     final response = await _apiConsumer.get(path: EndPoints.getCheckTenant);
-    return response.data['message'];
+    return response.data['data']['tenant_id'];
   }
 }

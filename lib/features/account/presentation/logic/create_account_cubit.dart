@@ -343,6 +343,7 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
         emit(CheckTenantIdFailureState(errorMessage: failure.message));
       },
       (success) {
+        saveStringValue(key: 'tenant_id', value: success);
         emit(CheckTenantIdSuccessState());
       },
     );
