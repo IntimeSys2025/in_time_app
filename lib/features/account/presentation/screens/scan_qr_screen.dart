@@ -374,6 +374,11 @@ class _ScanQRScreenState extends State<ScanQRScreen>
                     MaterialPageRoute(
                       builder: (context) => const NavigationBarScreen(),
                     ));
+              }else if (state is CheckTenantIdFailureState){
+                showDialog(context: context, builder: (context) {
+                  return const QrFailPopup();
+                },);
+
               }
             },
             builder: (context, state) {

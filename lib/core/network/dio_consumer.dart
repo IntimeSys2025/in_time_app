@@ -17,7 +17,6 @@ class DioConsumer implements ApiConsumer {
       client.badCertificateCallback = (cert, host, port) => true;
       return client;
     };
-    debugPrint('X-Tenant-Id :: ${AppConstants.providerId}');
 
     dio.options
       ..baseUrl = EndPoints.baseUrl
@@ -27,7 +26,7 @@ class DioConsumer implements ApiConsumer {
         // 'content-type': 'application/json',
         'Access-control-Allow-Origin': '*',
         'audience': 'user',
-        'X-Tenant-Id': AppConstants.providerId
+        // 'X-Tenant-Id': AppConstants.providerId
       }
       ..sendTimeout = const Duration(seconds: 200)
       ..receiveTimeout = const Duration(seconds: 200);
@@ -35,6 +34,11 @@ class DioConsumer implements ApiConsumer {
     ///add authorization token
     dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
+        // debugPrint('X-Tenant-Id :: ${AppConstants.providerId}');
+        if(AppConstants.providerId != ''){
+          options.headers['X-Tenant-Id'] = AppConstants.providerId;
+        }
+
         if (AppConstants.userToken != '') {
           options.headers['Authorization'] = 'Bearer ${AppConstants.userToken}';
         }
