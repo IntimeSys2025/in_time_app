@@ -1,5 +1,6 @@
 import 'package:in_time_app/features/home/data/models/appointment_model.dart';
 import 'package:in_time_app/features/home/data/models/category_model.dart';
+import 'package:in_time_app/features/home/data/models/event_model.dart';
 import 'package:in_time_app/features/home/data/models/partner_details_model.dart';
 import 'package:in_time_app/features/home/data/models/partner_model.dart';
 import 'package:in_time_app/features/home/data/models/service_model.dart';
@@ -21,7 +22,7 @@ abstract class HomeRemoteDataSource {
 
   Future<List<PartnerModel>> getPartners({String? categoryId});
   Future<PartnerDetailsModel> getPartnerDetails({required String partnerId});
-
+  Future<List<EventModel>> getEvents();
 }
 
 class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
@@ -98,18 +99,29 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
       path: EndPoints.getPartners,
     );
     final List<PartnerModel> partners = [];
-    for(var element in response.data['data']['data']){
+    for (var element in response.data['data']['data']) {
       partners.add(PartnerModel.fromJson(element));
     }
     return partners;
   }
 
   @override
-  Future<PartnerDetailsModel> getPartnerDetails({required String partnerId}) async{
-    final response = await _apiConsumer.get(path: '${EndPoints.getPartnerDetails}$partnerId');
+  Future<PartnerDetailsModel> getPartnerDetails(
+      {required String partnerId}) async {
+    final response = await _apiConsumer.get(
+        path: '${EndPoints.getPartnerDetails}$partnerId');
     return PartnerDetailsModel.fromJson(response.data['data']);
+  }
 
-
-
+  @override
+  Future<List<EventModel>> getEvents() async {
+    final response = await _apiConsumer.get(
+      path: EndPoints.getEvents,
+    );
+    final List<EventModel> events = [];
+    for (var element in response.data['data']) {
+      events.add(EventModel.fromJson(element));
+    }
+    return events;
   }
 }

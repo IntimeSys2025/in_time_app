@@ -70,3 +70,6 @@ final class GetPartnerDetailsFailureState extends HomeState {
   final String errorMessage;
   GetPartnerDetailsFailureState({required this.errorMessage});
 }
+final class GetEventsSuccessState extends HomeState {
+  GetEventsSuccessState();
+}

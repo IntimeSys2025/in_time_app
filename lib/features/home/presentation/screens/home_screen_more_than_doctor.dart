@@ -1,19 +1,18 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_time_app/core/helpers/extension.dart';
 import 'package:in_time_app/features/home/presentation/logic/home_states.dart';
+import 'package:in_time_app/features/home/presentation/screens/events_screen.dart';
 import 'package:in_time_app/features/home/presentation/screens/partner_details_screen.dart';
 import 'package:in_time_app/features/home/presentation/widgets/appointmant_card.dart';
-import 'package:in_time_app/features/home/presentation/widgets/custom_search_bar.dart';
 import 'package:in_time_app/features/home/presentation/widgets/doctor_card.dart';
-import 'package:in_time_app/features/home/presentation/widgets/event_card.dart';
 import 'package:in_time_app/features/home/presentation/widgets/hospital_card.dart';
 import 'package:in_time_app/features/home/presentation/widgets/welcome_header.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_constants.dart';
 import '../../../../core/utils/app_font_size.dart';
 import '../logic/home_cubit.dart';
-import 'home_screen_one_doctor.dart';
 
 class HomeScreenMoreThanDoctor extends StatelessWidget {
   const HomeScreenMoreThanDoctor({super.key});
@@ -21,7 +20,147 @@ class HomeScreenMoreThanDoctor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final homeCubit = BlocProvider.of<HomeCubit>(context);
-    return Scaffold(
+    return BlocConsumer<HomeCubit, HomeState>(
+      buildWhen: (previous, current) => current is GetEventsSuccessState,
+        listener: (context, state) {
+      if (state is GetPartnerDetailsSuccessState) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PartnerDetailsScreen(
+                partnerDetails: state.partnerDetails,
+                // partner: partner,
+              ),
+            ));
+      }
+    }, builder: (context, state) {
+      if (state is GetPartnerLoadingState) {
+        return const Align(
+          alignment: Alignment.center,
+          child: CircularProgressIndicator(),
+        );
+      } else if (state is GetPartnerFailureState) {
+        return const Center(
+          child: Text('Something went wrong, Please try again!'),
+        );
+      } else {
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: AppColors.moreLightGrey,
+            elevation: 0,
+            toolbarHeight: 0,
+          ),
+          body: SafeArea(
+              child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const WelcomeHeader(),
+                        // const SizedBox(height: 20),
+                        // const CustomSearchBar(),
+                        20.heightSpace,
+                        const HospitalCard(),
+                        20.heightSpace,
+                        if (AppConstants.userToken != '' &&
+                            AppConstants.isLoggedIn)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Upcoming Appointments',
+                                style: TextStyle(
+                                    fontSize: AppFontSize.fontSize20,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              10.heightSpace,
+                              const AppointmentCard(),
+                              20.heightSpace,
+                            ],
+                          ),
+
+                        // 10.heightSpace,
+                        if (homeCubit.partners.isNotEmpty &&
+                            homeCubit.partners.length > 1)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Explore Our Doctors',
+                                style: TextStyle(
+                                    fontSize: AppFontSize.fontSize20,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                              TextButton(
+                                  onPressed: () {},
+                                  child: const Text(
+                                    'View All',
+                                    style: TextStyle(
+                                        decoration: TextDecoration.underline),
+                                  ))
+                            ],
+                          ),
+                        // 6.heightSpace,
+                        if (homeCubit.partners.isNotEmpty)
+                          Flexible(
+                            // flex: 1,
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              scrollDirection: Axis.vertical,
+                              // itemCount: homeCubit.isViewAllServices ? homeCubit.filteredItems.length: 1,
+                              itemCount: homeCubit.partners.length,
+                              itemBuilder: (context, index) {
+                                final partner = homeCubit.partners[index];
+                                return DoctorCard(
+                                  // onTap:  () {
+                                  //   Navigator.push(
+                                  //       context,
+                                  //       MaterialPageRoute(
+                                  //         builder: (context) => HomeScreenOneDoctor(partner: partner,),
+                                  //       ));
+                                  // },
+                                  partner: partner,
+                                );
+                              },
+                            ),
+                          ),
+                        if (homeCubit.partners.isEmpty)
+                          const Center(
+                            child: Text('There are no partners!'),
+                          )
+                      ],
+                    ),
+                  ))),
+          floatingActionButton: Pulse(
+            animate: true,
+            duration: const Duration(seconds: 15),
+            infinite: true,
+            child: CircleAvatar(
+              backgroundColor: AppColors.kGreenButton,
+              radius: 30,
+              child: IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const EventsScreen(),
+                        ));
+                  },
+                  icon: const Icon(
+                    Icons.event,
+                    color: AppColors.white,
+                    size: 30,
+                  )),
+            ),
+          ),
+        );
+      }
+    });
+
+    Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.moreLightGrey,
         elevation: 0,
@@ -30,7 +169,7 @@ class HomeScreenMoreThanDoctor extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: BlocConsumer<HomeCubit,HomeState>(
+          child: BlocConsumer<HomeCubit, HomeState>(
             listener: (context, state) {
               if (state is GetPartnerDetailsSuccessState) {
                 Navigator.push(
@@ -44,17 +183,16 @@ class HomeScreenMoreThanDoctor extends StatelessWidget {
               }
             },
             builder: (context, state) {
-              if(state is GetPartnerLoadingState){
+              if (state is GetPartnerLoadingState) {
                 return const Align(
                   alignment: Alignment.center,
                   child: CircularProgressIndicator(),
                 );
-              }else if(state is GetPartnerFailureState){
+              } else if (state is GetPartnerFailureState) {
                 return const Center(
                   child: Text('Something went wrong, Please try again!'),
                 );
-
-              }else{
+              } else {
                 return SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,8 +204,9 @@ class HomeScreenMoreThanDoctor extends StatelessWidget {
                       20.heightSpace,
                       const HospitalCard(),
                       20.heightSpace,
-                      if (AppConstants.userToken != '' && AppConstants.isLoggedIn)
-                         Column(
+                      if (AppConstants.userToken != '' &&
+                          AppConstants.isLoggedIn)
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
@@ -77,32 +216,32 @@ class HomeScreenMoreThanDoctor extends StatelessWidget {
                                   fontWeight: FontWeight.w500),
                             ),
                             10.heightSpace,
-                            AppointmentCard(),
+                            const AppointmentCard(),
                             20.heightSpace,
-
                           ],
                         ),
-                      EventBookingCard(),
-                      10.heightSpace,
-                      if(homeCubit.partners.isNotEmpty && homeCubit.partners.length >1)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Explore Our Doctors',
-                            style: TextStyle(
-                                fontSize: AppFontSize.fontSize20,
-                                fontWeight: FontWeight.w700),
-                          ),
-                          TextButton(
-                              onPressed: () {},
-                              child: const Text(
-                                'View All',
-                                style: TextStyle(
-                                    decoration: TextDecoration.underline),
-                              ))
-                        ],
-                      ),
+
+                      // 10.heightSpace,
+                      if (homeCubit.partners.isNotEmpty &&
+                          homeCubit.partners.length > 1)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Explore Our Doctors',
+                              style: TextStyle(
+                                  fontSize: AppFontSize.fontSize20,
+                                  fontWeight: FontWeight.w700),
+                            ),
+                            TextButton(
+                                onPressed: () {},
+                                child: const Text(
+                                  'View All',
+                                  style: TextStyle(
+                                      decoration: TextDecoration.underline),
+                                ))
+                          ],
+                        ),
                       // 6.heightSpace,
                       if (homeCubit.partners.isNotEmpty)
                         Flexible(
@@ -136,10 +275,30 @@ class HomeScreenMoreThanDoctor extends StatelessWidget {
                   ),
                 );
               }
-
             },
-
           ),
+        ),
+      ),
+      floatingActionButton: Pulse(
+        animate: true,
+        duration: const Duration(seconds: 15),
+        infinite: true,
+        child: CircleAvatar(
+          backgroundColor: AppColors.kGreenButton,
+          radius: 30,
+          child: IconButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const EventsScreen(),
+                    ));
+              },
+              icon: const Icon(
+                Icons.event,
+                color: AppColors.white,
+                size: 30,
+              )),
         ),
       ),
     );

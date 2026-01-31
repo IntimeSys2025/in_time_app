@@ -6,11 +6,13 @@ import 'package:in_time_app/features/home/data/models/slider_model.dart';
 import 'package:in_time_app/features/home/data/models/sub_service_model.dart';
 import 'package:in_time_app/features/home/domain/use_cases/appointments_use_case.dart';
 import 'package:in_time_app/features/home/domain/use_cases/get_categories_use_case.dart';
+import 'package:in_time_app/features/home/domain/use_cases/get_events_use_case.dart';
 import 'package:in_time_app/features/home/domain/use_cases/get_partners_use_case.dart';
 import 'package:in_time_app/features/home/domain/use_cases/get_services_use_case.dart';
 import 'package:in_time_app/features/home/domain/use_cases/get_slider_use_case.dart';
 import 'package:in_time_app/features/home/domain/use_cases/sub_service_use_case.dart';
 import 'package:in_time_app/features/home/presentation/logic/home_states.dart';
+import '../../data/models/event_model.dart';
 import '../../data/models/service_model.dart';
 import '../../domain/use_cases/get_partner_details_use_case.dart';
 
@@ -22,6 +24,7 @@ class HomeCubit extends Cubit<HomeState> {
   final AppointmentsUseCas _appointmentsUseCas;
   final PartnersUseCase _partnersUseCase;
   final PartnerDetailsUseCase _partnerDetailsUseCase;
+  final EventsUseCase _eventsUseCase;
   HomeCubit(
       this._getCategoriesUseCase,
       this._getSliderUseCase,
@@ -29,7 +32,8 @@ class HomeCubit extends Cubit<HomeState> {
       this._subServiceUseCase,
       this._appointmentsUseCas,
       this._partnersUseCase,
-      this._partnerDetailsUseCase)
+      this._partnerDetailsUseCase,
+      this._eventsUseCase)
       : super(HomeInitial());
 
   List<CategoryModel> categories = [];
@@ -146,18 +150,18 @@ class HomeCubit extends Cubit<HomeState> {
     debugPrint('Scroll to End');
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (scrollController.hasClients) {
-      scrollController.jumpTo(scrollController.position.maxScrollExtent);
+        scrollController.jumpTo(scrollController.position.maxScrollExtent);
         scrollController.animateTo(
           offset,
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeOut,
         );
-      }
-      else {
+      } else {
         print('ScrollController is not attached to any scroll views.');
       }
     });
   }
+
   void toggleViewAllServices() {
     isViewAllServices = true;
     // scrollToEnd(offset: scrollController.position.maxScrollExtent);
@@ -196,10 +200,25 @@ class HomeCubit extends Cubit<HomeState> {
       (success) {
         // partners = success;
         emit(GetPartnerDetailsSuccessState(partnerDetails: success));
-        filteredServices  = success.services ?? [];
+        filteredServices = success.services ?? [];
         // debugPrint('Success:: ${success.toJson()}');
       },
     );
     // emit(HomeInitial());
+  }
+  List<EventModel> events = [];
+
+  Future<void> getEvents() async {
+    final result = await _eventsUseCase.call();
+    result.fold(
+      (failure) {
+
+      },
+      (success) {
+        events = success;
+        emit(GetEventsSuccessState());
+
+      },
+    );
   }
 }

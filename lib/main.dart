@@ -72,6 +72,7 @@ class MyApp extends StatelessWidget {
               create: (context) => sl<HomeCubit>()
                 // ..getCategories()
                 ..getPartners()
+                  ..getEvents()
               // ..getSliders()
               // ..getServices(),
               ),

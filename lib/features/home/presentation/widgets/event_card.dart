@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:in_time_app/core/shared_widgets/app_button_widget.dart';
+import 'package:in_time_app/features/home/data/models/event_model.dart';
 import '../../../../core/utils/app_colors.dart';
 
 class EventBookingCard extends StatelessWidget {
-  const EventBookingCard({super.key});
+  final EventModel event;
+  const EventBookingCard({super.key, required this.event});
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +36,10 @@ class EventBookingCard extends StatelessWidget {
               borderRadius:
                   const BorderRadius.vertical(top: Radius.circular(16)),
             ),
-            child: const Text(
-              'March 13, 2024 - 10:00 AM',
-              style: TextStyle(
+            child:  Text(
+              // 'March 13, 2024 - 10:00 AM',
+              '${event.date} - ${event.startTime}',
+              style: const TextStyle(
                 fontWeight: FontWeight.w600,
                 color: Colors.black87,
                 fontSize: 15,
@@ -62,7 +65,8 @@ class EventBookingCard extends StatelessWidget {
                         height: 100,
                         color: Colors.grey.shade200,
                         child: Image.network(
-                          'https://images.unsplash.com/photo-1556911220-b0b895fafb40?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                          event.image ?? '',
+                          // 'https://images.unsplash.com/photo-1556911220-b0b895fafb40?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) =>
                               const Icon(
@@ -80,9 +84,9 @@ class EventBookingCard extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Event Title',
-                            style: TextStyle(
+                           Text(
+                            event.title ?? '',
+                            style: const TextStyle(
                               fontSize: 17,
                               fontWeight: FontWeight.bold,
                               height: 1.3,
@@ -93,11 +97,11 @@ class EventBookingCard extends StatelessWidget {
                           const SizedBox(height: 8),
                           Row(
                             children: [
-                              Icon(Icons.location_on,
+                              const Icon(Icons.location_on,
                                   size: 16, color: Colors.red),
                               const SizedBox(width: 4),
                               Text(
-                                'Eloubour, Egypt',
+                                event.briefAddress ?? '',
                                 style: TextStyle(
                                   color: Colors.grey[700],
                                   fontSize: 14,
@@ -106,17 +110,17 @@ class EventBookingCard extends StatelessWidget {
                             ],
                           ),
                           const SizedBox(width: 12),
-                          const Row(
+                           Row(
                             children: [
-                              Icon(
+                              const Icon(
                                 Icons.circle,
                                 color: AppColors.kGreenButton,
                                 size: 16,
                               ),
                               SizedBox(width: 4),
                               Text(
-                                'Online',
-                                style: TextStyle(
+                               event.locationType ?? '',
+                                style: const TextStyle(
                                   color: Colors.grey,
                                   fontSize: 12,
                                   // fontWeight: FontWeight.w600,
@@ -124,9 +128,9 @@ class EventBookingCard extends StatelessWidget {
                               )
                             ],
                           ),
-                          const Text(
-                            "Practical guidance from the 'Core' curriculum to grow dfkljkjdfklgj",
-                            style: TextStyle(
+                           Text(
+                            event.description ?? '',
+                            style: const TextStyle(
                                 // fontSize: 17,
                                 // fontWeight: FontWeight.bold,
                                 // height: 1.3,
@@ -161,13 +165,13 @@ class EventBookingCard extends StatelessWidget {
                 // Details
                 _buildDetailRow(
                   icon: Icons.person,
-                  text: 'Type: One To One',
+                  text: 'Type: ${event.eventType}',
                   color: Colors.green,
                 ),
                 const SizedBox(height: 12),
                 _buildDetailRow(
                   icon: Icons.attach_money,
-                  text: 'Price: 2400 EGP',
+                  text: 'Price: ${event.price} EGP',
                   color: Colors.green,
                 ),
 

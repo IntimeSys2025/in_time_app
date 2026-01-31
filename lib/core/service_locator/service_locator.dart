@@ -14,6 +14,7 @@ import 'package:in_time_app/features/home/data/repositories/home_repo_impl.dart'
 import 'package:in_time_app/features/home/domain/repositories/home_repo.dart';
 import 'package:in_time_app/features/home/domain/use_cases/appointments_use_case.dart';
 import 'package:in_time_app/features/home/domain/use_cases/get_categories_use_case.dart';
+import 'package:in_time_app/features/home/domain/use_cases/get_events_use_case.dart';
 import 'package:in_time_app/features/home/domain/use_cases/get_partner_details_use_case.dart';
 import 'package:in_time_app/features/home/domain/use_cases/get_partners_use_case.dart';
 import 'package:in_time_app/features/home/domain/use_cases/get_services_use_case.dart';
@@ -61,7 +62,8 @@ sealed class ServiceLocator {
         sl<SubServiceUseCase>(),
         sl<AppointmentsUseCas>(),
         sl<PartnersUseCase>(),
-        sl<PartnerDetailsUseCase>()));
+        sl<PartnerDetailsUseCase>(),
+        sl<EventsUseCase>()));
     sl.registerLazySingleton(
       () => AppointmentCubit(
           sl<AppointmentsUseCas>(), sl<GetAvailableTimesInDateUseCase>()),
@@ -126,6 +128,9 @@ sealed class ServiceLocator {
     sl.registerLazySingleton(() => UploadProfilePicUseCase(sl<ProfileRepo>()));
     sl.registerLazySingleton(
       () => CheckTenantUseCas(sl<CreateAccountRepo>()),
+    );
+    sl.registerLazySingleton(
+      () => EventsUseCase(sl<HomeRepo>()),
     );
 
     /// register Repositories
