@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:in_time_app/core/shared_widgets/app_button_widget.dart';
 import 'package:in_time_app/features/home/data/models/event_model.dart';
 import '../../../../core/utils/app_colors.dart';
+import '../../../../core/utils/app_constants.dart';
+import '../../../account/presentation/screens/loginScreen.dart';
 
 class EventBookingCard extends StatelessWidget {
   final EventModel event;
@@ -178,7 +180,18 @@ class EventBookingCard extends StatelessWidget {
                 const SizedBox(height: 20),
 
                 // Book button
-                AppButtonWidget(title: 'Book Event', onPressed: () {},
+                AppButtonWidget(title: 'Book Event', onPressed: () {
+                  if(AppConstants.userToken ==''){
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginScreen(),
+                        ));
+                    return;
+                  }else{
+
+                  }
+                },
                 backgroundColor: AppColors.kLightGreen,
                 textColor: AppColors.kGreenButton,),
                 // SizedBox(
