@@ -4,6 +4,7 @@ import 'package:in_time_app/core/localization/locale_keys.g.dart';
 import 'package:in_time_app/core/shared_widgets/app_button_widget.dart';
 import 'package:in_time_app/core/utils/app_asset_path.dart';
 import 'package:in_time_app/core/utils/app_colors.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/utils/app_font_size.dart';
 import '../../data/models/slider_model.dart';
 
@@ -127,7 +128,12 @@ class DoctorDescCard extends StatelessWidget {
                           title: sliderModel.buttonText,
                           backgroundColor: AppColors.white,
                           textColor: AppColors.black,
-                          onPressed: () {}),
+                          onPressed: () async {
+                            if (!await launchUrl(Uri.parse(
+                            sliderModel.buttonLink))) {
+                            throw Exception('Could not launch ');
+                            }
+                          }),
                     12.heightSpace,
                   ],
                 ),
