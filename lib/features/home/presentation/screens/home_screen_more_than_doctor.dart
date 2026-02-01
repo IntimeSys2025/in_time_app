@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_time_app/core/helpers/extension.dart';
+import 'package:in_time_app/core/shared_widgets/custom_carousel_slider_widget.dart';
 import 'package:in_time_app/features/home/presentation/logic/home_states.dart';
 import 'package:in_time_app/features/home/presentation/screens/events_screen.dart';
 import 'package:in_time_app/features/home/presentation/screens/partner_details_screen.dart';
@@ -13,6 +14,7 @@ import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_constants.dart';
 import '../../../../core/utils/app_font_size.dart';
 import '../logic/home_cubit.dart';
+import '../widgets/doctor_desc_card.dart';
 
 class HomeScreenMoreThanDoctor extends StatelessWidget {
   const HomeScreenMoreThanDoctor({super.key});
@@ -61,8 +63,16 @@ class HomeScreenMoreThanDoctor extends StatelessWidget {
                         const WelcomeHeader(),
                         // const SizedBox(height: 20),
                         // const CustomSearchBar(),
-                        20.heightSpace,
-                        const HospitalCard(),
+                        50.heightSpace,
+                        (homeCubit.sliders.isNotEmpty)?
+                            CustomCarouselSliderWidget(widgets: [
+                              ...List.generate(homeCubit.sliders.length, (index) {
+                                return DoctorDescCard(sliderModel: homeCubit.sliders[index]);
+                              },)
+                            ], height: 200)
+
+                        : const Center(child: Text('Slider is not available!'),),
+                        // const HospitalCard(),
                         20.heightSpace,
                         if (AppConstants.userToken != '' &&
                             AppConstants.isLoggedIn)

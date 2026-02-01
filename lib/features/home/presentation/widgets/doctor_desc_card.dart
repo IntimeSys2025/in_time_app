@@ -82,7 +82,6 @@ class DoctorDescCard extends StatelessWidget {
         Stack(
       clipBehavior: Clip.none,
       children: [
-
         Container(
           // height: 200,
           decoration: BoxDecoration(
@@ -137,23 +136,25 @@ class DoctorDescCard extends StatelessWidget {
           ),
         ),
         Positioned(
-          top: -40,
-          bottom: 0,
-          child: Image.network(
-            sliderModel.media,
-            fit: BoxFit.fitHeight,
-            // height: 200,
-            width: MediaQuery.of(context).size.width * 0.3,
-            errorBuilder: (context, error, stackTrace) {
-              return Image.asset(
-                AppAsset.inTimeApp,
-                fit: BoxFit.cover,
-                height: 200,
-                width: 130,
-              );
-            },
-          ),
-        ),
+            top: 0,
+            bottom: 0,
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(16),bottomLeft: Radius.circular(16)),
+              child: Image.network(
+                sliderModel.media,
+                fit: BoxFit.fitHeight,
+                // height: 200,
+                width: MediaQuery.of(context).size.width * 0.3,
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.asset(
+                    AppAsset.inTimeApp,
+                    fit: BoxFit.cover,
+                    height: 200,
+                    width: 130,
+                  );
+                },
+              ),
+            )),
       ],
     );
 

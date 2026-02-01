@@ -43,6 +43,7 @@ dependencies:
   mobile_scanner: ^7.1.4
   local_auth: ^2.3.0
   animate_do: ^4.2.0
+  carousel_slider: ^5.0.0
 #  qr_code_scanner: ^1.0.1
 #  qr_code_scanner: ^0.4.0
 #  qr_code_scanner_plus: ^2.0.14
