@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:in_time_app/core/utils/app_asset_path.dart';
 import 'package:in_time_app/features/account/presentation/screens/reset_password_screen.dart';
 
 import '../../../home/presentation/screens/navigation_screen.dart';
@@ -121,7 +122,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                       //     height: 200
                       // )
                       child: Image.asset(
-                        'assets/images/otp.gif',
+                        AppAsset.inTimeApp,
+                        // 'assets/images/otp.gif',
                         height: 200,
                       ),
                     ),
