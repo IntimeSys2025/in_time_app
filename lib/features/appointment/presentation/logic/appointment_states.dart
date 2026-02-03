@@ -38,3 +38,16 @@ class ConfirmRescheduleBookingState extends AppointmentState {}
 class SuccessRescheduleBookingState extends AppointmentState {}
 
 class CancelBookingState extends AppointmentState {}
+class UpdateEventListState extends AppointmentState{
+  final String message;
+  UpdateEventListState({required this.message});
+}
+class EventAddedSuccessfullyState extends AppointmentState{
+  final String successMessage;
+  EventAddedSuccessfullyState({required this.successMessage});
+}
+class EventAddedFailureState extends AppointmentState{
+  final String errorMessage;
+  EventAddedFailureState({required this.errorMessage});
+}
+

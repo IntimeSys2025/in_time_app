@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_time_app/features/home/data/models/available_times_in_date_model.dart';
+import 'package:in_time_app/features/home/data/models/event_model.dart';
 import 'package:in_time_app/features/home/domain/use_cases/get_appointment_in_date.dart';
 import '../../../home/data/models/appointment_model.dart';
 import '../../../home/data/models/sub_service_model.dart';
@@ -19,11 +20,6 @@ class AppointmentCubit extends Cubit<AppointmentState> {
 
   bool showDateSelector = false;
 
-  // void toggleDateSelector() {
-  //   showDateSelector = true;
-  //   // calculateTotalPrice();
-  //   emit(ShowDateSelectorStates());
-  // }
   bool showBottomSheet = false;
   void toggleShowBottomSheet() {
     showBottomSheet = !showBottomSheet;
@@ -32,12 +28,10 @@ class AppointmentCubit extends Cubit<AppointmentState> {
 
   List<SubServiceModel> subServicesBooked = [];
   void addSubServiceBooked({required SubServiceModel subService}) {
-    debugPrint('subService:::: ${subService.toJson()},');
     int index1 = subServicesBooked.indexWhere(
       (element) => element.service.id == subService.service.id,
     );
     if (index1 != -1) {
-      // subServicesBooked[index1].subServices.addAll(subService.subServices);
       int index = subServicesBooked[index1].subServices.indexWhere(
             (element) => element.id == subService.subServices.first.id,
           );
@@ -56,7 +50,6 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     int index = subServicesBooked.indexWhere(
       (element) => element.service.id == serviceId,
     );
-    debugPrint('index: $index');
     if (index != -1) {
       subServicesBooked[index].subServices.removeWhere(
             (element) => element.id == subServiceId,
@@ -72,19 +65,15 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     subServicesBooked.removeWhere(
       (element) => element.service.id == serviceId,
     );
-    debugPrint('removeSubServicesBooked: ${subServicesBooked},');
     emit(RefreshCartScreenState());
   }
 
   double totalPrice = 0.0;
   void calculateTotalPriceForService({required SubServiceModel service}) {
     totalPrice = 0;
-    // for (var service in subServicesBooked) {
     for (var subService in service.subServices) {
       totalPrice += subService.price;
     }
-    // }
-    // emit(CalculateTotalPriceState(totalPrice: totalPrice));
   }
 
   List<AvailableAppointmentModel> availableAppointments = [];
@@ -93,9 +82,7 @@ class AppointmentCubit extends Cubit<AppointmentState> {
   Future<void> getAvailableAppointments(int id) async {
     final result = await _appointmentsUseCas.call(id);
     result.fold(
-      (failure) {
-        // emit(HomeError(failure.message));
-      },
+      (failure) {},
       (appointmentsData) {
         availableAppointments = appointmentsData;
         for (var element in availableAppointments) {
@@ -122,11 +109,8 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     result.fold(
       (failure) {
         emit(GetAvailableAppointmentInDateFailureState());
-
-        // emit(HomeError(failure.message));
       },
       (success) {
-        debugPrint('success: $success');
         times = success;
         emit(GetAvailableAppointmentInDateSuccessState());
       },
@@ -134,11 +118,6 @@ class AppointmentCubit extends Cubit<AppointmentState> {
   }
 
   String? selectedTimeFormat12Hours;
-
-  // String setSelectedTimeFormat12Hours(String time) {
-  //   DateTime dateTime = DateTime.parse("$dateFormat ${time.startTime}");
-  //   String timeFormat = DateFormat('h:mm a').format(dateTime);
-  // }
   void setTime(
       {required AvailableTimesInDateModel time,
       required String selectedTimeFormatted}) async {
@@ -169,7 +148,6 @@ class AppointmentCubit extends Cubit<AppointmentState> {
         selectedService?.selectedDate = selectedDate;
         selectedService?.selectedTime = selectedTime;
       }
-      // toggleShowBottomSheet();
       emit(ConfirmDateAndTimeSuccessState());
       if (isReschedule) {
         emit(SuccessRescheduleBookingState());
@@ -187,9 +165,42 @@ class AppointmentCubit extends Cubit<AppointmentState> {
   void rescheduleBooking() {
     emit(ConfirmRescheduleBookingState());
   }
-  void cancelBooking({SubServiceModel? item})async{
+
+  void cancelBooking({SubServiceModel? item}) async {
     removeServiceFromCart(serviceId: item!.service.id);
     emit(CancelBookingState());
-    
+  }
+
+  ///  book event
+  List<EventModel> bookedEvents = [];
+  bool isEventBooked(EventModel event) {
+    return bookedEvents.any((e) => e.id == event.id);
+  }
+
+  void addEvent(EventModel event) {
+    if (isEventBooked(event)) {
+
+      // ممكن تطلعي toast أو emit state فيه error
+      return;
+    }
+
+    bookedEvents.add(event);
+    emit(EventAddedSuccessfullyState(successMessage: 'Your event was added successfully.'));
+    // final updatedList = List<EventModel>.from(state.bookedEvents)
+    //   ..add(event);
+
+    // emit(EventsState(bookedEvents: updatedList));
+  }
+
+  void removeEvent(EventModel event) {
+    bookedEvents.removeWhere(
+      (element) => element.id == event.id,
+    );
+    emit(UpdateEventListState(message: 'Your event was removed successfully.'));
+    // final updatedList = bookedEvents
+    //     .where((e) => e.id != event.id)
+    //     .toList();
+
+    // emit(EventsState(bookedEvents: updatedList));
   }
 }

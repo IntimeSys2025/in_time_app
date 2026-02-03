@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:in_time_app/core/helpers/extension.dart';
 import 'package:in_time_app/core/shared_widgets/app_button_widget.dart';
+import 'package:in_time_app/features/appointment/presentation/logic/appointment_cubit.dart';
 import 'package:in_time_app/features/home/data/models/event_model.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_constants.dart';
@@ -11,6 +14,7 @@ class EventBookingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appointmentCubit = BlocProvider.of<AppointmentCubit>(context);
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -38,7 +42,7 @@ class EventBookingCard extends StatelessWidget {
               borderRadius:
                   const BorderRadius.vertical(top: Radius.circular(16)),
             ),
-            child:  Text(
+            child: Text(
               // 'March 13, 2024 - 10:00 AM',
               '${event.date} - ${event.startTime}',
               style: const TextStyle(
@@ -86,7 +90,7 @@ class EventBookingCard extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                           Text(
+                          Text(
                             event.title ?? '',
                             style: const TextStyle(
                               fontSize: 17,
@@ -112,7 +116,7 @@ class EventBookingCard extends StatelessWidget {
                             ],
                           ),
                           const SizedBox(width: 12),
-                           Row(
+                          Row(
                             children: [
                               const Icon(
                                 Icons.circle,
@@ -121,7 +125,7 @@ class EventBookingCard extends StatelessWidget {
                               ),
                               SizedBox(width: 4),
                               Text(
-                               event.locationType ?? '',
+                                event.locationType ?? '',
                                 style: const TextStyle(
                                   color: Colors.grey,
                                   fontSize: 12,
@@ -130,7 +134,7 @@ class EventBookingCard extends StatelessWidget {
                               )
                             ],
                           ),
-                           Text(
+                          Text(
                             event.description ?? '',
                             style: const TextStyle(
                                 // fontSize: 17,
@@ -177,47 +181,69 @@ class EventBookingCard extends StatelessWidget {
                   color: Colors.green,
                 ),
 
-                const SizedBox(height: 20),
+                20.heightSpace,
 
                 // Book button
-                AppButtonWidget(title: 'Book Event', onPressed: () {
-                  if(AppConstants.userToken ==''){
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginScreen(),
-                        ));
-                    return;
-                  }else{
-
-                  }
-                },
-                backgroundColor: AppColors.kLightGreen,
-                textColor: AppColors.kGreenButton,),
-                // SizedBox(
-                //   width: double.infinity,
-                //   height: 52,
-                //   child: ElevatedButton(
-                //     onPressed: () {
-                //       // Book event action
-                //     },
-                //     style: ElevatedButton.styleFrom(
-                //       backgroundColor: Colors.green.shade700,
-                //       foregroundColor: Colors.white,
-                //       elevation: 0,
-                //       shape: RoundedRectangleBorder(
-                //         borderRadius: BorderRadius.circular(12),
-                //       ),
-                //     ),
-                //     child: const Text(
-                //       'Book Event',
-                //       style: TextStyle(
-                //         fontSize: 16,
-                //         fontWeight: FontWeight.bold,
-                //       ),
-                //     ),
-                //   ),
-                // ),
+                BlocConsumer<AppointmentCubit, AppointmentState>(
+                  listener: (context, state) {
+                    if (state is EventAddedSuccessfullyState) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(state.successMessage),
+                          backgroundColor: AppColors.kGreenButton,
+                          // duration: const Duration(milliseconds: 100),
+                          ),
+                      );
+                    } else  if (state is UpdateEventListState) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(state.message),
+                          backgroundColor: AppColors.kRed,
+                          // duration: const Duration(milliseconds: 100),
+                        ),
+                      );
+                    }
+                  },
+                  buildWhen: (previous, current) =>
+                      current is EventAddedSuccessfullyState ||
+                      current is EventAddedFailureState ||
+                  current is UpdateEventListState,
+                  builder: (context, state) {
+                    return (appointmentCubit.isEventBooked(event))
+                        ? AppButtonWidget(
+                            title: 'Remove Event',
+                            onPressed: () {
+                              if (AppConstants.userToken == '') {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const LoginScreen(),
+                                    ));
+                                return;
+                              } else {
+                                appointmentCubit.removeEvent(event);
+                              }
+                            },
+                            backgroundColor: AppColors.kLightGreen,
+                            textColor: AppColors.kGreenButton,
+                          )
+                        : AppButtonWidget(
+                            title: 'Book Event',
+                            onPressed: () {
+                              if (AppConstants.userToken == '') {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const LoginScreen(),
+                                    ));
+                                return;
+                              } else {
+                                appointmentCubit.addEvent(event);
+                              }
+                            },
+                            backgroundColor: AppColors.kLightGreen,
+                            textColor: AppColors.kGreenButton,
+                          );
+                  },
+                )
               ],
             ),
           ),
