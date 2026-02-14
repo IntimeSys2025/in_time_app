@@ -7,6 +7,7 @@ import 'package:in_time_app/features/home/data/models/service_model.dart';
 import 'package:in_time_app/features/home/presentation/logic/home_cubit.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_constants.dart';
+import '../screens/service_details_screen.dart';
 
 class ServiceCard extends StatelessWidget {
   final ServiceModel service;
@@ -14,7 +15,7 @@ class ServiceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // debugPrint('ServiceCard: ${service.toJson()}');
+    debugPrint('ServiceCard: ${service.toJson()}');
     final homeCubit = BlocProvider.of<HomeCubit>(context);
     return Container(
       decoration: BoxDecoration(
@@ -87,7 +88,15 @@ class ServiceCard extends StatelessWidget {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen(),));
                         return;
                       }
-                      homeCubit.getSubServices(id: service.id);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ServiceDetailsScreen(service: service,
+                              // subServiceModel: state.subServiceModel,
+                            ),
+                          ));
+
+                      // homeCubit.getSubServices(id: service.id);
 
                     })
 

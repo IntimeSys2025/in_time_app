@@ -38,13 +38,13 @@ class HomeScreenOneDoctor extends StatelessWidget {
     return BlocConsumer<HomeCubit, HomeState>(
       listener: (context, state) {
         if (state is GetSubServicesSuccessState) {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ServiceDetailsScreen(
-                  subServiceModel: state.subServiceModel,
-                ),
-              ));
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //       builder: (context) => ServiceDetailsScreen(
+          //         subServiceModel: state.subServiceModel,
+          //       ),
+          //     ));
         }
       },
       buildWhen: (previous, current) =>

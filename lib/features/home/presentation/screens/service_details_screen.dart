@@ -3,13 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_time_app/core/helpers/extension.dart';
 import 'package:in_time_app/core/shared_widgets/app_button_widget.dart';
 import 'package:in_time_app/features/appointment/presentation/screens/cart_screen.dart';
+import 'package:in_time_app/features/home/data/models/service_model.dart';
 import 'package:in_time_app/features/home/data/models/sub_service_model.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../appointment/presentation/logic/appointment_cubit.dart';
 
 class ServiceDetailsScreen extends StatefulWidget {
-  final SubServiceModel subServiceModel;
-  const ServiceDetailsScreen({super.key, required this.subServiceModel});
+  // final SubServiceModel subServiceModel;
+  final ServiceModel service;
+  const ServiceDetailsScreen({super.key,
+    // required this.subServiceModel,
+    required this.service});
 
   @override
   State<ServiceDetailsScreen> createState() => _ServiceDetailsScreenState();
@@ -19,12 +23,12 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final appointmentCubit = BlocProvider.of<AppointmentCubit>(context);
-    debugPrint(
-        'ServiceDetailsScreen: ${widget.subServiceModel.subServices.length}');
+    // debugPrint(
+    //     'ServiceDetailsScreen: ${widget.subServiceModel.subServices.length}');
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
-        title: Text(widget.subServiceModel.service.title),
+        title: Text(widget.service.title),
         centerTitle: true,
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
@@ -53,7 +57,7 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.network(
-                  widget.subServiceModel.service.imageUrl,
+                  widget.service.imageUrl,
                   height: 180,
                   width: double.infinity,
                   fit: BoxFit.cover,
@@ -81,7 +85,7 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.6,
                     child: Text(
-                      widget.subServiceModel.service.title,
+                      widget.service.title,
                       // softWrap: true,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
@@ -107,12 +111,12 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
 
               // Description
               Text(
-                widget.subServiceModel.service.description,
+                widget.service.description,
                 style: TextStyle(color: Colors.grey),
               ),
 
               const SizedBox(height: 16),
-              if (widget.subServiceModel.subServices.isNotEmpty)
+              if (widget.service.subServices.isNotEmpty)
                 const Text(
                   "Select Sub-Service",
                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -121,7 +125,7 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
 
               // Sub-Services List
               Expanded(
-                child: (widget.subServiceModel.subServices.isEmpty)
+                child: (widget.service.subServices.isEmpty)
                     ? const Row(
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,10 +139,10 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                     : ListView.builder(
                         shrinkWrap: true,
                         // physics: const NeverScrollableScrollPhysics(),
-                        itemCount: widget.subServiceModel.subServices.length,
+                        itemCount: widget.service.subServices.length,
                         itemBuilder: (context, index) {
                           final subService =
-                              widget.subServiceModel.subServices[index];
+                              widget.service.subServices[index];
                           return ListTile(
                             leading: Checkbox(
                               value: subService.isSelected,
@@ -149,16 +153,16 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                                 if (subService.isSelected) {
                                   appointmentCubit.addSubServiceBooked(
                                     subService: SubServiceModel(
-                                        service: widget.subServiceModel.service,
+                                        service: widget.service,
                                         subServices: [
-                                          widget.subServiceModel
+                                          widget.service
                                               .subServices[index]
                                         ]),
                                   );
                                 } else {
                                   appointmentCubit.removeSubServiceBooked(
                                     serviceId:
-                                        widget.subServiceModel.service.id,
+                                        widget.service.id,
                                     subServiceId: subService.id,
                                   );
                                 }
