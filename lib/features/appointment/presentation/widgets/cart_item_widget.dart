@@ -195,12 +195,12 @@ class CartItemWidget extends StatelessWidget {
               ),
               // 10.heightSpace,
               // if(!isCheckout)
-              const Column(
-                children: [
-                  Divider(),
-                  DoctorInfoCard(),
-                ],
-              ),
+              // const Column(
+              //   children: [
+              //     Divider(),
+              //     DoctorInfoCard(),
+              //   ],
+              // ),
               // 10.heightSpace,
               if (
               (!appointmentCubit.showDateSelector) &&

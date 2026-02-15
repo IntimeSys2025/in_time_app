@@ -30,10 +30,10 @@ class CartScreen extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          (AppConstants.productType == ProductType.oneDoctor)
-                              ? const NavigationBarScreen()
-                              : const HomeScreenOneDoctor(),
+                      builder: (context) => NavigationBarScreen()
+                          // (AppConstants.productType == ProductType.oneDoctor)
+                          //     ? const NavigationBarScreen()
+                          //     : const HomeScreenOneDoctor(),
                     ));
               },
             ),
@@ -72,11 +72,11 @@ class CartScreen extends StatelessWidget {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          (AppConstants.productType ==
-                                                  ProductType.oneDoctor)
-                                              ? const NavigationBarScreen()
-                                              : const HomeScreenOneDoctor(),
+                                      builder: (context) => NavigationBarScreen()
+                                          // (AppConstants.productType ==
+                                          //         ProductType.oneDoctor)
+                                          //     ? const NavigationBarScreen()
+                                          //     : const HomeScreenOneDoctor(),
                                     ));
                               }))),
         );

@@ -98,11 +98,13 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
         ],
       ),
       body: [
-        (AppConstants.productType == ProductType.oneDoctor)
-            ? const HomeScreenOneDoctor()
-            : (AppConstants.productType == ProductType.moreThanOneDoctor)
-                ? const HomeScreenMoreThanDoctor()
-                : const HomeScreenMoreThanCategory(),
+        // (AppConstants.productType == ProductType.oneDoctor)
+            // ? const HomeScreenOneDoctor()
+            // : (AppConstants.productType == ProductType.moreThanOneDoctor)
+            //     ?
+        const HomeScreenMoreThanDoctor()
+                // : const HomeScreenMoreThanCategory()
+        ,
         const MyBookingScreen(),
         const MyCartScreen(),
         const ProfileScreen(),
