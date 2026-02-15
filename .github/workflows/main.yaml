@@ -90,7 +90,7 @@
                   serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
                   testers: ${{ secrets.FIREBASE_TESTERS }}
                   file: build/app/outputs/flutter-apk/app-release.apk
-                  releaseNotes: "Book event 🚀"
+                  releaseNotes: "Service selection 🚀"
 
 
 #               #9) Upload to Firebase App Distribution
